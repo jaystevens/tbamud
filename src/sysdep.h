@@ -340,6 +340,14 @@ typedef int socket_t;
 #define cpp_extern    /* Nothing */
 #endif
 
+/* Guess if we have the getrlimit()/setrlimit() functions */
+#if defined(RLIMIT_NOFILE) || defined (RLIMIT_OFILE)
+#define HAS_RLIMIT
+#if !defined (RLIMIT_NOFILE)
+# define RLIMIT_NOFILE RLIMIT_OFILE
+#endif
+#endif
+
 /* Make sure we have STDERR_FILENO */
 #ifndef STDERR_FILENO
 #define STDERR_FILENO 2
