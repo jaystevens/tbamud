@@ -193,6 +193,9 @@ void run_autowiz(void) {
     if (CONFIG_USE_AUTOWIZ) {
         size_t res;
         char buf[256];
+        int rval = -1;
+
+        if (rval) {};  // fix compiler warning
 
 #if defined(CIRCLE_UNIX)
         res = snprintf(buf, sizeof(buf), "nice ../bin/autowiz %d %s %d %s %d &",
@@ -206,7 +209,7 @@ void run_autowiz(void) {
         if (res < sizeof(buf)) {
             mudlog(CMP, LVL_IMMORT, FALSE, "Initiating autowiz.");
             reboot_wizlists();
-            int rval = system(buf);
+            rval = system(buf);
             if (rval != 0)
                 mudlog(BRF, LVL_IMMORT, TRUE, "Warning: autowiz failed with return value %d", rval);
         } else
