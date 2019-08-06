@@ -1,5 +1,5 @@
 /*
- * conf.h.win -- conf.h file for Windows 95/NT compilation; any compiler
+ * conf.h.msvc-- conf.h file for MS Visual Studio
  * Created by Jeremy Elson, 1 July 1998
  * Updated by Fade 2013
  */
