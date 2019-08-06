@@ -10,3 +10,8 @@ src/util/Makefile
 src/.accepted
 src/depend
 src/util/depend
+# cmake build
+cmake-build*/
+.idea/
+src/version.c
+src/conf.h
