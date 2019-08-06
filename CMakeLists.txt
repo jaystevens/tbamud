@@ -179,7 +179,7 @@ add_executable(circle
         "src/ban.c"
         "src/boards.c"
         "src/bsd-snprintf.c"
-        "src/castle.c"
+        "src/zone_spec_castle.c"
         "src/cedit.c"
         "src/class.c"
         "src/comm.c"
