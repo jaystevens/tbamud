@@ -28,7 +28,7 @@
 #include "ban.h"
 #include "class.h"
 #include "graph.h"
-#include "olc_hedit.h"
+#include "hedit.h"
 #include "house.h"
 #include "config.h"
 #include "modify.h" /* for do_skillset... */
