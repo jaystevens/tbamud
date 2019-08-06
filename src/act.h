@@ -102,6 +102,8 @@ ACMD(do_areas);
 
 ACMD(do_consider);
 
+ACMD(do_date);
+
 ACMD(do_diagnose);
 
 ACMD(do_equipment);
@@ -129,6 +131,8 @@ ACMD(do_time);
 ACMD(do_toggle);
 
 ACMD(do_users);
+
+ACMD(do_uptime);
 
 ACMD(do_weather);
 
@@ -377,11 +381,7 @@ bool change_player_name(struct char_data *ch, struct char_data *vict, char *new_
 
 bool AddRecentPlayer(char *chname, char *chhost, bool newplr, bool cpyplr);
 /* Functions with subcommands */
-/* do_date */
-ACMD(do_date);
 
-#define SCMD_DATE   0
-#define SCMD_UPTIME 1
 /* do_echo */
 ACMD(do_echo);
 

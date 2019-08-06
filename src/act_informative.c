@@ -2617,3 +2617,27 @@ ACMD(do_scan) {
         send_to_char(ch, "You don't see anything nearby!\r\n");
     }
 } // end of do_scan
+
+ACMD(do_date) {
+    char timestr[25];
+    time_t mytime = time(0);
+
+    strftime(timestr, sizeof(timestr), "%c", localtime(&mytime));
+
+    send_to_char(ch, "Current machine time: %s\r\n", timestr);
+}
+
+ACMD(do_uptime) {
+    char timestr[25];
+    time_t mytime = boot_time;
+    unsigned int d, h, m;
+
+    strftime(timestr, sizeof(timestr), "%c", localtime(&mytime));
+
+    mytime = time(0) - boot_time;
+    d = mytime / 86400;
+    h = (mytime / 3600) % 24;
+    m = (mytime / 60) % 60;
+
+    send_to_char(ch, "Up since %s: %d day%s, %d hour%s, %d minute%s\r\n", timestr, d, d == 1 ? "" : "s", h, d == 1 ? "" : "s", m, m == 1 ? "" : "s");
+}

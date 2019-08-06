@@ -130,7 +130,7 @@ cpp_extern const struct command_info cmd_info[] = {
         {"copyover",   "copyover",  POS_DEAD,     do_copyover,        LVL_GRGOD,   0},
         {"credits",    "cred",      POS_DEAD,     do_gen_ps,         0,            SCMD_CREDITS},
 
-        {"date",       "da",        POS_DEAD,     do_date,            LVL_IMMORT,  SCMD_DATE},
+        {"date",       "da",        POS_DEAD,     do_date,           0,           0},
         {"dc",         "dc",        POS_DEAD,     do_dc,              LVL_GOD,     0},
         {"deposit",    "depo",      POS_STANDING, do_not_here,       1,            0},
         {"detach",     "detach",    POS_DEAD,     do_detach,          LVL_BUILDER, 0},
@@ -200,7 +200,7 @@ cpp_extern const struct command_info cmd_info[] = {
         {"kick",       "ki",        POS_FIGHTING, do_kick,           1,            0},
 
         {"look",       "l",         POS_RESTING,  do_look,           0,            SCMD_LOOK},
-        {"last",       "last",      POS_DEAD,     do_last,            LVL_GOD,     0},
+        {"last",       "last",      POS_DEAD,     do_last,           0,            0},
         {"leave",      "lea",       POS_STANDING, do_leave,          0,            0},
         {"levels",     "lev",       POS_DEAD,     do_levels,         0,            0},
         {"list",       "lis",       POS_STANDING, do_not_here,       0,            0},
@@ -330,7 +330,7 @@ cpp_extern const struct command_info cmd_info[] = {
         {"unban",      "unban",     POS_DEAD,     do_unban,           LVL_GRGOD,   0},
         {"unaffect",   "unaffect",  POS_DEAD,     do_wizutil,         LVL_GOD,     SCMD_UNAFFECT},
         {"unfollow",   "unf",       POS_RESTING,  do_unfollow,       0,            0},
-        {"uptime",     "uptime",    POS_DEAD,     do_date,            LVL_GOD,     SCMD_UPTIME},
+        {"uptime",     "uptime",    POS_DEAD,     do_uptime,           0,            0},
         {"use",        "use",       POS_SITTING,  do_use,            1,            SCMD_USE},
         {"users",      "users",     POS_DEAD,     do_users,           LVL_GOD,     0},
 
