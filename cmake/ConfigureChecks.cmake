@@ -63,10 +63,15 @@ else()
 
     CHECK_INCLUDE_FILES("sys/time.h;time.h" TIME_WITH_SYS_TIME)
 
-    if(NOT WIN32)
+    # CIRCLE_UNIX / CIRCLE_WINDOWS
+    if(WIN32)
+        set(CIRCLE_UNIX 0)
+        set(CIRCLE_WINDOWS 1)
+    else()
         set(CIRCLE_UNIX 1)
+        set(CIRCLE_WINDOWS 0)
     endif()
-
+    
     # CIRCLE_CRYPT test
     CHECK_FUNCTION_EXISTS(crypt HAVE_CRYPT)
     CHECK_LIBRARY_EXISTS(crypt crypt "" HAVE_CRYPT_LIB)
@@ -80,9 +85,11 @@ else()
 
     # TODO HAVE_UNSAFE_CRYPT
 
+    # TODO - broken on windows - need to find headers
     CHECK_STRUCT_HAS_MEMBER("struct in_addr" s_addr "netinet/in.h" HAVE_STRUCT_IN_ADDR)
 
     # TODO - includes for HAVE_SOCKLEN
+    # TODO - borken on windows
     CHECK_TYPE_SIZE(socklen_t HAVE_SOCKLEN_T)
     if(HAVE_SOCKLEN_T GREATER_EQUAL 0)
         message("-- socklen_t - found")
