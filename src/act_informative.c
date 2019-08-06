@@ -937,12 +937,11 @@ ACMD(do_inventory) {
 }
 
 ACMD(do_equipment) {
-    int i, found = 0;
+    int i;
 
     send_to_char(ch, "You are using:\r\n");
     for (i = 0; i < NUM_WEARS; i++) {
         if (GET_EQ(ch, i)) {
-            found = TRUE;
             if (CAN_SEE_OBJ(ch, GET_EQ(ch, i))) {
                 send_to_char(ch, "%s", wear_where[i]);
                 show_obj_to_char(GET_EQ(ch, i), ch, SHOW_OBJ_SHORT);
@@ -950,10 +949,10 @@ ACMD(do_equipment) {
                 send_to_char(ch, "%s", wear_where[i]);
                 send_to_char(ch, "Something.\r\n");
             }
+        } else {
+            send_to_char(ch, "%s     ---\r\n", wear_where[i]);
         }
     }
-    if (!found)
-        send_to_char(ch, " Nothing.\r\n");
 }
 
 ACMD(do_time) {

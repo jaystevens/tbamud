@@ -341,7 +341,7 @@ const char *wear_where[] = {
         "<worn about waist>   ",
         "<worn around wrist>  ",
         "<worn around wrist>  ",
-        "<wielded>            ",
+        "<primary weapon>     ",
         "<held>               "
 };
 
