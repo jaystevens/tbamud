@@ -626,7 +626,7 @@ typedef unsigned short int ush_int; /**< 2 bytes; vals = 0 to 65,535 */
 typedef char bool; /**< Technically 1 signed byte; vals should only = TRUE or FALSE. */
 #endif
 
-#if !defined(CIRCLE_WINDOWS) || defined(LCC_WIN32)    /* Hm, sysdep.h? */
+#if !defined(CIRCLE_WINDOWS)   /* Hm, sysdep.h? */
 typedef signed char byte; /**< Technically 1 signed byte; vals should only = TRUE or FALSE. */
 #endif
 

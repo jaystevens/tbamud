@@ -17,16 +17,6 @@
 # include <mcheck.h>
 #endif
 
-#ifdef CIRCLE_MACINTOSH        /* Includes for the Macintosh */
-# define SIGPIPE 13
-# define SIGALRM 14
-/* GUSI headers */
-# include <sys/ioctl.h>
-/* Codewarrior dependant */
-# include <SIOUX.h>
-# include <console.h>
-#endif
-
 #ifdef CIRCLE_WINDOWS        /* Includes for Win32 */
 # ifdef __BORLANDC__
 #  include <dir.h>
@@ -36,17 +26,6 @@
 # endif
 # include <mmsystem.h>
 #endif /* CIRCLE_WINDOWS */
-
-#ifdef CIRCLE_AMIGA        /* Includes for the Amiga */
-# include <sys/ioctl.h>
-# include <clib/socket_protos.h>
-#endif /* CIRCLE_AMIGA */
-
-#ifdef CIRCLE_ACORN        /* Includes for the Acorn (RiscOS) */
-# include <socklib.h>
-# include <inetlib.h>
-# include <sys/ioctl.h>
-#endif
 
 #ifdef HAVE_ARPA_TELNET_H
 
@@ -216,23 +195,17 @@ static void msdp_update(void); /* KaVir plugin*/
 
 /*  main game loop and related stuff */
 
-#if defined(CIRCLE_WINDOWS) || defined(CIRCLE_MACINTOSH)
-/* Windows and Mac do not have gettimeofday, so we'll simulate it. Borland C++
- * warns: "Undefined structure 'timezone'" */
+#if defined(CIRCLE_WINDOWS)
+/* Windows does not have gettimeofday, so we'll simulate it. */
 void gettimeofday(struct timeval *t, struct timezone *dummy)
 {
-#if defined(CIRCLE_WINDOWS)
   DWORD millisec = GetTickCount();
-#elif defined(CIRCLE_MACINTOSH)
-  unsigned long int millisec;
-  millisec = (int)((float)TickCount() * 1000.0 / 60.0);
-#endif
 
   t->tv_sec = (int) (millisec / 1000);
   t->tv_usec = (millisec % 1000) * 1000;
 }
 
-#endif    /* CIRCLE_WINDOWS || CIRCLE_MACINTOSH */
+#endif    /* CIRCLE_WINDOWS */
 
 int main(int argc, char **argv) {
     int pos = 1;
@@ -244,14 +217,6 @@ int main(int argc, char **argv) {
 
 #if CIRCLE_GNU_LIBC_MEMORY_TRACK
     mtrace();	/* This must come before any use of malloc(). */
-#endif
-
-#ifdef CIRCLE_MACINTOSH
-    /* ccommand() calls the command line/io redirection dialog box from
-     * Codewarriors's SIOUX library. */
-    argc = ccommand(&argv);
-    /* Initialize the GUSI library calls.  */
-    GUSIDefaultSetup();
 #endif
 
     /* Load the game configuration. We must load BEFORE we use any of the
@@ -561,7 +526,7 @@ static void init_game(ush_int local_port) {
 
     boot_db();
 
-#if defined(CIRCLE_UNIX) || defined(CIRCLE_MACINTOSH)
+#if defined(CIRCLE_UNIX)
     log("Signal trapping.");
     signal_setup();
 #endif
@@ -646,7 +611,7 @@ static socket_t init_socket(ush_int local_port) {
     }
 #endif                /* CIRCLE_WINDOWS */
 
-#if defined(SO_REUSEADDR) && !defined(CIRCLE_MACINTOSH)
+#if defined(SO_REUSEADDR)
     opt = 1;
     if (setsockopt(s, SOL_SOCKET, SO_REUSEADDR, (char *) &opt, sizeof(opt)) < 0) {
         perror("SYSERR: setsockopt REUSEADDR");
@@ -658,7 +623,7 @@ static socket_t init_socket(ush_int local_port) {
 
 /* The GUSI sockets library is derived from BSD, so it defines SO_LINGER, even
  * though setsockopt() is unimplimented. (from Dean Takemori) */
-#if defined(SO_LINGER) && !defined(CIRCLE_MACINTOSH)
+#if defined(SO_LINGER)
     {
         struct linger ld;
 
@@ -1454,7 +1419,7 @@ int parse_ip(const char *addr, struct in_addr *inaddr)
 
 /* Sets the kernel's send buffer size for the descriptor */
 static int set_sendbuf(socket_t s) {
-#if defined(SO_SNDBUF) && !defined(CIRCLE_MACINTOSH)
+#if defined(SO_SNDBUF)
     int opt = MAX_SOCK_BUF;
 
     if (setsockopt(s, SOL_SOCKET, SO_SNDBUF, (char *) &opt, sizeof(opt)) < 0) {
@@ -1695,10 +1660,6 @@ ssize_t perform_socket_write(socket_t desc, const char *txt, size_t length)
 
 #else
 
-#if defined(CIRCLE_ACORN)
-#define write	socketwrite
-#endif
-
 /* perform_socket_write for all Non-Windows platforms */
 static ssize_t perform_socket_write(socket_t desc, const char *txt, size_t length) {
     ssize_t result;
@@ -1774,9 +1735,7 @@ int write_to_descriptor(socket_t desc, const char *txt) {
 static ssize_t perform_socket_read(socket_t desc, char *read_point, size_t space_left) {
     ssize_t ret;
 
-#if defined(CIRCLE_ACORN)
-    ret = recv(desc, read_point, space_left, MSG_DONTWAIT);
-#elif defined(CIRCLE_WINDOWS)
+#if defined(CIRCLE_WINDOWS)
     ret = recv(desc, read_point, space_left, 0);
 #else
     ret = read(desc, read_point, space_left);
@@ -2185,35 +2144,7 @@ void nonblock(socket_t s)
   ioctlsocket(s, FIONBIO, &val);
 }
 
-#elif defined(CIRCLE_AMIGA)
-
-void nonblock(socket_t s)
-{
-  long val = 1;
-  IoctlSocket(s, FIONBIO, &val);
-}
-
-#elif defined(CIRCLE_ACORN)
-
-void nonblock(socket_t s)
-{
-  int val = 1;
-  socket_ioctl(s, FIONBIO, &val);
-}
-
-#elif defined(CIRCLE_VMS)
-
-void nonblock(socket_t s)
-{
-  int val = 1;
-
-  if (ioctl(s, FIONBIO, &val) < 0) {
-    perror("SYSERR: Fatal error executing nonblock (comm.c)");
-    exit(1);
-  }
-}
-
-#elif defined(CIRCLE_UNIX) || defined(CIRCLE_OS2) || defined(CIRCLE_MACINTOSH)
+#elif defined(CIRCLE_UNIX)
 
 #ifndef O_NONBLOCK
 #define O_NONBLOCK O_NDELAY
@@ -2230,11 +2161,11 @@ static void nonblock(socket_t s) {
     }
 }
 
-#endif  /* CIRCLE_UNIX || CIRCLE_OS2 || CIRCLE_MACINTOSH */
+#endif  /* CIRCLE_UNIX */
 
 
 /*  signal-handling functions (formerly signals.c).  UNIX only. */
-#if defined(CIRCLE_UNIX) || defined(CIRCLE_MACINTOSH)
+#if defined(CIRCLE_UNIX)
 
 static RETSIGTYPE reread_wizlists(int sig) {
     reread_wizlist = TRUE;
@@ -2313,7 +2244,6 @@ static sigfunc *my_signal(int signo, sigfunc *func) {
 #endif                /* POSIX */
 
 static void signal_setup(void) {
-#ifndef CIRCLE_MACINTOSH
     struct itimerval itime;
     struct timeval interval;
 
@@ -2336,14 +2266,13 @@ static void signal_setup(void) {
     /* just to be on the safe side: */
     my_signal(SIGHUP, hupsig);
     my_signal(SIGCHLD, reap);
-#endif /* CIRCLE_MACINTOSH */
     my_signal(SIGINT, hupsig);
     my_signal(SIGTERM, hupsig);
     my_signal(SIGPIPE, SIG_IGN);
     my_signal(SIGALRM, SIG_IGN);
 }
 
-#endif    /* CIRCLE_UNIX || CIRCLE_MACINTOSH */
+#endif    /* CIRCLE_UNIX */
 
 /* Public routines for system-to-player-communication. */
 void game_info(const char *format, ...) {

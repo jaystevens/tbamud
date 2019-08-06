@@ -329,17 +329,9 @@ struct in_addr {
 #  define FD_SETSIZE		1024
 # endif
 
-#elif defined(CIRCLE_VMS)
+#endif /* CIRCLE_WINDOWS */
 
-/* Necessary Definitions For DEC C With DEC C Sockets Under OpenVMS. */
-# if defined(DECC)
-#  include <stdio.h>
-#  include <time.h>
-#  include <stropts.h>
-#  include <unixio.h>
-# endif
-
-#elif !defined(CIRCLE_MACINTOSH) && !defined(CIRCLE_UNIX) && !defined(CIRCLE_ACORN)
+#if !defined(CIRCLE_UNIX) && !defined(CIRCLE_WINDOWS)
 # error "You forgot to include conf.h or do not have a valid system define."
 #endif
 
@@ -357,16 +349,6 @@ typedef int socket_t;
 #else				/* C */
 #define cpp_extern    /* Nothing */
 #endif
-
-#ifndef CIRCLE_OS_X
-/* Guess if we have the getrlimit()/setrlimit() functions */
-#if defined(RLIMIT_NOFILE) || defined (RLIMIT_OFILE)
-#define HAS_RLIMIT
-#if !defined (RLIMIT_NOFILE)
-# define RLIMIT_NOFILE RLIMIT_OFILE
-#endif
-#endif
-#endif /*CIRCLE_OS_X*/
 
 /* Make sure we have STDERR_FILENO */
 #ifndef STDERR_FILENO
