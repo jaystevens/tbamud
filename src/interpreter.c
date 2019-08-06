@@ -1696,17 +1696,24 @@ void nanny(struct descriptor_data *d, char *arg) {
                     break;
 
                 case '3':
+                    log("MENU who - %s", d->character->player.name);
+                    write_to_output(d, "\r\n");
+                    do_who(d->character, (char*)&"", 0, 0);
+                    write_to_output(d, "\r\n%s\r\n", CONFIG_MENU);
+                    break;
+
+                case '4':
                     page_string(d, background, 0);
                     STATE(d) = CON_RMOTD;
                     break;
 
-                case '4':
+                case '5':
                     write_to_output(d, "\r\nEnter your old password: ");
                     echo_off(d);
                     STATE(d) = CON_CHPWD_GETOLD;
                     break;
 
-                case '5':
+                case '6':
                     write_to_output(d, "\r\nEnter your password for verification: ");
                     echo_off(d);
                     STATE(d) = CON_DELCNF1;
