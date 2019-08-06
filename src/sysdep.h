@@ -119,26 +119,17 @@ extern void abort (), exit ();
 /* Now, we #define POSIX if we have a POSIX system. */
 
 #ifdef HAVE_UNISTD_H
-/* Ultrix's unistd.h always defines _POSIX_VERSION, but you only get
-   POSIX.1 behavior with `cc -YPOSIX', which predefines POSIX itself!  */
-#if defined (_POSIX_VERSION) && !defined (ultrix)
+
+#if defined (_POSIX_VERSION)
 #define POSIX
 #endif
 
-/* Some systems define _POSIX_VERSION but are not really POSIX.1.  */
-#if (defined (butterfly) || defined (__arm) || \
-     (defined (__mips) && defined (_SYSTYPE_SVR3)) || \
-     (defined (sequent) && defined (i386)))
-#undef POSIX
-#endif
 #endif /* HAVE_UNISTD_H */
 
+/* JASON - 2019-08-06 - want to remove _AIX
+ * not sure if this can safely be removed, it is not needed on Centos 7 */
 #if !defined (POSIX) && defined (_AIX) && defined (_POSIX_SOURCE)
 #define POSIX
-#endif
-
-#if defined(_AIX)
-#define POSIX_NONBLOCK_BROKEN
 #endif
 
 /* Header files common to all source files */
@@ -158,7 +149,6 @@ extern void abort (), exit ();
 #include <net/errno.h>
 #endif
 
-/* Macintosh */
 #ifdef HAVE_SYS_ERRNO_H
 #include <sys/errno.h>
 #endif
