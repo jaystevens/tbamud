@@ -26,22 +26,27 @@
 
 #define BANNED_SITE_LENGTH    50
 struct ban_list_element {
-   char site[BANNED_SITE_LENGTH+1];
-   int  type;
-   time_t date;
-   char name[MAX_NAME_LENGTH+1];
-   struct ban_list_element *next;
+    char site[BANNED_SITE_LENGTH + 1];
+    int type;
+    time_t date;
+    char name[MAX_NAME_LENGTH + 1];
+    struct ban_list_element *next;
 };
 
 /* Global functions */
 /* Utility Functions */
 void load_banned(void);
+
 int isbanned(char *hostname);
+
 int valid_name(char *newname);
+
 void read_invalid_list(void);
+
 void free_invalid_list(void);
 /* Command functions without subcommands */
 ACMD(do_ban);
+
 ACMD(do_unban);
 
 extern struct ban_list_element *ban_list;

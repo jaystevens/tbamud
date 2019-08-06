@@ -15,6 +15,7 @@
 #define _GRAPH_H_
 
 ACMD(do_track);
+
 void hunt_victim(struct char_data *ch);
 
 #endif /* _GRAPH_H_*/

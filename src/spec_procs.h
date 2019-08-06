@@ -23,10 +23,13 @@ void assign_kings_castle(void);
  * Begin Functions and defines for spec_assign.c 
  ****************************************************************************/
 void assign_mobiles(void);
+
 void assign_objects(void);
+
 void assign_rooms(void);
 
 #include "structs.h"
+
 const char *get_spec_func_name(SPECIAL(*func));
 
 /*****************************************************************************
@@ -34,21 +37,34 @@ const char *get_spec_func_name(SPECIAL(*func));
  ****************************************************************************/
 /* Utility functions */
 void sort_spells(void);
+
 void list_skills(struct char_data *ch);
 
 /* Special functions */
 SPECIAL(guild);
+
 SPECIAL(dump);
+
 SPECIAL(mayor);
+
 SPECIAL(snake);
+
 SPECIAL(thief);
+
 SPECIAL(magic_user);
+
 SPECIAL(guild_guard);
+
 SPECIAL(puff);
+
 SPECIAL(fido);
+
 SPECIAL(janitor);
+
 SPECIAL(cityguard);
+
 SPECIAL(pet_shops);
+
 SPECIAL(bank);
 
 #endif /* _SPEC_PROCS_H_ */

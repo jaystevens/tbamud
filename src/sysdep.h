@@ -59,7 +59,7 @@
  *      MALLOC_TRACE=/tmp/circle-trace bin/circle
  * Read the entire "Allocation Debugging" section of the GNU C library
  * documentation before setting this to '1'. */
-#define CIRCLE_GNU_LIBC_MEMORY_TRACK	0	/* 0 = off, 1 = on */
+#define CIRCLE_GNU_LIBC_MEMORY_TRACK    0    /* 0 = off, 1 = on */
 
 /* Do not change anything below this line. */
 
@@ -71,14 +71,19 @@
 #include <stdarg.h>
 
 #ifdef HAVE_STRING_H
+
 #include <string.h>
+
 #endif
 
 #ifdef HAVE_STRINGS_H
+
 #include <strings.h>
+
 #endif
 
 #if     (defined (STDC_HEADERS) || defined (__GNU_LIBRARY__))
+
 #include <stdlib.h>
 
 #else   /* No standard headers.  */
@@ -96,7 +101,9 @@ extern void abort (), exit ();
 
 /* POSIX compliance */
 #ifdef HAVE_SYS_TYPES_H
+
 # include <sys/types.h>
+
 #endif
 
 #ifdef CIRCLE_WINDOWS
@@ -104,7 +111,9 @@ extern void abort (), exit ();
 #endif
 
 #ifdef HAVE_UNISTD_H
+
 # include <unistd.h>
+
 #endif
 
 /* Now, we #define POSIX if we have a POSIX system. */
@@ -134,11 +143,15 @@ extern void abort (), exit ();
 
 /* Header files common to all source files */
 #ifdef HAVE_LIMITS_H
+
 #include <limits.h>
+
 #endif
 
 #ifdef HAVE_ERRNO_H
+
 #include <errno.h>
+
 #endif
 
 #ifdef HAVE_NET_ERRNO_H
@@ -151,12 +164,16 @@ extern void abort (), exit ();
 #endif
 
 #ifdef HAVE_CRYPT_H
+
 #include <crypt.h>
+
 #endif
 
 #ifdef TIME_WITH_SYS_TIME
+
 # include <sys/time.h>
 # include <time.h>
+
 #else
 # if HAVE_SYS_TIME_H
 #  include <sys/time.h>
@@ -166,7 +183,9 @@ extern void abort (), exit ();
 #endif
 
 #ifdef HAVE_ASSERT_H
+
 #include <assert.h>
+
 #else
 #define assert(arg)
 #endif
@@ -178,39 +197,57 @@ struct in_addr {
 #endif
 
 #ifdef HAVE_SYS_SELECT_H
+
 #include <sys/select.h>
+
 #endif
 
 #ifdef HAVE_FCNTL_H
+
 #include <fcntl.h>
+
 #endif
 
 #ifdef HAVE_SYS_FCNTL_H
+
 #include <sys/fcntl.h>
+
 #endif
 
 #ifdef HAVE_SYS_SOCKET_H
+
 # include <sys/socket.h>
+
 #endif
 
 #ifdef HAVE_SYS_RESOURCE_H
+
 # include <sys/resource.h>
+
 #endif
 
 #ifdef HAVE_SYS_WAIT_H
+
 # include <sys/wait.h>
+
 #endif
 
 #ifdef HAVE_NETINET_IN_H
+
 # include <netinet/in.h>
+
 #endif
 
 #ifdef HAVE_ARPA_INET_H
+
 # include <arpa/inet.h>
+
 #endif
 
 #ifdef HAVE_NETDB_H
+
 # include <netdb.h>
+
 #endif
 
 #ifdef HAVE_SIGNAL_H
@@ -219,16 +256,22 @@ struct in_addr {
 #  include <signal.h>
 #  undef _POSIX_C_SOURCE
 # else
-#  include <signal.h>	/* GNU libc 6 already defines _POSIX_C_SOURCE. */
+
+#  include <signal.h>    /* GNU libc 6 already defines _POSIX_C_SOURCE. */
+
 # endif
 #endif
 
 #ifdef HAVE_SYS_UIO_H
+
 # include <sys/uio.h>
+
 #endif
 
 #ifdef HAVE_SYS_STAT_H
+
 # include <sys/stat.h>
+
 #endif
 
 /* Basic system dependencies. */
@@ -260,7 +303,7 @@ struct in_addr {
 
 /* Socket/header miscellany. */
 
-#if defined(CIRCLE_WINDOWS)	/* Definitions for Win32 */
+#if defined(CIRCLE_WINDOWS)    /* Definitions for Win32 */
 
 # define snprintf _snprintf
 # define vsnprintf _vsnprintf
@@ -303,16 +346,16 @@ struct in_addr {
 /* SOCKET -- must be after the winsock.h #include. */
 #ifdef CIRCLE_WINDOWS
 # define CLOSE_SOCKET(sock)	closesocket(sock)
-  typedef SOCKET		socket_t;
+typedef SOCKET		socket_t;
 #else
-# define CLOSE_SOCKET(sock)	close(sock)
-  typedef int			socket_t;
+# define CLOSE_SOCKET(sock)    close(sock)
+typedef int socket_t;
 #endif
 
-#if defined(__cplusplus)	/* C++ */
+#if defined(__cplusplus)    /* C++ */
 #define cpp_extern	extern
 #else				/* C */
-#define cpp_extern	/* Nothing */
+#define cpp_extern    /* Nothing */
 #endif
 
 #ifndef CIRCLE_OS_X
@@ -352,213 +395,215 @@ struct in_addr {
 #ifndef NO_LIBRARY_PROTOTYPES
 
 #ifdef NEED_ATOI_PROTO
-   int atoi(const char *str);
+int atoi(const char *str);
 #endif
 
 #ifdef NEED_ATOL_PROTO
-   long atol(const char *str);
+long atol(const char *str);
 #endif
 
 /* bzero is deprecated - use memset() instead. This prototype is needed for 
  * FD_xxx macros on some machines. */
 #ifdef NEED_BZERO_PROTO
-   void bzero(char *b, int length);
+void bzero(char *b, int length);
 #endif
 
 #ifdef NEED_CRYPT_PROTO
-   char *crypt(const char *key, const char *salt);
+char *crypt(const char *key, const char *salt);
 #endif
 
 #ifdef NEED_FCLOSE_PROTO
-   int fclose(FILE *stream);
+int fclose(FILE *stream);
 #endif
 
 #ifdef NEED_FDOPEN_PROTO
-   FILE *fdopen(int fd, const char *mode);
+FILE *fdopen(int fd, const char *mode);
 #endif
 
 #ifdef NEED_FFLUSH_PROTO
-   int fflush(FILE *stream);
+int fflush(FILE *stream);
 #endif
 
 #ifdef NEED_FPRINTF_PROTO
-   int fprintf(FILE *strm, const char *format, /* args */ ... );
+int fprintf(FILE *strm, const char *format, /* args */ ... );
 #endif
 
 #ifdef NEED_FREAD_PROTO
-   size_t fread(void *ptr, size_t size, size_t nitems, FILE *stream);
+size_t fread(void *ptr, size_t size, size_t nitems, FILE *stream);
 #endif
 
 #ifdef NEED_FSCANF_PROTO
-  int fscanf(FILE *strm, const char *format, ...);
+int fscanf(FILE *strm, const char *format, ...);
 #endif
 
 #ifdef NEED_FSEEK_PROTO
-   int fseek(FILE *stream, long offset, int ptrname);
+int fseek(FILE *stream, long offset, int ptrname);
 #endif
 
 #ifdef NEED_FWRITE_PROTO
-  size_t fwrite(const void *ptr, size_t size, size_t nitems, FILE *stream);
+size_t fwrite(const void *ptr, size_t size, size_t nitems, FILE *stream);
 #endif
 
 #ifdef NEED_GETPID_PROTO
-   pid_t getpid(void);
+pid_t getpid(void);
 #endif
 
 #ifdef NEED_PERROR_PROTO
-   void perror(const char *s);
+void perror(const char *s);
 #endif
 
 #ifdef NEED_QSORT_PROTO
-   void qsort(void *base, size_t nel, size_t width,
-          int (*compar) (const void *, const void *));
+void qsort(void *base, size_t nel, size_t width,
+       int (*compar) (const void *, const void *));
 #endif
 
 #ifdef NEED_REWIND_PROTO
-   void rewind(FILE *stream);
+void rewind(FILE *stream);
 #endif
 
 #ifdef NEED_SPRINTF_PROTO
-   int sprintf(char *s, const char *format, /* args */ ... );
+int sprintf(char *s, const char *format, /* args */ ... );
 #endif
 
 #ifdef NEED_SSCANF_PROTO
-   int sscanf(const char *s, const char *format, ...);
+int sscanf(const char *s, const char *format, ...);
 #endif
 
 #ifdef NEED_STRDUP_PROTO
-   char *strdup(const char *txt);
+char *strdup(const char *txt);
 #endif
 
 #ifdef NEED_STRERROR_PROTO
-   char *strerror(int errnum);
+char *strerror(int errnum);
 #endif
 
 #ifdef NEED_STRLCPY_PROTO
-   size_t strlcpy(char *dest, const char *src, size_t copylen);
+
+size_t strlcpy(char *dest, const char *src, size_t copylen);
+
 #endif
 
 #ifdef NEED_SYSTEM_PROTO
-   int system(const char *string);
+int system(const char *string);
 #endif
 
 #ifdef NEED_TIME_PROTO
-   time_t time(time_t *tloc);
+time_t time(time_t *tloc);
 #endif
 
 #ifdef NEED_UNLINK_PROTO
-   int unlink(const char *path);
+int unlink(const char *path);
 #endif
 
 #ifdef NEED_REMOVE_PROTO
-   int remove(const char *path);
+int remove(const char *path);
 #endif
 
 #ifdef NEED_ACCEPT_PROTO
-   int accept(socket_t s, struct sockaddr *addr, int *addrlen);
+int accept(socket_t s, struct sockaddr *addr, int *addrlen);
 #endif
 
 #ifdef NEED_BIND_PROTO
-   int bind(socket_t s, const struct sockaddr *name, int namelen);
+int bind(socket_t s, const struct sockaddr *name, int namelen);
 #endif
 
 #ifdef NEED_CHDIR_PROTO
-   int chdir(const char *path);
+int chdir(const char *path);
 #endif
 
 #ifdef NEED_CLOSE_PROTO
-   int close(int fildes);
+int close(int fildes);
 #endif
 
 #ifdef NEED_FCNTL_PROTO
-   int fcntl(int fildes, int cmd, /* arg */ ...);
+int fcntl(int fildes, int cmd, /* arg */ ...);
 #endif
 
 #ifdef NEED_FPUTC_PROTO
-   int fputc(char c, FILE *stream);
+int fputc(char c, FILE *stream);
 #endif
 
 #ifdef NEED_FPUTS_PROTO
-   int fputs(const char *s, FILE *stream);
+int fputs(const char *s, FILE *stream);
 #endif
 
 #ifdef NEED_GETPEERNAME_PROTO
-   int getpeername(socket_t s, struct sockaddr *name, int *namelen);
+int getpeername(socket_t s, struct sockaddr *name, int *namelen);
 #endif
 
 #if defined(HAS_RLIMIT) && defined(NEED_GETRLIMIT_PROTO)
-   int getrlimit(int resource, struct rlimit *rlp);
+int getrlimit(int resource, struct rlimit *rlp);
 #endif
 
 #ifdef NEED_GETSOCKNAME_PROTO
-   int getsockname(socket_t s, struct sockaddr *name, int *namelen);
+int getsockname(socket_t s, struct sockaddr *name, int *namelen);
 #endif
 
 #ifdef NEED_GETTIMEOFDAY_PROTO
-   void gettimeofday(struct timeval *tp, void * );
+void gettimeofday(struct timeval *tp, void * );
 #endif
 
 #ifdef NEED_HTONL_PROTO
-   ulong htonl(u_long hostlong);
+ulong htonl(u_long hostlong);
 #endif
 
 #ifdef NEED_HTONS_PROTO
-   u_short htons(u_short hostshort);
+u_short htons(u_short hostshort);
 #endif
 
 #if defined(HAVE_INET_ADDR) && defined(NEED_INET_ADDR_PROTO)
-   unsigned long int inet_addr(const char *cp);
+unsigned long int inet_addr(const char *cp);
 #endif
 
 #if defined(HAVE_INET_ATON) && defined(NEED_INET_ATON_PROTO)
-   int inet_aton(const char *cp, struct in_addr *inp);
+int inet_aton(const char *cp, struct in_addr *inp);
 #endif
 
 #ifdef NEED_INET_NTOA_PROTO
-   char *inet_ntoa(const struct in_addr in);
+char *inet_ntoa(const struct in_addr in);
 #endif
 
 #ifdef NEED_LISTEN_PROTO
-   int listen(socket_t s, int backlog);
+int listen(socket_t s, int backlog);
 #endif
 
 #ifdef NEED_NTOHL_PROTO
-   u_long ntohl(u_long netlong);
+u_long ntohl(u_long netlong);
 #endif
 
 #ifdef NEED_PRINTF_PROTO
-   int printf(char *format, ...);
+int printf(char *format, ...);
 #endif
 
 #ifdef NEED_READ_PROTO
-   ssize_t read(int fildes, void *buf, size_t nbyte);
+ssize_t read(int fildes, void *buf, size_t nbyte);
 #endif
 
 #ifdef NEED_SELECT_PROTO
-   int select(int nfds, fd_set *readfds, fd_set *writefds,
-          fd_set *exceptfds, struct timeval *timeout);
+int select(int nfds, fd_set *readfds, fd_set *writefds,
+       fd_set *exceptfds, struct timeval *timeout);
 #endif
 
 #ifdef NEED_SETITIMER_PROTO
-   int setitimer(int which, const struct itimerval *value,
-          struct itimerval *ovalue);
+int setitimer(int which, const struct itimerval *value,
+       struct itimerval *ovalue);
 #endif
 
 #if defined(HAS_RLIMIT) && defined(NEED_SETRLIMIT_PROTO)
-   int setrlimit(int resource, const struct rlimit *rlp);
+int setrlimit(int resource, const struct rlimit *rlp);
 #endif
 
 #ifdef NEED_SETSOCKOPT_PROTO
-   int setsockopt(socket_t s, int level, int optname, const char *optval,
-		  int optlen);
+int setsockopt(socket_t s, int level, int optname, const char *optval,
+       int optlen);
 #endif
 
 #ifdef NEED_SOCKET_PROTO
-   int socket(int domain, int type, int protocol);
+int socket(int domain, int type, int protocol);
 #endif
 
 #ifdef NEED_WRITE_PROTO
-    ssize_t write(int fildes, const void *buf, size_t nbyte);
+ssize_t write(int fildes, const void *buf, size_t nbyte);
 #endif
 
 #endif /* NO_LIBRARY_PROTOTYPES */
