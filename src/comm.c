@@ -84,6 +84,7 @@
 #include "quest.h"
 #include "ibt.h" /* for free_ibt_lists */
 #include "mud_event.h"
+#include "version.h"
 
 #ifndef INVALID_SOCKET
 #define INVALID_SOCKET (-1)
@@ -370,9 +371,12 @@ int main(int argc, char **argv) {
 
     /* Moved here to distinguish command line options and to show up
      * in the log if stderr is redirected to a file. */
-    log("Loading configuration.");
-    log("%s", tbamud_version);
+    log("circlemud - starting up");
 
+    log("%s %s", MUD_NAME, MUD_VERSION_FULL);
+    log("Compiled: %s on %s", MUD_BUILD_TIME, MUD_BUILD_HOST);
+
+    log("Loading configuration.");
     if (chdir(dir) < 0) {
         perror("SYSERR: Fatal error changing to data directory");
         exit(1);

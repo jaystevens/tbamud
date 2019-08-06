@@ -28,6 +28,7 @@
 #include "modify.h"
 #include "asciimap.h"
 #include "quest.h"
+#include "version.h"
 
 /* prototypes of local functions */
 /* do_diagnose utility functions */
@@ -1523,7 +1524,7 @@ ACMD(do_gen_ps) {
             send_to_char(ch, "\033[H\033[J");
             break;
         case SCMD_VERSION:
-            send_to_char(ch, "%s\r\n", tbamud_version);
+            send_to_char(ch, "%s v%s. Compiled on %s\r\n", MUD_NAME, MUD_VERSION, MUD_BUILD_TIME);
             break;
         case SCMD_WHOAMI:
             send_to_char(ch, "%s\r\n", GET_NAME(ch));
