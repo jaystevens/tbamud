@@ -166,14 +166,14 @@ else()
 endif()
 
 add_executable(circle
-        "src/act.comm.c"
-        "src/act.informative.c"
-        "src/act.item.c"
-        "src/act.movement.c"
-        "src/act.offensive.c"
-        "src/act.other.c"
-        "src/act.social.c"
-        "src/act.wizard.c"
+        "src/act_comm.c"
+        "src/act_informative.c"
+        "src/act_item.c"
+        "src/act_movement.c"
+        "src/act_offensive.c"
+        "src/act_other.c"
+        "src/act_social.c"
+        "src/act_wizard.c"
         "src/aedit.c"
         "src/asciimap.c"
         "src/ban.c"
