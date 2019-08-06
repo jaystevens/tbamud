@@ -1111,7 +1111,7 @@ ACMD(do_who) {
     int who_room = 0, showgroup = 0, showleader = 0;
 
     struct {
-        char *disp;
+        const char *disp;
         int min_level;
         int max_level;
         int count; /* must always start as 0 */
@@ -1799,11 +1799,11 @@ ACMD(do_toggle) {
     const char *types[] = {"off", "brief", "normal", "on", "\n"};
 
     const struct {
-        char *command;
+        const char *command;
         bitvector_t toggle; /* this needs changing once hashmaps are implemented */
         char min_level;
-        char *disable_msg;
-        char *enable_msg;
+        const char *disable_msg;
+        const char *enable_msg;
     } tog_messages[] = {
             {"summonable", PRF_SUMMONABLE, 0,
                                                        "You are now safe from summoning by other players.\r\n",
