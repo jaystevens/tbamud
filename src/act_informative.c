@@ -266,10 +266,7 @@ static void look_at_char(struct char_data *i, struct char_data *ch) {
     if (!ch->desc)
         return;
 
-    if (i->player.description)
-        send_to_char(ch, "%s %s\r\n", i->player.name, i->player.description);
-    else
-        send_to_char(ch, "%s\r\n", i->player.name);
+    send_to_char(ch, "%s %s\r\n", i->player.name, i->player.title);
 
     diag_char_to_char(i, ch);
 
