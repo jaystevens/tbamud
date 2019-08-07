@@ -788,6 +788,7 @@ ACMD(do_gold) {
 
 ACMD(do_score) {
     unsigned long xp_to_next_level = 0;
+    /* this uses alot of QBBLU so copy them here so we don't hit the macros as often */
     const char *CL_BBLU = QBBLU;
     const char *CL_NRM = QNRM;
 
@@ -815,7 +816,7 @@ ACMD(do_score) {
     // TODO (-3) parts should be red
     // TODO - probably should be maco/func
     send_to_char(ch, "%sStr:%s %-2d (%-3d)\r\n",
-            CL_BBLU, CL_NRM, GET_STR(ch), -99);
+            CL_BBLU, CL_NRM, GET_STR(ch), ch->real_abils.str_add);
     send_to_char(ch, "%sInt:%s %-2d (%-3d)     %sArmor Class:%s %-10d %sPlayer Kills:%s %d\r\n",
             CL_BBLU, CL_NRM, GET_INT(ch), -99,
             CL_BBLU, CL_NRM, GET_AC(ch),
@@ -826,7 +827,7 @@ ACMD(do_score) {
             CL_BBLU, CL_NRM, -99);
     send_to_char(ch, "%sDex:%s %-2d (%-3d)         %sDamroll:%s %-16d %sDeaths:%s %d\r\n",
             CL_BBLU, CL_NRM, GET_DEX(ch), -99,
-            CL_BBLU, CL_NRM, -99,
+            CL_BBLU, CL_NRM, GET_DAMROLL(ch),
             CL_BBLU, CL_NRM, -99);
     send_to_char(ch, "%sCon:%s %-2d (%-3d)         %sWpn Avg:%s %.1f\r\n",
             CL_BBLU, CL_NRM, GET_CON(ch), -99,
@@ -850,8 +851,8 @@ ACMD(do_score) {
             CL_BBLU, CL_NRM, GET_BANK_GOLD(ch));
     send_to_char(ch, "%sYou are carrying%s %d%s/%s%d%s items, for a total weight of %s%d%s/%s%d%s.%s\r\n",
             CL_BBLU,
-            CL_NRM, -99, CL_BBLU, CL_NRM, -99, CL_BBLU,
-            CL_NRM, GET_WEIGHT(ch), CL_BBLU, CL_NRM, GET_WEIGHT(ch), CL_BBLU, CL_NRM);
+            CL_NRM, IS_CARRYING_N(ch), CL_BBLU, CL_NRM, CAN_CARRY_N(ch), CL_BBLU,
+            CL_NRM, IS_CARRYING_W(ch), CL_BBLU, CL_NRM, CAN_CARRY_W(ch), CL_BBLU, CL_NRM);
     send_to_char(ch, "%sYou have been playing for%s %ld %shours.%s\r\n",
             CL_BBLU, CL_NRM,
                  ((time(0) - ch->player.time.logon) + ch->player.time.played) / 60,
