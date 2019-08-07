@@ -787,93 +787,118 @@ ACMD(do_gold) {
 }
 
 ACMD(do_score) {
-    struct time_info_data playing_time;
+    unsigned long xp_to_next_level = 0;
+    const char *CL_BBLU = QBBLU;
+    const char *CL_NRM = QNRM;
 
     if (IS_NPC(ch))
         return;
 
-    send_to_char(ch, "You are %d years old.", GET_AGE(ch));
+    send_to_char(ch, "%s%s %s%s\r\n", QCYN, GET_NAME(ch), GET_TITLE(ch), CL_NRM);
 
-    if (age(ch)->month == 0 && age(ch)->day == 0)
-        send_to_char(ch, "  It's your birthday today.\r\n");
-    else
-        send_to_char(ch, "\r\n");
-
-    send_to_char(ch, "You have %d(%d) hit, %d(%d) mana and %d(%d) movement points.\r\n",
-                 GET_HIT(ch), GET_MAX_HIT(ch), GET_MANA(ch), GET_MAX_MANA(ch),
-                 GET_MOVE(ch), GET_MAX_MOVE(ch));
-
-    send_to_char(ch, "Your armor class is %d/10, and your alignment is %d.\r\n",
-                 compute_armor_class(ch), GET_ALIGNMENT(ch));
-
-    send_to_char(ch, "You have %d exp, %d gold coins, and %d questpoints.\r\n",
-                 GET_EXP(ch), GET_GOLD(ch), GET_QUESTPOINTS(ch));
-
+    send_to_char(ch, "%sLevel:%s %-8d %sRace:%s %-5s %sClass:%s %-7hhd %sAge:%s %d\r\n",
+            CL_BBLU, CL_NRM, ch->player.level,
+            CL_BBLU, CL_NRM, "<TBD>",
+            CL_BBLU, CL_NRM, GET_CLASS(ch),
+            CL_BBLU, CL_NRM, GET_AGE(ch));
+    // TODO - pad out hit points
+    send_to_char(ch, "%sHit Points:%s %d/%d %sMana:%s %d/%d %sMovement:%s %d/%d\r\n",
+            CL_BBLU, CL_NRM, GET_HIT(ch), GET_MAX_HIT(ch),
+            CL_BBLU, CL_NRM, GET_MANA(ch), GET_MAX_MANA(ch),
+            CL_BBLU, CL_NRM, GET_MOVE(ch), GET_MAX_MANA(ch));
+    send_to_char(ch, "%sSave vs Spells:%s %-4d %sMagic:%s %-4d %sAffect:%s %-4d %sBreath:%s %d\r\n",
+            CL_BBLU, CL_NRM, -99,
+            CL_BBLU, CL_NRM, -99,
+            CL_BBLU, CL_NRM, -99,
+            CL_BBLU, CL_NRM, -99);
+    // TODO (+3) parts should be green
+    // TODO (-3) parts should be red
+    // TODO - probably should be maco/func
+    send_to_char(ch, "%sStr:%s %-2d (%-3d)\r\n",
+            CL_BBLU, CL_NRM, GET_STR(ch), -99);
+    send_to_char(ch, "%sInt:%s %-2d (%-3d)     %sArmor Class:%s %-10d %sPlayer Kills:%s %d\r\n",
+            CL_BBLU, CL_NRM, GET_INT(ch), -99,
+            CL_BBLU, CL_NRM, GET_AC(ch),
+            CL_BBLU, CL_NRM, -99);
+    send_to_char(ch, "%sWis:%s %-2d (%-3d)         %sHitroll:%s %-9d %sMonster Kills:%s %d\r\n",
+            CL_BBLU, CL_NRM, GET_WIS(ch), -99,
+            CL_BBLU, CL_NRM, GET_HITROLL(ch),
+            CL_BBLU, CL_NRM, -99);
+    send_to_char(ch, "%sDex:%s %-2d (%-3d)         %sDamroll:%s %-16d %sDeaths:%s %d\r\n",
+            CL_BBLU, CL_NRM, GET_DEX(ch), -99,
+            CL_BBLU, CL_NRM, -99,
+            CL_BBLU, CL_NRM, -99);
+    send_to_char(ch, "%sCon:%s %-2d (%-3d)         %sWpn Avg:%s %.1f\r\n",
+            CL_BBLU, CL_NRM, GET_CON(ch), -99,
+            CL_BBLU, CL_NRM, -99.0);
+    send_to_char(ch, "%sSpell Bonuses:         Cleric:%s %-18d %sMage:%s %d\r\n",
+            CL_BBLU, CL_NRM, -99,
+            CL_BBLU, CL_NRM, -99);
+    send_to_char(ch, "%sAlignment:%s %-26d %sTokens:%s %d\r\n",
+            CL_BBLU, CL_NRM, GET_ALIGNMENT(ch),
+            CL_BBLU, CL_NRM, -99);
+    send_to_char(ch, "%sExperience Points:%s %-18d %sQuest Points:%s %d\r\n",
+            CL_BBLU, CL_NRM, GET_EXP(ch),
+            CL_BBLU, CL_NRM, GET_QUESTPOINTS(ch));
     if (GET_LEVEL(ch) < LVL_IMMORT)
-        send_to_char(ch, "You need %d exp to reach your next level.\r\n",
-                     level_exp(GET_CLASS(ch), GET_LEVEL(ch) + 1) - GET_EXP(ch));
-
-    send_to_char(ch, "You have earned %d quest points.\r\n", GET_QUESTPOINTS(ch));
-    send_to_char(ch, "You have completed %d quest%s, ",
-                 GET_NUM_QUESTS(ch),
-                 GET_NUM_QUESTS(ch) == 1 ? "" : "s");
-    if (GET_QUEST(ch) == NOTHING)
-        send_to_char(ch, "and you are not on a quest at the moment.\r\n");
-    else {
-        send_to_char(ch, "and your current quest is: %s", QST_NAME(real_quest(GET_QUEST(ch))));
-
-        if (!IS_NPC(ch) && PRF_FLAGGED(ch, PRF_SHOWVNUMS))
-            send_to_char(ch, " [%d]\r\n", GET_QUEST(ch));
-        else
-            send_to_char(ch, "\r\n");
-    }
-
-    playing_time = *real_time_passed((time(0) - ch->player.time.logon) +
-                                     ch->player.time.played, 0);
-    send_to_char(ch, "You have been playing for %d day%s and %d hour%s.\r\n",
-                 playing_time.day, playing_time.day == 1 ? "" : "s",
-                 playing_time.hours, playing_time.hours == 1 ? "" : "s");
-
-    send_to_char(ch, "This ranks you as %s %s (level %d).\r\n",
-                 GET_NAME(ch), GET_TITLE(ch), GET_LEVEL(ch));
+        xp_to_next_level = level_exp(GET_CLASS(ch), GET_LEVEL(ch) + 1) - GET_EXP(ch);
+    send_to_char(ch, "%sXP to Level:%s %-24ld %sGold Carried:%s %d\r\n",
+            CL_BBLU, CL_NRM, xp_to_next_level,
+            CL_BBLU, CL_NRM, GET_GOLD(ch));
+    send_to_char(ch, "%sHero Points:%s %-24d %sGold in Bank:%s %d\r\n",
+            CL_BBLU, CL_NRM, -99,
+            CL_BBLU, CL_NRM, GET_BANK_GOLD(ch));
+    send_to_char(ch, "%sYou are carrying%s %d%s/%s%d%s items, for a total weight of %s%d%s/%s%d%s.%s\r\n",
+            CL_BBLU,
+            CL_NRM, -99, CL_BBLU, CL_NRM, -99, CL_BBLU,
+            CL_NRM, GET_WEIGHT(ch), CL_BBLU, CL_NRM, GET_WEIGHT(ch), CL_BBLU, CL_NRM);
+    send_to_char(ch, "%sYou have been playing for%s %ld %shours.%s\r\n",
+            CL_BBLU, CL_NRM,
+                 ((time(0) - ch->player.time.logon) + ch->player.time.played) / 60,
+            CL_BBLU, CL_NRM);
+    send_to_char(ch, "%sYour energy level is at%s %d%%%s.%s\r\n",
+            CL_BBLU, CL_NRM, 0, CL_BBLU, CL_NRM);
 
     switch (GET_POS(ch)) {
         case POS_DEAD:
-            send_to_char(ch, "You are DEAD!\r\n");
+            send_to_char(ch, "%sYou are DEAD!%s\r\n", CL_BBLU, CL_NRM);
             break;
         case POS_MORTALLYW:
-            send_to_char(ch, "You are mortally wounded!  You should seek help!\r\n");
+            send_to_char(ch, "%sYou are mortally wounded!  You should seek help!%s\r\n", CL_BBLU, CL_NRM);
             break;
         case POS_INCAP:
-            send_to_char(ch, "You are incapacitated, slowly fading away...\r\n");
+            send_to_char(ch, "%sYou are incapacitated, slowly fading away...%s\r\n", CL_BBLU, CL_NRM);
             break;
         case POS_STUNNED:
-            send_to_char(ch, "You are stunned!  You can't move!\r\n");
+            send_to_char(ch, "%sYou are stunned!  You can't move!%s\r\n", CL_BBLU, CL_NRM);
             break;
         case POS_SLEEPING:
-            send_to_char(ch, "You are sleeping.\r\n");
+            send_to_char(ch, "%sYou are sleeping.%s\r\n", CL_BBLU, CL_NRM);
             break;
         case POS_RESTING:
-            send_to_char(ch, "You are resting.\r\n");
+            send_to_char(ch, "%sYou are resting.%s\r\n", CL_BBLU, CL_NRM);
             break;
         case POS_SITTING:
             if (!SITTING(ch))
-                send_to_char(ch, "You are sitting.\r\n");
+                send_to_char(ch, "%sYou are sitting.%s\r\n", CL_BBLU, CL_NRM);
             else {
                 struct obj_data *furniture = SITTING(ch);
-                send_to_char(ch, "You are sitting upon %s.\r\n", furniture->short_description);
+                send_to_char(ch, "%sYou are sitting upon %s.%s\r\n", CL_BBLU, furniture->short_description, CL_NRM);
             }
             break;
         case POS_FIGHTING:
-            send_to_char(ch, "You are fighting %s.\r\n", FIGHTING(ch) ? PERS(FIGHTING(ch), ch) : "thin air");
+            send_to_char(ch, "%sYou are fighting %s.%s\r\n", CL_BBLU, FIGHTING(ch) ? PERS(FIGHTING(ch), ch) : "thin air", CL_NRM);
             break;
         case POS_STANDING:
-            send_to_char(ch, "You are standing.\r\n");
+            send_to_char(ch, "%sYou are standing.%s\r\n", CL_BBLU, CL_NRM);
             break;
         default:
-            send_to_char(ch, "You are floating.\r\n");
+            send_to_char(ch, "%sYou are floating.%s\r\n", CL_BBLU, CL_NRM);
             break;
     }
+
+    // TODO - move affect to seperate command and func
+    send_to_char(ch, "You are affected by: ");
 
     if (GET_COND(ch, DRUNK) > 10)
         send_to_char(ch, "You are intoxicated.\r\n");
@@ -886,6 +911,7 @@ ACMD(do_score) {
 
     if (AFF_FLAGGED(ch, AFF_BLIND) && GET_LEVEL(ch) < LVL_IMMORT)
         send_to_char(ch, "You have been blinded!\r\n");
+
 
     if (AFF_FLAGGED(ch, AFF_INVISIBLE))
         send_to_char(ch, "You are invisible.\r\n");
@@ -911,7 +937,7 @@ ACMD(do_score) {
     if (PRF_FLAGGED(ch, PRF_SUMMONABLE))
         send_to_char(ch, "You are summonable by other players.\r\n");
 
-    if (GET_LEVEL(ch) >= LVL_IMMORT) {
+    if (GET_LEVEL(ch) > LVL_IMMORT) {
         if (POOFIN(ch))
             send_to_char(ch, "%sPOOFIN:  %s%s %s%s\r\n", QYEL, QCYN, GET_NAME(ch), POOFIN(ch), QNRM);
         else
