@@ -171,11 +171,7 @@ void remove_shop_from_int_list(IDXTYPE **list, IDXTYPE num) {
     /* Count number of entries. */
     for (i = 0; (*list)[i] != NOTHING; i++);
 
-#if CIRCLE_UNSIGNED_INDEX
     if (num >= i)
-#else
-        if (num < 0 || num >= i)
-#endif
         return;
     num_items = i;
 
@@ -337,11 +333,7 @@ int save_shops(zone_rnum zone_num) {
     char fname[128], oldname[128], buf[MAX_STRING_LENGTH];
     struct shop_data *shop;
 
-#if CIRCLE_UNSIGNED_INDEX
     if (zone_num == NOWHERE || zone_num > top_of_zone_table) {
-#else
-        if (zone_num < 0 || zone_num > top_of_zone_table) {
-#endif
         log("SYSERR: GenOLC: save_shops: Invalid real zone number %d. (0-%d)", zone_num, top_of_zone_table);
         return FALSE;
     }

@@ -1,157 +1,139 @@
 /**
-* @file structs.h
-* Core structures used within the core mud code.
-*
-* Part of the core tbaMUD source code distribution, which is a derivative
-* of, and continuation of, CircleMUD.
-*
-* All rights reserved.  See license for complete information.
-* Copyright (C) 1993, 94 by the Trustees of the Johns Hopkins University
-* CircleMUD is based on DikuMUD, Copyright (C) 1990, 1991.
-*/
+ * @file structs.h
+ * Core structures used within the core mud code.
+ *
+ * Part of the core tbaMUD source code distribution, which is a derivative
+ * of, and continuation of, CircleMUD.
+ *
+ * All rights reserved.  See license for complete information.
+ * Copyright (C) 1993, 94 by the Trustees of the Johns Hopkins University
+ * CircleMUD is based on DikuMUD, Copyright (C) 1990, 1991.
+ */
+
 #ifndef _STRUCTS_H_
 #define _STRUCTS_H_
 
-#include "protocol.h" /* Kavir Plugin*/
+#include "protocol.h"
 #include "lists.h"
 
 /** If you want equipment to be automatically equipped to the same place
- * it was when players rented, set the define below to 1 because
- * TRUE/FALSE aren't defined yet. */
+ *  it was when players rented, set the define below to 1 because
+ *  TRUE/FALSE aren't defined yet. */
 #define USE_AUTOEQ    1
 
-/* preamble */
-/** As of bpl20, it should be safe to use unsigned data types for the various
- * virtual and real number data types.  There really isn't a reason to use
- * signed anymore so use the unsigned types and get 65,535 objects instead of
- * 32,768. NOTE: This will likely be unconditionally unsigned later.
- * 0 = use signed indexes; 1 = use unsigned indexes */
-#define CIRCLE_UNSIGNED_INDEX    1
-
-#if CIRCLE_UNSIGNED_INDEX
-# define IDXTYPE    ush_int          /**< Index types are unsigned short ints */
-# define IDXTYPE_MAX USHRT_MAX     /**< Used for compatibility checks. */
-# define IDXTYPE_MIN 0             /**< Used for compatibility checks. */
-# define NOWHERE    ((IDXTYPE)~0)    /**< Sets to ush_int_MAX, or 65,535 */
-# define NOTHING    ((IDXTYPE)~0)    /**< Sets to ush_int_MAX, or 65,535 */
-# define NOBODY        ((IDXTYPE)~0)    /**< Sets to ush_int_MAX, or 65,535 */
-# define NOFLAG   ((IDXTYPE)~0)    /**< Sets to ush_int_MAX, or 65,535 */
-#else
-# define IDXTYPE	sh_int           /**< Index types are unsigned short ints */
-# define IDXTYPE_MAX SHRT_MAX      /**< Used for compatibility checks. */
-# define IDXTYPE_MIN SHRT_MIN      /**< Used for compatibility checks. */
-# define NOWHERE	((IDXTYPE)-1)    /**< nil reference for rooms */
-# define NOTHING	((IDXTYPE)-1)    /**< nil reference for objects */
-# define NOBODY		((IDXTYPE)-1)	   /**< nil reference for mobiles  */
-# define NOFLAG   ((IDXTYPE)-1)    /**< nil reference for flags   */
-#endif
+# define IDXTYPE        ush_int          /**< Index types are unsigned short ints */
+# define IDXTYPE_MIN    0                /**< Used for compatibility checks. */
+# define IDXTYPE_MAX    USHRT_MAX        /**< Used for compatibility checks. */
+# define NOWHERE        ((IDXTYPE)~0)    /**< Sets to ush_int_MAX, or 65,535 */
+# define NOTHING        ((IDXTYPE)~0)    /**< Sets to ush_int_MAX, or 65,535 */
+# define NOBODY         ((IDXTYPE)~0)    /**< Sets to ush_int_MAX, or 65,535 */
+# define NOFLAG         ((IDXTYPE)~0)    /**< Sets to ush_int_MAX, or 65,535 */
 
 /** Function macro for the mob, obj and room special functions */
 #define SPECIAL(name) \
    int (name)(struct char_data *ch, void *me, int cmd, char *argument)
 
-/* room-related defines */
-/* The cardinal directions: used as index to room_data.dir_option[] */
-#define NORTH          0    /**< The direction north */
-#define EAST           1    /**< The direction east */
-#define SOUTH          2    /**< The direction south */
-#define WEST           3    /**< The direction west */
-#define UP             4    /**< The direction up */
-#define DOWN           5    /**< The direction down */
-#define NORTHWEST      6 /**< The direction north-west */
-#define NORTHEAST      7 /**< The direction north-east */
-#define SOUTHEAST      8 /**< The direction south-east */
-#define SOUTHWEST      9 /**< The direction south-west */
-/** Total number of directions available to move in. BEFORE CHANGING THIS, make
-* sure you change every other direction and movement based item that this will
-* impact. */
-
+/** room-related defines */
+/**  The cardinal directions: used as index to room_data.dir_option[] */
+#define NORTH       0    /**< The direction north */
+#define EAST        1    /**< The direction east */
+#define SOUTH       2    /**< The direction south */
+#define WEST        3    /**< The direction west */
+#define UP          4    /**< The direction up */
+#define DOWN        5    /**< The direction down */
+#define NORTHWEST   6    /**< The direction north-west */
+#define NORTHEAST   7    /**< The direction north-east */
+#define SOUTHEAST   8    /**< The direction south-east */
+#define SOUTHWEST   9    /**< The direction south-west */
+/** BEFORE CHANGING THIS, make sure you change every other direction
+ * and movement based item that this will impact. */
+/** The total number of directions */
 #define NUM_OF_DIRS 10
 
-/* Room flags: used in room_data.room_flags */
-/* WARNING: In the world files, NEVER set the bits marked "R" ("Reserved") */
-#define ROOM_DARK           0   /**< Dark room, light needed to see */
-#define ROOM_DEATH          1   /**< Death trap, instant death */
-#define ROOM_NOMOB          2   /**< MOBs not allowed in room */
-#define ROOM_INDOORS        3   /**< Indoors, no weather */
-#define ROOM_PEACEFUL       4   /**< Violence not allowed	*/
-#define ROOM_SOUNDPROOF     5   /**< Shouts, gossip blocked */
-#define ROOM_NOTRACK        6   /**< Track won't go through */
-#define ROOM_NOMAGIC        7   /**< Magic not allowed */
-#define ROOM_TUNNEL         8   /**< Room for only 1 pers	*/
-#define ROOM_PRIVATE        9   /**< Can't teleport in */
-#define ROOM_GODROOM       10   /**< LVL_GOD+ only allowed */
-#define ROOM_HOUSE         11   /**< (R) Room is a house */
-#define ROOM_HOUSE_CRASH   12   /**< (R) House needs saving */
-#define ROOM_ATRIUM        13   /**< (R) The door to a house */
-#define ROOM_OLC           14   /**< (R) Modifyable/!compress */
-#define ROOM_BFS_MARK      15   /**< (R) breath-first srch mrk */
-#define ROOM_WORLDMAP      16   /**< World-map style maps here */
+/** Room flags: used in room_data.room_flags */
+/** WARNING: In the world files, NEVER set the bits marked "R" ("Reserved") */
+#define ROOM_DARK            0    /**< Dark room, light needed to see */
+#define ROOM_DEATH           1    /**< Death trap, instant death */
+#define ROOM_NOMOB           2    /**< MOBs not allowed in room */
+#define ROOM_INDOORS         3    /**< Indoors, no weather */
+#define ROOM_PEACEFUL        4    /**< Violence not allowed	*/
+#define ROOM_SOUNDPROOF      5    /**< Shouts, gossip blocked */
+#define ROOM_NOTRACK         6    /**< Track won't go through */
+#define ROOM_NOMAGIC         7    /**< Magic not allowed */
+#define ROOM_TUNNEL          8    /**< Room for only 1 pers	*/
+#define ROOM_PRIVATE         9    /**< Can't teleport in */
+#define ROOM_GODROOM        10    /**< LVL_GOD+ only allowed */
+#define ROOM_HOUSE          11    /**< (R) Room is a house */
+#define ROOM_HOUSE_CRASH    12    /**< (R) House needs saving */
+#define ROOM_ATRIUM         13    /**< (R) The door to a house */
+#define ROOM_OLC            14    /**< (R) Modifyable/!compress */
+#define ROOM_BFS_MARK       15    /**< (R) breath-first srch mrk */
+#define ROOM_WORLDMAP       16    /**< World-map style maps here */
 /** The total number of Room Flags */
-#define NUM_ROOM_FLAGS    17
+#define NUM_ROOM_FLAGS      17
 
 /* Zone info: Used in zone_data.zone_flags */
-#define ZONE_CLOSED       0  /**< Zone is closed - players cannot enter */
-#define ZONE_NOIMMORT     1  /**< Immortals (below LVL_GRGOD) cannot enter this zone */
-#define ZONE_QUEST        2  /**< This zone is a quest zone (not implemented) */
-#define ZONE_GRID         3  /**< Zone is 'on the grid', connected, show on 'areas' */
-#define ZONE_NOBUILD      4  /**< Building is not allowed in the zone */
-#define ZONE_NOASTRAL     5  /**< No teleportation magic will work to or from this zone */
-#define ZONE_WORLDMAP     6 /**< Whole zone uses the WORLDMAP by default */
+#define ZONE_CLOSED         0    /**< Zone is closed - players cannot enter */
+#define ZONE_NOIMMORT       1    /**< Immortals (below LVL_GRGOD) cannot enter this zone */
+#define ZONE_QUEST          2    /**< This zone is a quest zone (not implemented) */
+#define ZONE_GRID           3    /**< Zone is 'on the grid', connected, show on 'areas' */
+#define ZONE_NOBUILD        4    /**< Building is not allowed in the zone */
+#define ZONE_NOASTRAL       5    /**< No teleportation magic will work to or from this zone */
+#define ZONE_WORLDMAP       6    /**< Whole zone uses the WORLDMAP by default */
 /** The total number of Zone Flags */
-#define NUM_ZONE_FLAGS    7
+#define NUM_ZONE_FLAGS      7
 
 /* Exit info: used in room_data.dir_option.exit_info */
-#define EX_ISDOOR    (1 << 0) /**< Exit is a door */
-#define EX_CLOSED    (1 << 1) /**< The door is closed */
-#define EX_LOCKED    (1 << 2) /**< The door is locked */
-#define EX_PICKPROOF (1 << 3) /**< Lock can't be picked */
-#define EX_HIDDEN    (1 << 4) /**< Exit is hidden, secret */
+#define EX_ISDOOR    (1 << 0)    /**< Exit is a door */
+#define EX_CLOSED    (1 << 1)    /**< The door is closed */
+#define EX_LOCKED    (1 << 2)    /**< The door is locked */
+#define EX_PICKPROOF (1 << 3)    /**< Lock can't be picked */
+#define EX_HIDDEN    (1 << 4)    /**< Exit is hidden, secret */
 
 /* Sector types: used in room_data.sector_type */
-#define SECT_INSIDE          0        /**< Indoors, connected to SECT macro. */
-#define SECT_CITY            1        /**< In a city			*/
-#define SECT_FIELD           2        /**< In a field		*/
-#define SECT_FOREST          3        /**< In a forest		*/
-#define SECT_HILLS           4        /**< In the hills		*/
-#define SECT_MOUNTAIN        5        /**< On a mountain		*/
-#define SECT_WATER_SWIM      6        /**< Swimmable water		*/
-#define SECT_WATER_NOSWIM    7        /**< Water - need a boat	*/
-#define SECT_FLYING             8        /**< Flying			*/
-#define SECT_UNDERWATER         9        /**< Underwater		*/
+#define SECT_INSIDE         0        /**< Indoors, connected to SECT macro. */
+#define SECT_CITY           1        /**< In a city			*/
+#define SECT_FIELD          2        /**< In a field		*/
+#define SECT_FOREST         3        /**< In a forest		*/
+#define SECT_HILLS          4        /**< In the hills		*/
+#define SECT_MOUNTAIN       5        /**< On a mountain		*/
+#define SECT_WATER_SWIM     6        /**< Swimmable water		*/
+#define SECT_WATER_NOSWIM   7        /**< Water - need a boat	*/
+#define SECT_FLYING         8        /**< Flying			*/
+#define SECT_UNDERWATER     9        /**< Underwater		*/
 /** The total number of room Sector Types */
-#define NUM_ROOM_SECTORS  10
+#define NUM_ROOM_SECTORS   10
 
-/* char and mob-related defines */
+/** char and mob-related defines */
 
-/* History */
-#define HIST_ALL       0 /**< Index to history of all channels */
-#define HIST_SAY       1 /**< Index to history of all 'say' */
-#define HIST_GOSSIP    2 /**< Index to history of all 'gossip' */
-#define HIST_WIZNET    3 /**< Index to history of all 'wiznet' */
-#define HIST_TELL      4 /**< Index to history of all 'tell' */
-#define HIST_SHOUT     5 /**< Index to history of all 'shout' */
-#define HIST_GRATS     6 /**< Index to history of all 'grats' */
-#define HIST_HOLLER    7 /**< Index to history of all 'holler' */
-#define HIST_AUCTION   8 /**< Index to history of all 'auction' */
+/** History */
+#define HIST_ALL       0    /**< Index to history of all channels */
+#define HIST_SAY       1    /**< Index to history of all 'say' */
+#define HIST_GOSSIP    2    /**< Index to history of all 'gossip' */
+#define HIST_WIZNET    3    /**< Index to history of all 'wiznet' */
+#define HIST_TELL      4    /**< Index to history of all 'tell' */
+#define HIST_SHOUT     5    /**< Index to history of all 'shout' */
+#define HIST_GRATS     6    /**< Index to history of all 'grats' */
+#define HIST_HOLLER    7    /**< Index to history of all 'holler' */
+#define HIST_AUCTION   8    /**< Index to history of all 'auction' */
 
-#define NUM_HIST       9 /**< Total number of history indexes */
+#define NUM_HIST       9    /**< Total number of history indexes */
 
-#define HISTORY_SIZE   5 /**< Number of last commands kept in each history */
+#define HISTORY_SIZE   5    /**< Number of last commands kept in each history */
 
 /* Group Defines */
-#define GROUP_OPEN    (1 << 0)  /**< Group is open for members */
-#define GROUP_ANON    (1 << 1)  /**< Group is Anonymous */
-#define GROUP_NPC     (1 << 2)  /**< Group created by NPC and thus not listed */
+#define GROUP_OPEN    (1 << 0)    /**< Group is open for members */
+#define GROUP_ANON    (1 << 1)    /**< Group is Anonymous */
+#define GROUP_NPC     (1 << 2)    /**< Group created by NPC and thus not listed */
 
 /* PC classes */
-#define CLASS_UNDEFINED      (-1) /**< PC Class undefined */
-#define CLASS_MAGIC_USER  0    /**< PC Class Magic User */
-#define CLASS_CLERIC      1    /**< PC Class Cleric */
-#define CLASS_THIEF       2    /**< PC Class Thief */
-#define CLASS_WARRIOR     3    /**< PC Class Warrior */
+#define CLASS_UNDEFINED     (-1)    /**< PC Class undefined */
+#define CLASS_MAGIC_USER    0       /**< PC Class Magic User */
+#define CLASS_CLERIC        1       /**< PC Class Cleric */
+#define CLASS_THIEF         2       /**< PC Class Thief */
+#define CLASS_WARRIOR       3       /**< PC Class Warrior */
 /** Total number of available PC Classes */
-#define NUM_CLASSES      4
+#define NUM_CLASSES         4
 
 /* NPC classes (currently unused - feel free to implement!) */
 #define CLASS_OTHER       0    /**< NPC Class Other (or undefined) */
@@ -161,27 +143,27 @@
 #define CLASS_DRAGON      4    /**< NPC Class Dragon */
 #define CLASS_GIANT       5    /**< NPC Class Giant */
 
-/* Sex */
-#define SEX_NEUTRAL   0   /**< Neutral Sex (Hermaphrodite) */
-#define SEX_MALE      1   /**< Male Sex (XY Chromosome) */
-#define SEX_FEMALE    2   /**< Female Sex (XX Chromosome) */
+/** Sex */
+#define SEX_NEUTRAL     0    /**< Neutral Sex (Hermaphrodite) */
+#define SEX_MALE        1    /**< Male Sex (XY Chromosome) */
+#define SEX_FEMALE      2    /**< Female Sex (XX Chromosome) */
 /** Total number of Genders */
-#define NUM_GENDERS   3
+#define NUM_GENDERS     3
 
-/* Positions */
-#define POS_DEAD       0    /**< Position = dead */
-#define POS_MORTALLYW  1    /**< Position = mortally wounded */
-#define POS_INCAP      2    /**< Position = incapacitated */
-#define POS_STUNNED    3    /**< Position = stunned	*/
-#define POS_SLEEPING   4    /**< Position = sleeping */
-#define POS_RESTING    5    /**< Position = resting	*/
-#define POS_SITTING    6    /**< Position = sitting	*/
-#define POS_FIGHTING   7    /**< Position = fighting */
-#define POS_STANDING   8    /**< Position = standing */
+/** Positions */
+#define POS_DEAD        0    /**< Position = dead */
+#define POS_MORTALLYW   1    /**< Position = mortally wounded */
+#define POS_INCAP       2    /**< Position = incapacitated */
+#define POS_STUNNED     3    /**< Position = stunned	*/
+#define POS_SLEEPING    4    /**< Position = sleeping */
+#define POS_RESTING     5    /**< Position = resting	*/
+#define POS_SITTING     6    /**< Position = sitting	*/
+#define POS_FIGHTING    7    /**< Position = fighting */
+#define POS_STANDING    8    /**< Position = standing */
 /** Total number of positions. */
 #define NUM_POSITIONS   9
 
-/* Player flags: used by char_data.char_specials.act */
+/** Player flags: used by char_data.char_specials.act */
 #define PLR_KILLER        0   /**< Player is a player-killer */
 #define PLR_THIEF         1   /**< Player is a player-thief */
 #define PLR_FROZEN        2   /**< Player is frozen */
@@ -202,13 +184,15 @@
 #define PLR_BUG          17   /**< Player is writing a bug */
 #define PLR_IDEA         18   /**< Player is writing an idea */
 #define PLR_TYPO         19   /**< Player is writing a typo */
+/** The total number of PLR Flags */
+/** TODO - 2018-08-06 - this was not set here, is it needed ? */
 
-/* Mobile flags: used by char_data.char_specials.act */
+/** Mobile flags: used by char_data.char_specials.act */
 #define MOB_SPEC            0   /**< Mob has a callable spec-proc */
 #define MOB_SENTINEL        1   /**< Mob should not move */
 #define MOB_SCAVENGER       2   /**< Mob picks up stuff on the ground */
 #define MOB_ISNPC           3   /**< (R) Automatically set on all Mobs */
-#define MOB_AWARE        4   /**< Mob can't be backstabbed */
+#define MOB_AWARE           4   /**< Mob can't be backstabbed */
 #define MOB_AGGRESSIVE      5   /**< Mob auto-attacks everybody nearby */
 #define MOB_STAY_ZONE       6   /**< Mob shouldn't wander out of zone */
 #define MOB_WIMPY           7   /**< Mob flees if severely injured */
@@ -224,10 +208,10 @@
 #define MOB_NOBLIND        17   /**< Mob can't be blinded */
 #define MOB_NOKILL         18   /**< Mob can't be attacked */
 #define MOB_NOTDEADYET     19   /**< (R) Mob being extracted */
-
+/** The total number of Mob Flags */
 #define NUM_MOB_FLAGS      19
 
-/* Preference flags: used by char_data.player_specials.pref */
+/** Preference flags: used by char_data.player_specials.pref */
 #define PRF_BRIEF         0   /**< Room descs won't normally be shown */
 #define PRF_COMPACT       1   /**< No extra CRLF pair before prompts */
 #define PRF_NOSHOUT       2   /**< Can't hear shouts */
@@ -266,8 +250,8 @@
 /** Total number of available PRF flags */
 #define NUM_PRF_FLAGS    35
 
-/* Affect bits: used in char_data.char_specials.saved.affected_by */
-/* WARNING: In the world files, NEVER set the bits marked "R" ("Reserved") */
+/** Affect bits: used in char_data.char_specials.saved.affected_by */
+/** WARNING: In the world files, NEVER set the bits marked "R" ("Reserved") */
 #define AFF_DONTUSE         0   /**< DON'T USE! */
 #define AFF_BLIND           1   /**< (R) Char is blind */
 #define AFF_INVISIBLE       2   /**< Char is invisible */
@@ -294,7 +278,7 @@
 /** Total number of affect flags not including the don't use flag. */
 #define NUM_AFF_FLAGS   22
 
-/* Modes of connectedness: used by descriptor_data.state 		*/
+/** Modes of connectedness: used by descriptor_data.state 		*/
 #define CON_PLAYING       0 /**< Playing - Nominal state 		*/
 #define CON_CLOSE         1 /**< User disconnect, remove character.	*/
 #define CON_GET_NAME      2 /**< Login with name */
@@ -329,15 +313,15 @@
 #define CON_MSGEDIT      31 /**< OLC mode - message editor */
 #define CON_GET_PROTOCOL 32 /**< Used at log-in while attempting to get protocols > */
 
-/* OLC States range - used by IS_IN_OLC and IS_PLAYING */
+/** OLC States range - used by IS_IN_OLC and IS_PLAYING */
 #define FIRST_OLC_STATE CON_OEDIT     /**< The first CON_ state that is an OLC */
 #define LAST_OLC_STATE  CON_MSGEDIT   /**< The last CON_ state that is an OLC  */
 
-/* Character equipment positions: used as index for char_data.equipment[] */
-/* NOTE: Don't confuse these constants with the ITEM_ bitvectors
- which control the valid places you can wear a piece of equipment.
- For example, there are two neck positions on the player, and items
- only get the generic neck type. */
+/** Character equipment positions: used as index for char_data.equipment[] */
+/** NOTE: Don't confuse these constants with the ITEM_ bitvectors
+ * which control the valid places you can wear a piece of equipment.
+ * For example, there are two neck positions on the player, and items
+ * only get the generic neck type. */
 #define WEAR_LIGHT      0  /**< Equipment Location Light */
 #define WEAR_FINGER_R   1  /**< Equipment Location Right Finger */
 #define WEAR_FINGER_L   2  /**< Equipment Location Left Finger */
@@ -359,35 +343,35 @@
 /** Total number of available equipment lcoations */
 #define NUM_WEARS      18
 
-/* object-related defines */
-/* Item types: used by obj_data.obj_flags.type_flag */
-#define ITEM_LIGHT      1        /**< Item is a light source	*/
-#define ITEM_SCROLL     2        /**< Item is a scroll		*/
-#define ITEM_WAND       3        /**< Item is a wand		*/
-#define ITEM_STAFF      4        /**< Item is a staff		*/
-#define ITEM_WEAPON     5        /**< Item is a weapon		*/
-#define ITEM_FURNITURE  6   /**< Sittable Furniture		*/
-#define ITEM_FREE       7   /**< Unimplemented		*/
-#define ITEM_TREASURE   8   /**< Item is a treasure, not gold	*/
-#define ITEM_ARMOR      9   /**< Item is armor		*/
-#define ITEM_POTION    10   /**< Item is a potion		*/
-#define ITEM_WORN      11        /**< Unimplemented		*/
-#define ITEM_OTHER     12        /**< Misc object			*/
-#define ITEM_TRASH     13        /**< Trash - shopkeepers won't buy	*/
-#define ITEM_FREE2     14        /**< Unimplemented		*/
-#define ITEM_CONTAINER 15        /**< Item is a container		*/
-#define ITEM_NOTE      16        /**< Item is note 		*/
-#define ITEM_DRINKCON  17        /**< Item is a drink container	*/
-#define ITEM_KEY       18        /**< Item is a key		*/
-#define ITEM_FOOD      19        /**< Item is food			*/
-#define ITEM_MONEY     20        /**< Item is money (gold)		*/
-#define ITEM_PEN       21        /**< Item is a pen		*/
-#define ITEM_BOAT      22        /**< Item is a boat		*/
-#define ITEM_FOUNTAIN  23        /**< Item is a fountain		*/
+/** object-related defines */
+/** Item types: used by obj_data.obj_flags.type_flag */
+#define ITEM_LIGHT       1    /**< Item is a light source */
+#define ITEM_SCROLL      2    /**< Item is a scroll */
+#define ITEM_WAND        3    /**< Item is a wand */
+#define ITEM_STAFF       4    /**< Item is a staff */
+#define ITEM_WEAPON      5    /**< Item is a weapon */
+#define ITEM_FURNITURE   6    /**< Sittable Furniture */
+#define ITEM_FREE        7    /**< Unimplemented */
+#define ITEM_TREASURE    8    /**< Item is a treasure, not gold */
+#define ITEM_ARMOR       9    /**< Item is armor */
+#define ITEM_POTION     10    /**< Item is a potion */
+#define ITEM_WORN       11    /**< Unimplemented */
+#define ITEM_OTHER      12    /**< Misc object */
+#define ITEM_TRASH      13    /**< Trash - shopkeepers won't buy */
+#define ITEM_FREE2      14    /**< Unimplemented */
+#define ITEM_CONTAINER  15    /**< Item is a container */
+#define ITEM_NOTE      16     /**< Item is note */
+#define ITEM_DRINKCON  17     /**< Item is a drink container */
+#define ITEM_KEY       18     /**< Item is a key */
+#define ITEM_FOOD      19     /**< Item is food */
+#define ITEM_MONEY     20     /**< Item is money (gold) */
+#define ITEM_PEN       21     /**< Item is a pen */
+#define ITEM_BOAT      22     /**< Item is a boat */
+#define ITEM_FOUNTAIN  23     /**< Item is a fountain */
 /** Total number of item types.*/
 #define NUM_ITEM_TYPES    24
 
-/* Take/Wear flags: used by obj_data.obj_flags.wear_flags */
+/** Take/Wear flags: used by obj_data.obj_flags.wear_flags */
 #define ITEM_WEAR_TAKE      0   /**< Item can be taken */
 #define ITEM_WEAR_FINGER    1   /**< Item can be worn on finger */
 #define ITEM_WEAR_NECK      2   /**< Item can be worn around neck */
@@ -395,18 +379,18 @@
 #define ITEM_WEAR_HEAD      4   /**< Item can be worn on head */
 #define ITEM_WEAR_LEGS      5   /**< Item can be worn on legs */
 #define ITEM_WEAR_FEET      6   /**< Item can be worn on feet */
-#define ITEM_WEAR_HANDS        7   /**< Item can be worn on hands	*/
+#define ITEM_WEAR_HANDS     7   /**< Item can be worn on hands	*/
 #define ITEM_WEAR_ARMS      8   /**< Item can be worn on arms */
 #define ITEM_WEAR_SHIELD    9   /**< Item can be used as a shield */
-#define ITEM_WEAR_ABOUT       10   /**< Item can be worn about body */
+#define ITEM_WEAR_ABOUT    10   /**< Item can be worn about body */
 #define ITEM_WEAR_WAIST    11   /**< Item can be worn around waist */
-#define ITEM_WEAR_WRIST       12   /**< Item can be worn on wrist */
-#define ITEM_WEAR_WIELD       13   /**< Item can be wielded */
+#define ITEM_WEAR_WRIST    12   /**< Item can be worn on wrist */
+#define ITEM_WEAR_WIELD    13   /**< Item can be wielded */
 #define ITEM_WEAR_HOLD     14   /**< Item can be held */
 /** Total number of item wears */
 #define NUM_ITEM_WEARS    15
 
-/* Extra object flags: used by obj_data.obj_flags.extra_flags */
+/** Extra object flags: used by obj_data.obj_flags.extra_flags */
 #define ITEM_GLOW              0   /**< Item is glowing */
 #define ITEM_HUM               1   /**< Item is humming */
 #define ITEM_NORENT            2   /**< Item cannot be rented */
@@ -428,45 +412,45 @@
 /** Total number of item flags */
 #define NUM_ITEM_FLAGS    18
 
-/* Modifier constants used with obj affects ('A' fields) */
-#define APPLY_NONE              0    /**< No effect			*/
-#define APPLY_STR               1    /**< Apply to strength		*/
-#define APPLY_DEX               2    /**< Apply to dexterity		*/
-#define APPLY_INT               3    /**< Apply to intelligence	*/
-#define APPLY_WIS               4    /**< Apply to wisdom		*/
-#define APPLY_CON               5    /**< Apply to constitution	*/
-#define APPLY_CHA               6 /**< Apply to charisma		*/
-#define APPLY_CLASS             7    /**< Reserved			*/
-#define APPLY_LEVEL             8    /**< Reserved			*/
-#define APPLY_AGE               9    /**< Apply to age			*/
-#define APPLY_CHAR_WEIGHT      10    /**< Apply to weight		*/
-#define APPLY_CHAR_HEIGHT      11    /**< Apply to height		*/
-#define APPLY_MANA             12    /**< Apply to max mana		*/
-#define APPLY_HIT              13    /**< Apply to max hit points	*/
-#define APPLY_MOVE             14    /**< Apply to max move points	*/
-#define APPLY_GOLD             15    /**< Reserved			*/
-#define APPLY_EXP              16    /**< Reserved			*/
-#define APPLY_AC               17    /**< Apply to Armor Class		*/
-#define APPLY_HITROLL          18    /**< Apply to hitroll		*/
-#define APPLY_DAMROLL          19    /**< Apply to damage roll		*/
-#define APPLY_SAVING_PARA      20    /**< Apply to save throw: paralysis	*/
-#define APPLY_SAVING_ROD       21    /**< Apply to save throw: rods	*/
-#define APPLY_SAVING_PETRI     22    /**< Apply to save throw: petrif	*/
-#define APPLY_SAVING_BREATH    23    /**< Apply to save throw: breath	*/
-#define APPLY_SAVING_SPELL     24    /**< Apply to save throw: spells	*/
+/** Modifier constants used with obj affects ('A' fields) */
+#define APPLY_NONE              0    /**< No effect */
+#define APPLY_STR               1    /**< Apply to strength */
+#define APPLY_DEX               2    /**< Apply to dexterity */
+#define APPLY_INT               3    /**< Apply to intelligence */
+#define APPLY_WIS               4    /**< Apply to wisdom */
+#define APPLY_CON               5    /**< Apply to constitution */
+#define APPLY_CHA               6    /**< Apply to charisma */
+#define APPLY_CLASS             7    /**< Reserved */
+#define APPLY_LEVEL             8    /**< Reserved */
+#define APPLY_AGE               9    /**< Apply to age */
+#define APPLY_CHAR_WEIGHT      10    /**< Apply to weight */
+#define APPLY_CHAR_HEIGHT      11    /**< Apply to height */
+#define APPLY_MANA             12    /**< Apply to max mana */
+#define APPLY_HIT              13    /**< Apply to max hit points */
+#define APPLY_MOVE             14    /**< Apply to max move points */
+#define APPLY_GOLD             15    /**< Reserved */
+#define APPLY_EXP              16    /**< Reserved */
+#define APPLY_AC               17    /**< Apply to Armor Class */
+#define APPLY_HITROLL          18    /**< Apply to hitroll */
+#define APPLY_DAMROLL          19    /**< Apply to damage roll */
+#define APPLY_SAVING_PARA      20    /**< Apply to save throw: paralysis */
+#define APPLY_SAVING_ROD       21    /**< Apply to save throw: rods */
+#define APPLY_SAVING_PETRI     22    /**< Apply to save throw: petrif */
+#define APPLY_SAVING_BREATH    23    /**< Apply to save throw: breath */
+#define APPLY_SAVING_SPELL     24    /**< Apply to save throw: spells */
 /** Total number of applies */
 #define NUM_APPLIES   25
 
-/* Equals the total number of SAVING_* defines in spells.h */
+/** Equals the total number of SAVING_* defines in spells.h */
 #define NUM_OF_SAVING_THROWS  5
 
-/* Container flags - value[1] */
-#define CONT_CLOSEABLE      (1 << 0)    /**< Container can be closed	*/
-#define CONT_PICKPROOF      (1 << 1)    /**< Container is pickproof	*/
-#define CONT_CLOSED         (1 << 2)    /**< Container is closed		*/
-#define CONT_LOCKED         (1 << 3)    /**< Container is locked		*/
+/** Container flags - value[1] */
+#define CONT_CLOSEABLE      (1 << 0)    /**< Container can be closed */
+#define CONT_PICKPROOF      (1 << 1)    /**< Container is pickproof */
+#define CONT_CLOSED         (1 << 2)    /**< Container is closed */
+#define CONT_LOCKED         (1 << 3)    /**< Container is locked */
 
-/* Some different kind of liquids for use in values of drink containers */
+/** Some different kind of liquids for use in values of drink containers */
 #define LIQ_WATER      0   /**< Liquid type water */
 #define LIQ_BEER       1   /**< Liquid type beer */
 #define LIQ_WINE       2   /**< Liquid type wine */
@@ -486,8 +470,8 @@
 /** Total number of liquid types */
 #define NUM_LIQ_TYPES     16
 
-/* other miscellaneous defines */
-/* Player conditions */
+/** other miscellaneous defines */
+/** Player conditions */
 #define DRUNK        0  /**< Player drunk condition */
 #define HUNGER       1  /**< Player hunger condition */
 #define THIRST       2  /**< Player thirst condition */
@@ -495,8 +479,8 @@
 /* Sun state for weather_data */
 #define SUN_DARK    0  /**< Night time */
 #define SUN_RISE    1  /**< Dawn */
-#define SUN_LIGHT    2  /**< Day time */
-#define SUN_SET        3  /**< Dusk */
+#define SUN_LIGHT   2  /**< Day time */
+#define SUN_SET     3  /**< Dusk */
 
 /* Sky conditions for weather_data */
 #define SKY_CLOUDLESS  0  /**< Weather = No clouds */
@@ -521,8 +505,8 @@
 #define EF_ARRAY_MAX    4  /**< # Bytes in Bit vector - Obj Extra Flags */
 #define ZN_ARRAY_MAX    4  /**< # Bytes in Bit vector - Zone Flags */
 
-/* other #defined constants */
-/* **DO**NOT** blindly change the number of levels in your MUD merely by
+/** other #defined constants */
+/** **DO**NOT** blindly change the number of levels in your MUD merely by
  * changing these numbers and without changing the rest of the code to match.
  * Other changes throughout the code are required.  See coding.doc for details.
  *
@@ -532,13 +516,10 @@
 #define LVL_IMPL    34  /**< Level of Implementors */
 #define LVL_GRGOD   33  /**< Level of Greater Gods */
 #define LVL_GOD     32  /**< Level of Gods */
-#define LVL_IMMORT    31  /**< Level of Immortals */
+#define LVL_IMMORT  31  /**< Level of Immortals */
 
 /** Minimum level to build and to run the saveall command */
 #define LVL_BUILDER    LVL_IMMORT
-
-/** Arbitrary number that won't be in a string */
-#define MAGIC_NUMBER    (0x06)
 
 /** OPT_USEC determines how many commands will be processed by the MUD per
  * second and how frequently it does socket I/O.  A low setting will cause
@@ -551,11 +532,13 @@
  * @see RL_SEC
  */
 #define OPT_USEC    100000
+
 /** How many heartbeats equate to one real second.
  * @see OPT_USEC
  * @see RL_SEC
  */
 #define PASSES_PER_SEC    (1000000 / OPT_USEC)
+
 /** Used with other macros to define at how many heartbeats a control loop
  * gets executed. Helps to translate pulse counts to real seconds for
  * human comprehension.
@@ -569,6 +552,7 @@
 #define PULSE_MOBILE    (10 RL_SEC)
 /** Controls the time between turns of combat. */
 #define PULSE_VIOLENCE  ( 2 RL_SEC)
+
 /** Controls when characters and houses (if implemented) will be autosaved.
  * @see CONFIG_AUTO_SAVE
  */
@@ -584,7 +568,7 @@
 /** Controls when to save the current ingame MUD time to disk.
  * This should be set >= SECS_PER_MUD_HOUR */
 #define PULSE_TIMESAVE    (30 * 60 RL_SEC)
-/* Variables for the output buffering system */
+/** Variables for the output buffering system */
 #define MAX_SOCK_BUF       (24 * 1024) /**< Size of kernel's sock buf   */
 #define MAX_PROMPT_LENGTH  96          /**< Max length of prompt        */
 #define GARBAGE_SPACE      32          /**< Space for **OVERFLOW** etc  */
@@ -665,7 +649,7 @@ struct extra_descr_data {
     struct extra_descr_data *next; /**< Next description for this mob/obj/room */
 };
 
-/* object-related structures */
+/** object-related structures */
 /**< Number of elements in the object value array. Raising this will provide
  * more configurability per object type, and shouldn't break anything.
  * DO NOT LOWER from the default value of 4. */
@@ -695,33 +679,33 @@ struct obj_affected_type {
 
 /** The Object structure. */
 struct obj_data {
-    obj_rnum item_number; /**< The unique id of this object instance. */
-    room_rnum in_room;    /**< What room is the object lying in, or -1? */
+    obj_rnum item_number;                               /**< The unique id of this object instance. */
+    room_rnum in_room;                                  /**< What room is the object lying in, or -1? */
 
-    struct obj_flag_data obj_flags;  /**< Object information            */
-    struct obj_affected_type affected[MAX_OBJ_AFFECT]; /**< affects */
+    struct obj_flag_data obj_flags;                     /**< Object information            */
+    struct obj_affected_type affected[MAX_OBJ_AFFECT];  /**< affects */
 
-    char *name;        /**< Keyword reference(s) for object. */
-    char *description; /**< Shown when the object is lying in a room. */
-    char *short_description;  /**< Shown when worn, carried, in a container */
-    char *action_description; /**< Displays when (if) the object is used */
-    struct extra_descr_data *ex_description; /**< List of extra descriptions */
-    struct char_data *carried_by; /**< Points to PC/NPC carrying, or NULL */
-    struct char_data *worn_by; /**< Points to PC/NPC wearing, or NULL */
-    sh_int worn_on; /**< If the object can be worn, where can it be worn? */
+    char *name;                                         /**< Keyword reference(s) for object. */
+    char *description;                                  /**< Shown when the object is lying in a room. */
+    char *short_description;                            /**< Shown when worn, carried, in a container */
+    char *action_description;                           /**< Displays when (if) the object is used */
+    struct extra_descr_data *ex_description;            /**< List of extra descriptions */
+    struct char_data *carried_by;                       /**< Points to PC/NPC carrying, or NULL */
+    struct char_data *worn_by;                          /**< Points to PC/NPC wearing, or NULL */
+    sh_int worn_on;                                     /**< If the object can be worn, where can it be worn? */
 
-    struct obj_data *in_obj; /**< Points to carrying object, or NULL */
-    struct obj_data *contains; /**< List of objects being carried, or NULL */
+    struct obj_data *in_obj;                            /**< Points to carrying object, or NULL */
+    struct obj_data *contains;                          /**< List of objects being carried, or NULL */
 
-    long script_id; /**< used by DG triggers - fetch only with obj_script_id()  */
-    struct trig_proto_list *proto_script; /**< list of default triggers  */
-    struct script_data *script;           /**< script info for the object */
+    long script_id;                                     /**< used by DG triggers - fetch only with obj_script_id()  */
+    struct trig_proto_list *proto_script;               /**< list of default triggers  */
+    struct script_data *script;                         /**< script info for the object */
 
-    struct obj_data *next_content;  /**< For 'contains' lists   */
-    struct obj_data *next;          /**< For the object list */
-    struct char_data *sitting_here; /**< For furniture, who is sitting in it */
+    struct obj_data *next_content;                      /**< For 'contains' lists   */
+    struct obj_data *next;                              /**< For the object list */
+    struct char_data *sitting_here;                     /**< For furniture, who is sitting in it */
 
-    struct list_data *events;      /**< Used for object events */
+    struct list_data *events;                           /**< Used for object events */
 };
 
 /** Instance info for an object that gets saved to disk.
@@ -766,44 +750,44 @@ struct rent_info {
     int spare7;
 };
 
-/* room-related structures */
+/** room-related structures */
 
 /** Direction (north, south, east...) information for rooms. */
 struct room_direction_data {
-    char *general_description; /**< Show to char looking in this direction. */
+    char *general_description;           /**< Show to char looking in this direction. */
 
-    char *keyword; /**< for interacting (open/close) this direction */
+    char *keyword;                       /**< for interacting (open/close) this direction */
 
-    sh_int /*bitvector_t*/ exit_info; /**< Door, and what type? */
-    obj_vnum key;      /**< Key's vnum (-1 for no key) */
-    room_rnum to_room; /**< Where direction leads, or NOWHERE if not defined */
+    sh_int /*bitvector_t*/ exit_info;    /**< Door, and what type? */
+    obj_vnum key;                        /**< Key's vnum (-1 for no key) */
+    room_rnum to_room;                   /**< Where direction leads, or NOWHERE if not defined */
 };
 
 /** The Room Structure. */
 struct room_data {
-    room_vnum number;  /**< Rooms number (vnum) */
-    zone_rnum zone;    /**< Room zone (for resetting) */
-    int sector_type;   /**< sector type (move/hide) */
-    int room_flags[RF_ARRAY_MAX]; /**< INDOORS, DARK, etc */
-    char *name;        /**< Room name */
-    char *description; /**< Shown when entered, looked at */
-    struct extra_descr_data *ex_description; /**< Additional things to look at */
-    struct room_direction_data *dir_option[NUM_OF_DIRS]; /**< Directions */
-    byte light;        /**< Number of lightsources in room */
-    SPECIAL(*func);    /**< Points to special function attached to room */
-    struct trig_proto_list *proto_script; /**< list of default triggers */
-    struct script_data *script; /**< script info for the room */
-    struct obj_data *contents;  /**< List of items in room */
-    struct char_data *people;   /**< List of NPCs / PCs in room */
+    room_vnum number;                        /**< Rooms number (vnum) */
+    zone_rnum zone;                          /**< Room zone (for resetting) */
+    int sector_type;                         /**< sector type (move/hide) */
+    int room_flags[RF_ARRAY_MAX];            /**< INDOORS, DARK, etc */
+    char *name;                              /**< Room name */
+    char *description;                       /**< Shown when entered, looked at */
+    struct extra_descr_data *ex_description;                /**< Additional things to look at */
+    struct room_direction_data *dir_option[NUM_OF_DIRS];    /**< Directions */
+    byte light;                              /**< Number of lightsources in room */
+    SPECIAL(*func);                   /**< Points to special function attached to room */
+    struct trig_proto_list *proto_script;    /**< list of default triggers */
+    struct script_data *script;              /**< script info for the room */
+    struct obj_data *contents;               /**< List of items in room */
+    struct char_data *people;                /**< List of NPCs / PCs in room */
 
-    struct list_data *events;
+    struct list_data *events;                /**< used for mob events */
 };
 
 /* char-related structures */
 /** Memory structure used by NPCs to remember specific PCs. */
 struct memory_rec_struct {
-    long id;  /**< The PC id to remember. */
-    struct memory_rec_struct *next; /**< Next PC to remember */
+    long id;                          /**< The PC id to remember. */
+    struct memory_rec_struct *next;   /**< Next PC to remember */
 };
 
 /** memory_rec_struct typedef */
@@ -896,52 +880,52 @@ struct char_point_data {
 /** char_special_data_saved: specials which both a PC and an NPC have in
  * common, but which must be saved to the players file for PC's. */
 struct char_special_data_saved {
-    int alignment;         /**< -1000 (evil) to 1000 (good) range. */
-    long idnum;            /**< PC's idnum; -1 for mobiles. */
-    int act[PM_ARRAY_MAX]; /**< act flags for NPC's; player flag for PC's */
-    int affected_by[AF_ARRAY_MAX]; /**< Bitvector for spells/skills affected by */
-    sh_int apply_saving_throw[5];  /**< Saving throw (Bonuses)		*/
+    int alignment;                    /**< -1000 (evil) to 1000 (good) range. */
+    long idnum;                       /**< PC's idnum; -1 for mobiles. */
+    int act[PM_ARRAY_MAX];            /**< act flags for NPC's; player flag for PC's */
+    int affected_by[AF_ARRAY_MAX];    /**< Bitvector for spells/skills affected by */
+    sh_int apply_saving_throw[5];     /**< Saving throw (Bonuses)		*/
 };
 
 /** Special playing constants shared by PCs and NPCs which aren't in pfile */
 struct char_special_data {
-    struct char_data *fighting;  /**< Target of fight; else NULL */
-    struct char_data *hunting;   /**< Target of NPC hunt; else NULL */
-    struct obj_data *furniture;  /**< Object being sat on/in; else NULL */
-    struct char_data *next_in_furniture; /**< Next person sitting, else NULL */
+    struct char_data *fighting;             /**< Target of fight; else NULL */
+    struct char_data *hunting;              /**< Target of NPC hunt; else NULL */
+    struct obj_data *furniture;             /**< Object being sat on/in; else NULL */
+    struct char_data *next_in_furniture;    /**< Next person sitting, else NULL */
 
-    byte position; /**< Standing, fighting, sleeping, etc. */
+    byte position;                          /**< Standing, fighting, sleeping, etc. */
 
-    int carry_weight; /**< Carried weight */
-    byte carry_items; /**< Number of items carried */
-    int timer;        /**< Timer for update */
+    int carry_weight;                       /**< Carried weight */
+    byte carry_items;                       /**< Number of items carried */
+    int timer;                              /**< Timer for update */
 
-    struct char_special_data_saved saved; /**< Constants saved for PCs. */
+    struct char_special_data_saved saved;   /**< Constants saved for PCs. */
 };
 
 /** Data only needed by PCs, and needs to be saved to disk. */
 struct player_special_data_saved {
     byte skills[MAX_SKILLS + 1]; /**< Character skills. */
-    int wimp_level;         /**< Below this # of hit points, flee! */
-    byte freeze_level;      /**< Level of god who froze char, if any */
-    sh_int invis_level;     /**< level of invisibility */
-    room_vnum load_room;    /**< Which room to load PC into */
-    int pref[PR_ARRAY_MAX]; /**< preference flags */
-    ubyte bad_pws;          /**< number of bad login attempts */
-    sbyte conditions[3];    /**< Drunk, hunger, and thirst */
-    struct txt_block *comm_hist[NUM_HIST]; /**< Communication history */
-    ubyte page_length;      /**< Max number of rows of text to send at once */
-    ubyte screen_width;     /**< How wide the display page is */
-    int spells_to_learn;    /**< Remaining number of practice sessions */
-    int olc_zone;           /**< Current olc permissions */
-    int questpoints;        /**< Number of quest points earned */
-    qst_vnum *completed_quests;   /**< Quests completed              */
-    int num_completed_quests;  /**< Number completed              */
-    int current_quest;         /**< vnum of current quest         */
-    int quest_time;            /**< time left on current quest    */
-    int quest_counter;         /**< Count of targets left to get  */
-    time_t lastmotd;            /**< Last time player read motd */
-    time_t lastnews;            /**< Last time player read news */
+    int wimp_level;                           /**< Below this # of hit points, flee! */
+    byte freeze_level;                        /**< Level of god who froze char, if any */
+    sh_int invis_level;                       /**< level of invisibility */
+    room_vnum load_room;                      /**< Which room to load PC into */
+    int pref[PR_ARRAY_MAX];                   /**< preference flags */
+    ubyte bad_pws;                            /**< number of bad login attempts */
+    sbyte conditions[3];                      /**< Drunk, hunger, and thirst */
+    struct txt_block *comm_hist[NUM_HIST];    /**< Communication history */
+    ubyte page_length;                        /**< Max number of rows of text to send at once */
+    ubyte screen_width;                       /**< How wide the display page is */
+    int spells_to_learn;                      /**< Remaining number of practice sessions */
+    int olc_zone;                             /**< Current olc permissions */
+    int questpoints;                          /**< Number of quest points earned */
+    qst_vnum *completed_quests;               /**< Quests completed              */
+    int num_completed_quests;                 /**< Number completed              */
+    int current_quest;                        /**< vnum of current quest         */
+    int quest_time;                           /**< time left on current quest    */
+    int quest_counter;                        /**< Count of targets left to get  */
+    time_t lastmotd;                          /**< Last time player read motd */
+    time_t lastnews;                          /**< Last time player read news */
 };
 
 /** Specials needed only by PCs, not NPCs.  Space for this structure is
@@ -950,14 +934,14 @@ struct player_special_data_saved {
 struct player_special_data {
     struct player_special_data_saved saved; /**< Information to be saved. */
 
-    char *poofin;  /**< Description displayed to room on arrival of a god. */
-    char *poofout; /**< Description displayed to room at a god's exit. */
-    struct alias_data *aliases; /**< Command aliases			*/
-    long last_tell;        /**< idnum of PC who last told this PC, used to reply */
-    void *last_olc_targ;   /**< ? Currently Unused ? */
-    int last_olc_mode;     /**< ? Currently Unused ? */
-    char *host;            /**< Resolved hostname, or ip, for player. */
-    int buildwalk_sector;  /**< Default sector type for buildwalk */
+    char *poofin;                  /**< Description displayed to room on arrival of a god. */
+    char *poofout;                 /**< Description displayed to room at a god's exit. */
+    struct alias_data *aliases;    /**< Command aliases			*/
+    long last_tell;                /**< idnum of PC who last told this PC, used to reply */
+    void *last_olc_targ;           /**< ? Currently Unused ? */
+    int last_olc_mode;             /**< ? Currently Unused ? */
+    char *host;                    /**< Resolved hostname, or ip, for player. */
+    int buildwalk_sector;          /**< Default sector type for buildwalk */
 };
 
 /** Special data used by NPCs, not PCs */
@@ -971,13 +955,13 @@ struct mob_special_data {
 
 /** An affect structure. */
 struct affected_type {
-    sh_int spell; /**< The spell that caused this */
-    sh_int duration; /**< For how long its effects will last      */
-    sbyte modifier;  /**< Added/subtracted to/from apropriate ability     */
-    byte location;   /**< Tells which ability to change(APPLY_XXX). */
-    int bitvector[AF_ARRAY_MAX]; /**< Tells which bits to set (AFF_XXX). */
+    sh_int spell;                   /**< The spell that caused this */
+    sh_int duration;                /**< For how long its effects will last      */
+    sbyte modifier;                 /**< Added/subtracted to/from apropriate ability     */
+    byte location;                  /**< Tells which ability to change(APPLY_XXX). */
+    int bitvector[AF_ARRAY_MAX];    /**< Tells which bits to set (AFF_XXX). */
 
-    struct affected_type *next; /**< The next affect in the list of affects. */
+    struct affected_type *next;     /**< The next affect in the list of affects. */
 };
 
 /** The list element that makes up a list of characters following this
@@ -989,41 +973,41 @@ struct follow_type {
 
 /** Master structure for PCs and NPCs. */
 struct char_data {
-    int pfilepos; /**< PC playerfile pos and id number */
-    mob_rnum nr;  /**< NPC real instance number */
-    room_rnum in_room;     /**< Current location (real room number) */
-    room_rnum was_in_room; /**< Previous location for linkdead people  */
-    int wait;              /**< wait for how many loops before taking action. */
+    int pfilepos;                                   /**< PC playerfile pos and id number */
+    mob_rnum nr;                                    /**< NPC real instance number */
+    room_rnum in_room;                              /**< Current location (real room number) */
+    room_rnum was_in_room;                          /**< Previous location for linkdead people  */
+    int wait;                                       /**< wait for how many loops before taking action. */
 
-    struct char_player_data player;       /**< General PC/NPC data */
-    struct char_ability_data real_abils;  /**< Abilities without modifiers */
-    struct char_ability_data aff_abils;   /**< Abilities with modifiers */
-    struct char_point_data points;        /**< Point/statistics */
-    struct char_special_data char_specials; /**< PC/NPC specials	  */
-    struct player_special_data *player_specials; /**< PC specials		  */
-    struct mob_special_data mob_specials; /**< NPC specials		  */
+    struct char_player_data player;                 /**< General PC/NPC data */
+    struct char_ability_data real_abils;            /**< Abilities without modifiers */
+    struct char_ability_data aff_abils;             /**< Abilities with modifiers */
+    struct char_point_data points;                  /**< Point/statistics */
+    struct char_special_data char_specials;         /**< PC/NPC specials	  */
+    struct player_special_data *player_specials;    /**< PC specials		  */
+    struct mob_special_data mob_specials;           /**< NPC specials		  */
 
-    struct affected_type *affected;        /**< affected by what spells    */
-    struct obj_data *equipment[NUM_WEARS]; /**< Equipment array            */
+    struct affected_type *affected;                 /**< affected by what spells    */
+    struct obj_data *equipment[NUM_WEARS];          /**< Equipment array            */
 
-    struct obj_data *carrying;    /**< List head for objects in inventory */
-    struct descriptor_data *desc; /**< Descriptor/connection info; NPCs = NULL */
+    struct obj_data *carrying;                      /**< List head for objects in inventory */
+    struct descriptor_data *desc;                   /**< Descriptor/connection info; NPCs = NULL */
 
-    long script_id; /**< used by DG triggers - fetch only with char_script_id() */
-    struct trig_proto_list *proto_script; /**< list of default triggers */
-    struct script_data *script;           /**< script info for the object */
-    struct script_memory *memory;         /**< for mob memory triggers */
+    long script_id;                                 /**< used by DG triggers - fetch only with char_script_id() */
+    struct trig_proto_list *proto_script;           /**< list of default triggers */
+    struct script_data *script;                     /**< script info for the object */
+    struct script_memory *memory;                   /**< for mob memory triggers */
 
-    struct char_data *next_in_room;  /**< Next PC in the room */
-    struct char_data *next;          /**< Next char_data in the room */
-    struct char_data *next_fighting; /**< Next in line to fight */
+    struct char_data *next_in_room;                 /**< Next PC in the room */
+    struct char_data *next;                         /**< Next char_data in the room */
+    struct char_data *next_fighting;                /**< Next in line to fight */
 
-    struct follow_type *followers; /**< List of characters following */
-    struct char_data *master;      /**< List of character being followed */
+    struct follow_type *followers;                  /**< List of characters following */
+    struct char_data *master;                       /**< List of character being followed */
 
-    struct group_data *group;      /**< Character's Group */
+    struct group_data *group;                       /**< Character's Group */
 
-    long pref; /**< unique session id */
+    long pref;                                      /**< unique session id */
 
     struct list_data *events;
 };
@@ -1045,44 +1029,44 @@ struct txt_q {
  * An analogy is the char_data is the body of the character, the descriptor_data
  * is the soul. */
 struct descriptor_data {
-    socket_t descriptor;      /**< file descriptor for socket */
-    char host[HOST_LENGTH + 1]; /**< hostname */
-    byte bad_pws;             /**< number of bad pw attemps this login */
-    byte idle_tics;           /**< tics idle at password prompt		*/
-    int connected;            /**< mode of 'connectedness'		*/
-    int desc_num;             /**< unique num assigned to desc		*/
-    time_t login_time;        /**< when the person connected		*/
-    char *showstr_head;       /**< for keeping track of an internal str	*/
-    char **showstr_vector;    /**< for paging through texts		*/
-    int showstr_count;        /**< number of pages to page through	*/
-    int showstr_page;         /**< which page are we currently showing?	*/
-    char **str;               /**< for the modify-str system		*/
-    char *backstr;            /**< backup string for modify-str system	*/
-    size_t max_str;           /**< maximum size of string in modify-str	*/
-    long mail_to;             /**< name for mail system			*/
-    int has_prompt;           /**< is the user at a prompt?             */
-    char inbuf[MAX_RAW_INPUT_LENGTH];  /**< buffer for raw input		*/
-    char last_input[MAX_INPUT_LENGTH]; /**< the last input			*/
-    char small_outbuf[SMALL_BUFSIZE];  /**< standard output buffer		*/
-    char *output;             /**< ptr to the current output buffer	*/
-    char **history;           /**< History of commands, for ! mostly.	*/
-    int history_pos;          /**< Circular array position.		*/
-    int bufptr;               /**< ptr to end of current output		*/
-    int bufspace;             /**< space left in the output buffer	*/
-    struct txt_block *large_outbuf; /**< ptr to large buffer, if we need it */
-    struct txt_q input;       /**< q of unprocessed input		*/
-    struct char_data *character; /**< linked to char			*/
-    struct char_data *original;  /**< original char if switched		*/
-    struct descriptor_data *snooping; /**< Who is this char snooping	*/
-    struct descriptor_data *snoop_by; /**< And who is snooping this char	*/
-    struct descriptor_data *next;     /**< link to next descriptor		*/
-    struct oasis_olc_data *olc;       /**< OLC info */
-    protocol_t *pProtocol;    /**< Kavir plugin */
+    socket_t descriptor;                  /**< file descriptor for socket */
+    char host[HOST_LENGTH + 1];           /**< hostname */
+    byte bad_pws;                         /**< number of bad pw attemps this login */
+    byte idle_tics;                       /**< tics idle at password prompt */
+    int connected;                        /**< mode of 'connectedness' */
+    int desc_num;                         /**< unique num assigned to desc */
+    time_t login_time;                    /**< when the person connected */
+    char *showstr_head;                   /**< for keeping track of an internal str */
+    char **showstr_vector;                /**< for paging through texts */
+    int showstr_count;                    /**< number of pages to page through */
+    int showstr_page;                     /**< which page are we currently showing? */
+    char **str;                           /**< for the modify-str system */
+    char *backstr;                        /**< backup string for modify-str system */
+    size_t max_str;                       /**< maximum size of string in modify-str */
+    long mail_to;                         /**< name for mail system */
+    int has_prompt;                       /**< is the user at a prompt? */
+    char inbuf[MAX_RAW_INPUT_LENGTH];     /**< buffer for raw input */
+    char last_input[MAX_INPUT_LENGTH];    /**< the last input */
+    char small_outbuf[SMALL_BUFSIZE];     /**< standard output buffer */
+    char *output;                         /**< ptr to the current output buffer */
+    char **history;                       /**< History of commands, for ! mostly */
+    int history_pos;                      /**< Circular array position */
+    int bufptr;                           /**< ptr to end of current output */
+    int bufspace;                         /**< space left in the output buffer */
+    struct txt_block *large_outbuf;       /**< ptr to large buffer, if we need it */
+    struct txt_q input;                   /**< q of unprocessed input */
+    struct char_data *character;          /**< linked to char */
+    struct char_data *original;           /**< original char if switched */
+    struct descriptor_data *snooping;     /**< Who is this char snooping */
+    struct descriptor_data *snoop_by;     /**< And who is snooping this char */
+    struct descriptor_data *next;         /**< link to next descriptor */
+    struct oasis_olc_data *olc;           /**< OLC info */
+    protocol_t *pProtocol;                /**< Kavir plugin */
 
     struct list_data *events;
 };
 
-/* other miscellaneous structures */
+/** other miscellaneous structures */
 /** Fight message display. This structure is used to hold the information to
  * be displayed for every different violent hit type. */
 struct msg_type {
@@ -1109,38 +1093,38 @@ struct message_list {
 
 /** Social message data structure. */
 struct social_messg {
-    int act_nr;    /**< The social id. */
-    char *command; /**< The command to activate (smile, wave, etc.) */
-    char *sort_as; /**< Priority of social sorted by this. */
-    int hide;      /**< If true, and target can't see actor, target doesn't see */
-    int min_victim_position; /**< Required Position of victim */
-    int min_char_position;   /**< Required Position of char */
-    int min_level_char;      /**< Minimum PC level required to use this social. */
+    int act_nr;                 /**< The social id. */
+    char *command;              /**< The command to activate (smile, wave, etc.) */
+    char *sort_as;              /**< Priority of social sorted by this. */
+    int hide;                   /**< If true, and target can't see actor, target doesn't see */
+    int min_victim_position;    /**< Required Position of victim */
+    int min_char_position;      /**< Required Position of char */
+    int min_level_char;         /**< Minimum PC level required to use this social. */
 
-    /* No argument was supplied */
-    char *char_no_arg;   /**< Displayed to char when no argument is supplied */
-    char *others_no_arg; /**< Displayed to others when no arg is supplied */
+    /** No argument was supplied */
+    char *char_no_arg;          /**< Displayed to char when no argument is supplied */
+    char *others_no_arg;        /**< Displayed to others when no arg is supplied */
 
-    /* An argument was there, and a victim was found */
-    char *char_found;   /**< Display to char when arg is supplied */
-    char *others_found; /**< Display to others when arg is supplied */
-    char *vict_found;   /**< Display to target arg */
+    /** An argument was there, and a victim was found */
+    char *char_found;           /**< Display to char when arg is supplied */
+    char *others_found;         /**< Display to others when arg is supplied */
+    char *vict_found;           /**< Display to target arg */
 
-    /* An argument was there, as well as a body part, and a victim was found */
-    char *char_body_found;   /**< Display to actor */
-    char *others_body_found; /**< Display to others */
-    char *vict_body_found;   /**< Display to target argument */
+    /** An argument was there, as well as a body part, and a victim was found */
+    char *char_body_found;      /**< Display to actor */
+    char *others_body_found;    /**< Display to others */
+    char *vict_body_found;      /**< Display to target argument */
 
-    /* An argument was there, but no victim was found */
-    char *not_found;         /**< Display when no victim is found */
+    /** An argument was there, but no victim was found */
+    char *not_found;            /**< Display when no victim is found */
 
-    /* The victim turned out to be the character */
-    char *char_auto;   /**< Display when self is supplied */
-    char *others_auto; /**< Display to others when self is supplied */
+    /** The victim turned out to be the character */
+    char *char_auto;            /**< Display when self is supplied */
+    char *others_auto;          /**< Display to others when self is supplied */
 
-    /* If the char cant be found search the char's inven and do these: */
-    char *char_obj_found;   /**< Social performed on object, display to char */
-    char *others_obj_found; /**< Social performed on object, display to others */
+    /** If the char cant be found search the char's inventory and do these: */
+    char *char_obj_found;       /**< Social performed on object, display to char */
+    char *others_obj_found;     /**< Social performed on object, display to others */
 };
 
 /** Describes bonuses, or negatives, applied to thieves skills. In practice
@@ -1156,65 +1140,65 @@ struct dex_skill_type {
 /** Describes the bonuses applied for a specific value of a character's
  * strength attribute. */
 struct dex_app_type {
-    sh_int reaction; /**< Historically affects reaction savings throws. */
-    sh_int miss_att; /**< Historically affects missile attacks */
-    sh_int defensive; /**< Alters character's inherent armor class */
+    sh_int reaction;     /**< Historically affects reaction savings throws. */
+    sh_int miss_att;     /**< Historically affects missile attacks */
+    sh_int defensive;    /**< Alters character's inherent armor class */
 };
 
 /** Describes the bonuses applied for a specific value of a character's
  * strength attribute. */
 struct str_app_type {
-    sh_int tohit; /**< To Hit (THAC0) Bonus/Penalty        */
-    sh_int todam; /**< Damage Bonus/Penalty                */
-    sh_int carry_w; /**< Maximum weight that can be carrried */
-    sh_int wield_w; /**< Maximum weight that can be wielded  */
+    sh_int tohit;      /**< To Hit (THAC0) Bonus/Penalty        */
+    sh_int todam;      /**< Damage Bonus/Penalty                */
+    sh_int carry_w;    /**< Maximum weight that can be carrried */
+    sh_int wield_w;    /**< Maximum weight that can be wielded  */
 };
 
 /** Describes the bonuses applied for a specific value of a character's
  * wisdom attribute. */
 struct wis_app_type {
-    byte bonus; /**< how many practices player gains per lev */
+    byte bonus;       /**< how many practices player gains per lev */
 };
 
 /** Describes the bonuses applied for a specific value of a character's
  * intelligence attribute. */
 struct int_app_type {
-    byte learn; /**< how many % a player learns a spell/skill */
+    byte learn;       /**< how many % a player learns a spell/skill */
 };
 
 /** Describes the bonuses applied for a specific value of a
  * character's constitution attribute. */
 struct con_app_type {
-    sh_int hitp; /**< Added to a character's new MAXHP at each new level. */
+    sh_int hitp;     /**< Added to a character's new MAXHP at each new level. */
 };
 
 /** Stores, and used to deliver, the current weather information
  * in the mud world. */
 struct weather_data {
-    int pressure; /**< How is the pressure ( Mb )? */
-    int change; /**< How fast and what way does it change? */
-    int sky; /**< How is the sky? */
-    int sunlight; /**< And how much sun? */
+    int pressure;    /**< How is the pressure ( Mb )? */
+    int change;      /**< How fast and what way does it change? */
+    int sky;         /**< How is the sky? */
+    int sunlight;    /**< And how much sun? */
 };
 
 /** Element in monster and object index-tables.
  NOTE: Assumes sizeof(mob_vnum) >= sizeof(obj_vnum) */
 struct index_data {
-    mob_vnum vnum; /**< virtual number of this mob/obj   */
-    int number; /**< number of existing units of this mob/obj  */
+    mob_vnum vnum;            /**< virtual number of this mob/obj   */
+    int number;               /**< number of existing units of this mob/obj  */
     /** Point to any SPECIAL function assoicated with mob/obj.
      * Note: These are not trigger scripts. They are functions hard coded in
      * the source code. */
     SPECIAL(*func);
 
-    char *farg; /**< String argument for special function. */
+    char *farg;              /**< String argument for special function. */
     struct trig_data *proto; /**< Points to the trigger prototype. */
 };
 
 /** Master linked list for the mob/object prototype trigger lists. */
 struct trig_proto_list {
-    int vnum; /**< vnum of the trigger   */
-    struct trig_proto_list *next; /**< next trigger          */
+    int vnum;                        /**< vnum of the trigger   */
+    struct trig_proto_list *next;    /**< next trigger          */
 };
 
 struct guild_info_type {
@@ -1233,13 +1217,13 @@ struct happyhour {
 
 /** structure for list of recent players (see 'recent' command) */
 struct recent_player {
-    int vnum;                   /* The ID number for this instance */
-    char name[MAX_NAME_LENGTH];  /* The char name of the player     */
-    bool new_player;             /* Is this a new player?           */
-    bool copyover_player;        /* Is this a player that was on during the last copyover? */
-    time_t time;                   /* login time                      */
-    char host[HOST_LENGTH + 1];    /* Host IP address                 */
-    struct recent_player *next;    /* Pointer to the next instance    */
+    int vnum;                       /** The ID number for this instance */
+    char name[MAX_NAME_LENGTH];     /** The char name of the player     */
+    bool new_player;                /** Is this a new player?           */
+    bool copyover_player;           /** Is this a player that was on during the last copyover? */
+    time_t time;                    /** login time                      */
+    char host[HOST_LENGTH + 1];     /** Host IP address                 */
+    struct recent_player *next;     /** Pointer to the next instance    */
 };
 
 /* Config structs */
@@ -1247,84 +1231,84 @@ struct recent_player {
 /** The game configuration structure used for configurating the game play
  * variables. */
 struct game_data {
-    int pk_allowed; /**< Is player killing allowed?    */
-    int pt_allowed; /**< Is player thieving allowed?   */
-    int level_can_shout; /**< Level player must be to shout.   */
-    int holler_move_cost; /**< Cost to holler in move points.    */
-    int tunnel_size; /**< Number of people allowed in a tunnel.*/
-    int max_exp_gain; /**< Maximum experience gainable per kill.*/
-    int max_exp_loss; /**< Maximum experience losable per death.*/
-    int max_npc_corpse_time; /**< Num tics before NPC corpses decompose*/
-    int max_pc_corpse_time; /**< Num tics before PC corpse decomposes.*/
-    int idle_void; /**< Num tics before PC sent to void(idle)*/
-    int idle_rent_time; /**< Num tics before PC is autorented.   */
-    int idle_max_level; /**< Level of players immune to idle.     */
-    int dts_are_dumps; /**< Should items in dt's be junked?   */
-    int load_into_inventory; /**< Objects load in immortals inventory. */
-    int track_through_doors; /**< Track through doors while closed?    */
-    int no_mort_to_immort; /**< Prevent mortals leveling to imms?    */
-    int disp_closed_doors; /**< Display closed doors in autoexit?    */
-    int diagonal_dirs; /**< Are there 6 or 10 directions? */
-    int map_option;         /**< MAP_ON, MAP_OFF or MAP_IMM_ONLY      */
-    int map_size;           /**< Default size for map command         */
-    int minimap_size;       /**< Default size for mini-map (automap)  */
-    int script_players;     /**< Is attaching scripts to players allowed? */
+    int pk_allowed;             /**< Is player killing allowed?    */
+    int pt_allowed;             /**< Is player thieving allowed?   */
+    int level_can_shout;        /**< Level player must be to shout.   */
+    int holler_move_cost;       /**< Cost to holler in move points.    */
+    int tunnel_size;            /**< Number of people allowed in a tunnel.*/
+    int max_exp_gain;           /**< Maximum experience gainable per kill.*/
+    int max_exp_loss;           /**< Maximum experience losable per death.*/
+    int max_npc_corpse_time;    /**< Num tics before NPC corpses decompose*/
+    int max_pc_corpse_time;     /**< Num tics before PC corpse decomposes.*/
+    int idle_void;              /**< Num tics before PC sent to void(idle)*/
+    int idle_rent_time;         /**< Num tics before PC is autorented.   */
+    int idle_max_level;         /**< Level of players immune to idle.     */
+    int dts_are_dumps;          /**< Should items in dt's be junked?   */
+    int load_into_inventory;    /**< Objects load in immortals inventory. */
+    int track_through_doors;    /**< Track through doors while closed?    */
+    int no_mort_to_immort;      /**< Prevent mortals leveling to imms?    */
+    int disp_closed_doors;      /**< Display closed doors in autoexit?    */
+    int diagonal_dirs;          /**< Are there 6 or 10 directions? */
+    int map_option;             /**< MAP_ON, MAP_OFF or MAP_IMM_ONLY      */
+    int map_size;               /**< Default size for map command         */
+    int minimap_size;           /**< Default size for mini-map (automap)  */
+    int script_players;         /**< Is attaching scripts to players allowed? */
 
-    char *OK;       /**< When player receives 'Okay.' text.    */
-    char *HUH;      /**< 'Huh!?!'                              */
-    char *NOPERSON; /**< 'No one by that name here.'           */
-    char *NOEFFECT; /**< 'Nothing seems to happen.'            */
+    char *OK;                   /**< When player receives 'Okay.' text.    */
+    char *HUH;                  /**< 'Huh!?!'                              */
+    char *NOPERSON;             /**< 'No one by that name here.'           */
+    char *NOEFFECT;             /**< 'Nothing seems to happen.'            */
 };
 
 /** The rent and crashsave options. */
 struct crash_save_data {
-    int free_rent; /**< Should the MUD allow rent for free?   */
-    int max_obj_save; /**< Max items players can rent.           */
-    int min_rent_cost; /**< surcharge on top of item costs.       */
-    int auto_save; /**< Does the game automatically save ppl? */
-    int autosave_time; /**< if auto_save=TRUE, how often?         */
-    int crash_file_timeout; /**< Life of crashfiles and idlesaves.     */
-    int rent_file_timeout; /**< Lifetime of normal rent files in days */
+    int free_rent;              /**< Should the MUD allow rent for free?   */
+    int max_obj_save;           /**< Max items players can rent.           */
+    int min_rent_cost;          /**< surcharge on top of item costs.       */
+    int auto_save;              /**< Does the game automatically save ppl? */
+    int autosave_time;          /**< if auto_save=TRUE, how often?         */
+    int crash_file_timeout;     /**< Life of crashfiles and idlesaves.     */
+    int rent_file_timeout;      /**< Lifetime of normal rent files in days */
 };
 
 /** Important room numbers. This structure stores vnums, not real array
  * numbers. */
 struct room_numbers {
-    room_vnum mortal_start_room; /**< vnum of room that mortals enter at.  */
-    room_vnum immort_start_room; /**< vnum of room that immorts enter at.  */
-    room_vnum frozen_start_room; /**< vnum of room that frozen ppl enter.  */
-    room_vnum donation_room_1; /**< vnum of donation room #1.            */
-    room_vnum donation_room_2; /**< vnum of donation room #2.            */
-    room_vnum donation_room_3; /**< vnum of donation room #3.            */
+    room_vnum mortal_start_room;    /**< vnum of room that mortals enter at.  */
+    room_vnum immort_start_room;    /**< vnum of room that immorts enter at.  */
+    room_vnum frozen_start_room;    /**< vnum of room that frozen ppl enter.  */
+    room_vnum donation_room_1;      /**< vnum of donation room #1.            */
+    room_vnum donation_room_2;      /**< vnum of donation room #2.            */
+    room_vnum donation_room_3;      /**< vnum of donation room #3.            */
 };
 
 /** Operational game variables. */
 struct game_operation {
-    ush_int DFLT_PORT; /**< The default port to run the game.  */
-    char *DFLT_IP; /**< Bind to all interfaces.     */
-    char *DFLT_DIR; /**< The default directory (lib).    */
-    char *LOGNAME; /**< The file to log messages to.    */
-    int max_playing; /**< Maximum number of players allowed. */
-    int max_filesize; /**< Maximum size of misc files.   */
-    int max_bad_pws; /**< Maximum number of pword attempts.  */
-    int siteok_everyone; /**< Everyone from all sites are SITEOK.*/
-    int nameserver_is_slow; /**< Is the nameserver slow or fast?   */
-    int use_new_socials; /**< Use new or old socials file ?      */
-    int auto_save_olc; /**< Does OLC save to disk right away ? */
-    char *MENU; /**< The MAIN MENU.        */
-    char *WELC_MESSG; /**< The welcome message.      */
-    char *START_MESSG; /**< The start msg for new characters.  */
-    int medit_advanced; /**< Does the medit OLC show the advanced stats menu ? */
-    int ibt_autosave; /**< Does "bug resolve" autosave ? */
-    int protocol_negotiation; /**< Enable the protocol negotiation system ? */
-    int special_in_comm; /**< Enable use of a special character in communication channels ? */
-    int debug_mode; /**< Current Debug Mode */
+    ush_int DFLT_PORT;              /**< The default port to run the game.  */
+    char *DFLT_IP;                  /**< Bind to all interfaces.     */
+    char *DFLT_DIR;                 /**< The default directory (lib).    */
+    char *LOGNAME;                  /**< The file to log messages to.    */
+    int max_playing;                /**< Maximum number of players allowed. */
+    int max_filesize;               /**< Maximum size of misc files.   */
+    int max_bad_pws;                /**< Maximum number of pword attempts.  */
+    int siteok_everyone;            /**< Everyone from all sites are SITEOK.*/
+    int nameserver_is_slow;         /**< Is the nameserver slow or fast?   */
+    int use_new_socials;            /**< Use new or old socials file ?      */
+    int auto_save_olc;              /**< Does OLC save to disk right away ? */
+    char *MENU;                     /**< The MAIN MENU.        */
+    char *WELC_MESSG;               /**< The welcome message.      */
+    char *START_MESSG;              /**< The start msg for new characters.  */
+    int medit_advanced;             /**< Does the medit OLC show the advanced stats menu ? */
+    int ibt_autosave;               /**< Does "bug resolve" autosave ? */
+    int protocol_negotiation;       /**< Enable the protocol negotiation system ? */
+    int special_in_comm;            /**< Enable use of a special character in communication channels ? */
+    int debug_mode;                 /**< Current Debug Mode */
 };
 
 /** The Autowizard options. */
 struct autowiz_data {
-    int use_autowiz; /**< Use the autowiz feature?   */
-    int min_wizlist_lev; /**< Minimun level to show on wizlist.  */
+    int use_autowiz;                /**< Use the autowiz feature?   */
+    int min_wizlist_lev;            /**< Minimun level to show on wizlist.  */
 };
 
 /**
