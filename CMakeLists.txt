@@ -20,6 +20,15 @@ if("${CMAKE_SOURCE_DIR}/src" STREQUAL "${CMAKE_BINARY_DIR}")
             "rm -rf CMakeCache.txt CMakeFiles")
 endif()
 
+# Visual Studio project generator x64 check
+if(MSVC)
+    if(CMAKE_GENERATOR MATCHES ".*Visual Studio.*")
+        if(NOT CMAKE_GENERATOR_PLATFORM MATCHES "x64")
+            message(FATAL_ERROR "\nVisual Studio x86 builds are not supported\nrebuild cmake cache with '-A x64'")
+        endif()
+    endif()
+endif()
+
 # if no build type specified default to release
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release"
@@ -58,14 +67,8 @@ configure_file (
         "${CMAKE_CURRENT_SOURCE_DIR}/src/version.c"
 )
 
-# Visual Studio project generator x64 check
-if(MSVC)
-    if(CMAKE_GENERATOR MATCHES ".*Visual Studio.*")
-        if(NOT CMAKE_GENERATOR_PLATFORM MATCHES "x64")
-            message(FATAL_ERROR "\nVisual Studio x86 builds are not supported\nrebuild cmake cache with '-A x64'")
-        endif()
-    endif()
-endif()
+# options
+option(MARCH_NATIVE "use march=native for GCC" ON)
 
 # compiler flags
 include(compiler_flags)
@@ -127,6 +130,10 @@ else()
     add_c_flag_if_supported("-g")  # enable debug
     add_c_flag_if_supported("-Wno-char-subscripts")  # disable gcc warning about arrays
     add_c_flag_if_supported("-fno-builtin")  # disable builtin
+
+    if(MARCH_NATIVE)
+        add_c_flag_if_supported("-march=native")
+    endif()
 endif()
 
 
