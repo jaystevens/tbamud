@@ -36,7 +36,7 @@
 #include "quest.h"
 #include "ibt.h"
 #include "mud_event.h"
-#include "msgedit.h"
+#include "olc_msg_msgedit.h"
 #include "screen.h"
 #include <sys/stat.h>
 

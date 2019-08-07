@@ -22,7 +22,7 @@
 #include "handler.h"
 #include "improved-edit.h"
 #include "act.h"
-#include "hedit.h"
+#include "olc_help_hedit.h"
 #include "modify.h"
 
 /* local functions */

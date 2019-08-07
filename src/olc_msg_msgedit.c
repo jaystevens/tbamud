@@ -13,7 +13,7 @@
 #include "screen.h"
 #include "spells.h"
 #include "db.h"
-#include "msgedit.h"
+#include "olc_msg_msgedit.h"
 #include "oasis.h"
 #include "genolc.h"
 #include "interpreter.h"

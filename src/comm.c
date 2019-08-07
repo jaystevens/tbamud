@@ -56,7 +56,7 @@
 #include "boards.h"
 #include "act.h"
 #include "ban.h"
-#include "msgedit.h"
+#include "olc_msg_msgedit.h"
 #include "fight.h"
 #include "spells.h" /* for affect_update */
 #include "modify.h"

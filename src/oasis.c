@@ -26,7 +26,7 @@
 #include "handler.h" /* for is_name */
 #include "quest.h"
 #include "ibt.h"
-#include "msgedit.h"
+#include "olc_msg_msgedit.h"
 
 /* Global variables defined here, used elsewhere */
 const char *nrm, *grn, *cyn, *yel;
