@@ -169,172 +169,172 @@
 #cmakedefine HAVE_LIBMALLOC 1
 
 /* Check for a prototype to accept. */
-#cmakedefine NEED_ACCEPT_PROTO
+#cmakedefine NEED_ACCEPT_PROTO 1
 
 /* Check for a prototype to atoi. */
-#cmakedefine NEED_ATOI_PROTO
+#cmakedefine NEED_ATOI_PROTO 1
 
 /* Check for a prototype to atol. */
-#cmakedefine NEED_ATOL_PROTO
+#cmakedefine NEED_ATOL_PROTO 1
 
 /* Check for a prototype to bind. */
-#cmakedefine NEED_BIND_PROTO
+#cmakedefine NEED_BIND_PROTO 1
 
 /* Check for a prototype to bzero. */
-#cmakedefine NEED_BZERO_PROTO
+#cmakedefine NEED_BZERO_PROTO 1
 
 /* Check for a prototype to chdir. */
-#cmakedefine NEED_CHDIR_PROTO
+#cmakedefine NEED_CHDIR_PROTO 1
 
 /* Check for a prototype to close. */
-#cmakedefine NEED_CLOSE_PROTO
+#cmakedefine NEED_CLOSE_PROTO 1
 
 /* Check for a prototype to crypt. */
-#cmakedefine NEED_CRYPT_PROTO
+#cmakedefine NEED_CRYPT_PROTO 1
 
 /* Check for a prototype to fclose. */
-#cmakedefine NEED_FCLOSE_PROTO
+#cmakedefine NEED_FCLOSE_PROTO 1
 
 /* Check for a prototype to fcntl. */
-#cmakedefine NEED_FCNTL_PROTO
+#cmakedefine NEED_FCNTL_PROTO 1
 
 /* Check for a prototype to fflush. */
-#cmakedefine NEED_FFLUSH_PROTO
+#cmakedefine NEED_FFLUSH_PROTO 1
 
 /* Check for a prototype to fprintf. */
-#cmakedefine NEED_FPRINTF_PROTO
+#cmakedefine NEED_FPRINTF_PROTO 1
 
 /* Check for a prototype to fputc. */
-#cmakedefine NEED_FPUTC_PROTO
+#cmakedefine NEED_FPUTC_PROTO 1
 
 /* Check for a prototype to fputs. */
-#cmakedefine NEED_FPUTS_PROTO
+#cmakedefine NEED_FPUTS_PROTO 1
 
 /* Check for a prototype to fread. */
-#cmakedefine NEED_FREAD_PROTO
+#cmakedefine NEED_FREAD_PROTO 1
 
 /* Check for a prototype to fscanf. */
-#cmakedefine NEED_FSCANF_PROTO
+#cmakedefine NEED_FSCANF_PROTO 1
 
 /* Check for a prototype to fseek. */
-#cmakedefine NEED_FSEEK_PROTO
+#cmakedefine NEED_FSEEK_PROTO 1
 
 /* Check for a prototype to fwrite. */
-#cmakedefine NEED_FWRITE_PROTO
+#cmakedefine NEED_FWRITE_PROTO 1
 
 /* Check for a prototype to getpeername. */
-#cmakedefine NEED_GETPEERNAME_PROTO
+#cmakedefine NEED_GETPEERNAME_PROTO 1
 
 /* Check for a prototype to getpid. */
-#cmakedefine NEED_GETPID_PROTO
+#cmakedefine NEED_GETPID_PROTO 1
 
 /* Check for a prototype to getrlimit. */
-#cmakedefine NEED_GETRLIMIT_PROTO
+#cmakedefine NEED_GETRLIMIT_PROTO 1
 
 /* Check for a prototype to getsockname. */
-#cmakedefine NEED_GETSOCKNAME_PROTO
+#cmakedefine NEED_GETSOCKNAME_PROTO 1
 
 /* Check for a prototype to gettimeofday. */
-#cmakedefine NEED_GETTIMEOFDAY_PROTO
+#cmakedefine NEED_GETTIMEOFDAY_PROTO 1
 
 /* Check for a prototype to htonl. */
-#cmakedefine NEED_HTONL_PROTO
+#cmakedefine NEED_HTONL_PROTO 1
 
 /* Check for a prototype to htons. */
-#cmakedefine NEED_HTONS_PROTO
+#cmakedefine NEED_HTONS_PROTO 1
 
 /* Check for a prototype to inet_addr. */
-#cmakedefine NEED_INET_ADDR_PROTO
+#cmakedefine NEED_INET_ADDR_PROTO 1
 
 /* Check for a prototype to inet_aton. */
-#cmakedefine NEED_INET_ATON_PROTO
+#cmakedefine NEED_INET_ATON_PROTO 1
 
 /* Check for a prototype to inet_ntoa. */
-#cmakedefine NEED_INET_NTOA_PROTO
+#cmakedefine NEED_INET_NTOA_PROTO 1
 
 /* Check for a prototype to listen. */
-#cmakedefine NEED_LISTEN_PROTO
+#cmakedefine NEED_LISTEN_PROTO 1
 
 /* Check for a prototype to ntohl. */
-#cmakedefine NEED_NTOHL_PROTO
+#cmakedefine NEED_NTOHL_PROTO 1
 
 /* Check for a prototype to perror. */
-#cmakedefine NEED_PERROR_PROTO
+#cmakedefine NEED_PERROR_PROTO 1
 
 /* Check for a prototype to printf. */
-#cmakedefine NEED_PRINTF_PROTO
+#cmakedefine NEED_PRINTF_PROTO 1
 
 /* Check for a prototype to qsort. */
-#cmakedefine NEED_QSORT_PROTO
+#cmakedefine NEED_QSORT_PROTO 1
 
 /* Check for a prototype to read. */
-#cmakedefine NEED_READ_PROTO
+#cmakedefine NEED_READ_PROTO 1
 
 /* Check for a prototype to remove. */
-#cmakedefine NEED_REMOVE_PROTO
+#cmakedefine NEED_REMOVE_PROTO 1
 
 /* Check for a prototype to rewind. */
-#cmakedefine NEED_REWIND_PROTO
+#cmakedefine NEED_REWIND_PROTO 1
 
 /* Check for a prototype to select. */
-#cmakedefine NEED_SELECT_PROTO
+#cmakedefine NEED_SELECT_PROTO 1
 
 /* Check for a prototype to setitimer. */
-#cmakedefine NEED_SETITIMER_PROTO
+#cmakedefine NEED_SETITIMER_PROTO 1
 
 /* Check for a prototype to setrlimit. */
-#cmakedefine NEED_SETRLIMIT_PROTO
+#cmakedefine NEED_SETRLIMIT_PROTO 1
 
 /* Check for a prototype to setsockopt. */
-#cmakedefine NEED_SETSOCKOPT_PROTO
+#cmakedefine NEED_SETSOCKOPT_PROTO 1
 
 /* Check for a prototype to snprintf. */
-#cmakedefine NEED_SNPRINTF_PROTO
+#cmakedefine NEED_SNPRINTF_PROTO 1
 
 /* Check for a prototype to socket. */
-#cmakedefine NEED_SOCKET_PROTO
+#cmakedefine NEED_SOCKET_PROTO 1
 
 /* Check for a prototype to sprintf. */
-#cmakedefine NEED_SPRINTF_PROTO
+#cmakedefine NEED_SPRINTF_PROTO 1
 
 /* Check for a prototype to sscanf. */
-#cmakedefine NEED_SSCANF_PROTO
+#cmakedefine NEED_SSCANF_PROTO 1
 
 /* Check for a prototype to strcasecmp. */
-#cmakedefine NEED_STRCASECMP_PROTO
+#cmakedefine NEED_STRCASECMP_PROTO 1
 
 /* Check for a prototype to strdup. */
-#cmakedefine NEED_STRDUP_PROTO
+#cmakedefine NEED_STRDUP_PROTO 1
 
 /* Check for a prototype to strerror. */
-#cmakedefine NEED_STRERROR_PROTO
+#cmakedefine NEED_STRERROR_PROTO 1
 
 /* Check for a prototype to stricmp. */
-#cmakedefine NEED_STRICMP_PROTO
+#cmakedefine NEED_STRICMP_PROTO 1
 
 /* Check for a prototype to strlcpy. */
-#cmakedefine NEED_STRLCPY_PROTO
+#cmakedefine NEED_STRLCPY_PROTO 1
 
 /* Check for a prototype to strncasecmp. */
-#cmakedefine NEED_STRNCASECMP_PROTO
+#cmakedefine NEED_STRNCASECMP_PROTO 1
 
 /* Check for a prototype to strnicmp. */
-#cmakedefine NEED_STRNICMP_PROTO
+#cmakedefine NEED_STRNICMP_PROTO 1
 
 /* Check for a prototype to system. */
-#cmakedefine NEED_SYSTEM_PROTO
+#cmakedefine NEED_SYSTEM_PROTO 1
 
 /* Check for a prototype to time. */
-#cmakedefine NEED_TIME_PROTO
+#cmakedefine NEED_TIME_PROTO 1
 
 /* Check for a prototype to unlink. */
-#cmakedefine NEED_UNLINK_PROTO
+#cmakedefine NEED_UNLINK_PROTO 1
 
 /* Check for a prototype to vsnprintf. */
-#cmakedefine NEED_VSNPRINTF_PROTO
+#cmakedefine NEED_VSNPRINTF_PROTO 1
 
 /* Check for a prototype to write. */
-#cmakedefine NEED_WRITE_PROTO
+#cmakedefine NEED_WRITE_PROTO 1
 
 #ifdef CIRCLE_WINDOWS
 
