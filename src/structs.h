@@ -525,7 +525,7 @@
 #define LVL_IMMORT  31  /**< Level of Immortals */
 
 /** Minimum level to build and to run the saveall command */
-#define LVL_BUILDER    LVL_IMMORT
+#define LVL_BUILDER    LVL_GRGOD
 
 /** OPT_USEC determines how many commands will be processed by the MUD per
  * second and how frequently it does socket I/O.  A low setting will cause
