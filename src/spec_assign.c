@@ -165,7 +165,7 @@ void assign_rooms(void) {
 }
 
 struct spec_func_data {
-    char *name;
+    const char *name;
 
     SPECIAL(*func);
 };
