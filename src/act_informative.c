@@ -899,7 +899,7 @@ ACMD(do_score) {
     }
 
     // TODO - move affect to seperate command and func
-    send_to_char(ch, "You are affected by: ");
+    send_to_char(ch, "You are affected by: \r\n");
 
     if (GET_COND(ch, DRUNK) > 10)
         send_to_char(ch, "You are intoxicated.\r\n");
