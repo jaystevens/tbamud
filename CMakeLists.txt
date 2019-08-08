@@ -124,7 +124,8 @@ else()
     #    add_c_flag_if_supported("-static-libgcc")
     #endif()
 
-    add_c_flag_if_supported("-Wno-unused-parameter")  # disable unused parameter otherwise GCC is very verbosey
+    # tbamud - disable unused parameter otherwise GCC is very verbosey
+    add_c_flag_if_supported("-Wno-unused-parameter")
 
     # tbamud options from old configure
     add_c_flag_if_supported("-g")  # enable debug
