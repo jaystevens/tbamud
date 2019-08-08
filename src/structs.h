@@ -21,13 +21,19 @@
  *  TRUE/FALSE aren't defined yet. */
 #define USE_AUTOEQ    1
 
-# define IDXTYPE        ush_int          /**< Index types are unsigned short ints */
-# define IDXTYPE_MIN    0                /**< Used for compatibility checks. */
-# define IDXTYPE_MAX    USHRT_MAX        /**< Used for compatibility checks. */
-# define NOWHERE        ((IDXTYPE)~0)    /**< Sets to ush_int_MAX, or 65,535 */
-# define NOTHING        ((IDXTYPE)~0)    /**< Sets to ush_int_MAX, or 65,535 */
-# define NOBODY         ((IDXTYPE)~0)    /**< Sets to ush_int_MAX, or 65,535 */
-# define NOFLAG         ((IDXTYPE)~0)    /**< Sets to ush_int_MAX, or 65,535 */
+/** index values */
+/**  uint8_t - MAX                        255
+ *  uint16_t - MAX                     65,535
+ *  uint32_t - MAX              4,294,967,295
+ *  uint64_t - MAX 18,446,744,073,709,551,615
+ */
+# define IDXTYPE        uint16_t       /**< Index types are 16 bit unsigned int */
+# define IDXTYPE_MIN    0              /**< Used for compatibility checks. */
+# define IDXTYPE_MAX    UINT16_MAX     /**< Used for compatibility checks. */
+# define NOWHERE        IDXTYPE_MAX    /**< Set to IDXTYPE_MAX - was ((IDXTYPE)~0) */
+# define NOTHING        IDXTYPE_MAX    /**< Set to IDXTYPE_MAX - was ((IDXTYPE)~0) */
+# define NOBODY         IDXTYPE_MAX    /**< Set to IDXTYPE_MAX - was ((IDXTYPE)~0) */
+# define NOFLAG         IDXTYPE_MAX    /**< Set to IDXTYPE_MAX - was ((IDXTYPE)~0) */
 
 /** Function macro for the mob, obj and room special functions */
 #define SPECIAL(name) \
