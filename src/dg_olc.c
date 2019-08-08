@@ -181,7 +181,7 @@ void trigedit_setup_existing(struct descriptor_data *d, int rtrg_num) {
 
 static void trigedit_disp_menu(struct descriptor_data *d) {
     struct trig_data *trig = OLC_TRIG(d);
-    char *attach_type;
+    const char *attach_type;
     char trgtypes[256];
 
     get_char_colors(d->character);
@@ -419,6 +419,7 @@ static void script_syntax_highlighting(struct descriptor_data *d, char *string) 
     ACMD(do_action);
     char buffer[MAX_STRING_LENGTH] = "";
     char *newlist, *curtok;
+    int cmd = 0;
 
     size_t i;
 
@@ -460,7 +461,6 @@ static void script_syntax_highlighting(struct descriptor_data *d, char *string) 
             }
 
             // Socials replacement (experimental)
-            int cmd;
             for (cmd = 0; *complete_cmd_info[cmd].command != '\n'; cmd++) {
                 if (complete_cmd_info[cmd].command_pointer == do_action) {
                     char replace_social[MAX_INPUT_LENGTH];
