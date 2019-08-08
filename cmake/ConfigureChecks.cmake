@@ -7,24 +7,27 @@ include(CheckPrototypeDefinition)
 include(CheckTypeSize)
 include(CheckStructHasMember)
 
-set(CONF_H_GENERATED 0)  # set for debuging
+#set(CONF_H_GENERATED 0)  # set for debuging
 
 # setup conf file
 if(NOT CONF_H_GENERATED)
     if(MSVC)
         # if MSVC use prebuilt conf.h
         message(STATUS "conf.h - using prebuilt file for Visual Studio")
-        configure_file(
-                "${CMAKE_CURRENT_SOURCE_DIR}/src/conf.h.msvc"
-                "${CMAKE_CURRENT_SOURCE_DIR}/src/conf.h"
-        )
+        include(WindowsCache)
     else()
         message(STATUS "conf.h - detecting configuration")
 
         # PREFLIGHT
+        CHECK_INCLUDE_FILES(stdio.h HAVE_STDIO_H)
+        if(NOT HAVE_STDIO_H)
+            message(ERROR "unable to find stdio.h")
+        endif()
+
         CHECK_INCLUDE_FILES(sys/types.h HAVE_SYS_TYPES_H)
 
-        # TODO #define const
+        # in C11 const should always be defined/work
+        set(const 0)
 
         CHECK_INCLUDE_FILES(sys/wait.h HAVE_SYS_WAIT_H)
 
@@ -88,16 +91,15 @@ if(NOT CONF_H_GENERATED)
         # TODO - broken on windows - need to find headers
         CHECK_STRUCT_HAS_MEMBER("struct in_addr" s_addr "netinet/in.h" HAVE_STRUCT_IN_ADDR)
 
-        # TODO - includes for HAVE_SOCKLEN
-        # TODO - broken on windows
-        CHECK_TYPE_SIZE(socklen_t HAVE_SOCKLEN_T)
-        if(HAVE_SOCKLEN_T GREATER_EQUAL 0)
+        # TODO - retest on windows - probably still broken
+        set(CMAKE_EXTRA_INCLUDE_FILES ${CMAKE_EXTRA_INCLUDE_FILES} sys/socket.h)
+        CHECK_TYPE_SIZE(socklen_t SOCKLEN_T_SIZE)
+        if(SOCKLEN_T_SIZE GREATER_EQUAL 0)
             set(socklen_t 0)
         else()
             set(socklen_t unsigned)
         endif()
-        message(STATUS "socklen_t test broken, JAM value")
-        set(socklen_t 0)
+        set(CMAKE_EXTRA_INCLUDE_FILES "")
 
         CHECK_TYPE_SIZE(ssize_t HAVE_SSIZE_T)
         if(HAVE_SSIZE_T GREATER_EQUAL 0)
@@ -147,12 +149,11 @@ if(NOT CONF_H_GENERATED)
         CHECK_INCLUDE_FILES(unistd.h HAVE_UNISTD_H)
 
         # TODO HAVE_LIBMALLOC -lmalloc
-
-        # make conf.h before we check prototypes
-        configure_file(
-                "${CMAKE_CURRENT_SOURCE_DIR}/src/conf.h.cmakein"
-                "${CMAKE_CURRENT_SOURCE_DIR}/src/conf.h"
-        )
+        # malloc library seems to be solaris related?
+        # it is also possibly available on macOS?
+        #   (apple has "barrowed" enough solaris code it would not surprise me)
+        FIND_LIBRARY(HAVE_LIBMALLOC malloc)
+        message(STATUS "HAVE_LIBMALLOC: ${HAVE_LIBMALLOC}")
 
         # NEED_ACCEPT_PROTO
         check_prototype_definition(accept
@@ -199,12 +200,16 @@ if(NOT CONF_H_GENERATED)
                 "sys/time.h"
                 HAVE_GETTIMEOFDAY_PROTO)
 
-        message(STATUS "HAVE_GETTIMEOFDAY_TZ: ${HAVE_GETTIMEOFDAY_TZ}")
 
-        message(STATUS "JAM NEED PROTO")
-        set(NEED_STRICMP_PROTO 1)
-        set(NEED_STRLCPY_PROTO 1)
-        set(NEED_STRNICMP_PROTO 1)
+        message(STATUS "PROTO detection is still incomplete")
+        if(UNIX AND NOT APPLE)
+            message(STATUS "PROTO override Linux")
+            set(NEED_STRICMP_PROTO 1)
+            set(NEED_STRLCPY_PROTO 1)
+            set(NEED_STRNICMP_PROTO 1)
+        else()
+            message(STATUS "PROTO override macOS - TODO")
+        endif()
 
         configure_file(
                 "${CMAKE_CURRENT_SOURCE_DIR}/src/conf.h.cmakein"
@@ -212,6 +217,13 @@ if(NOT CONF_H_GENERATED)
         )
     endif()
 
+    # write conf.h
+    configure_file(
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/conf.h.cmakein"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/conf.h"
+    )
+
+    # check that it worked
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/conf.h")
         message(STATUS "conf.h generated")
         set(CONF_H_GENERATED 1 CACHE BOOL "conf.h built, set variable 0/OFF to rebuild")
