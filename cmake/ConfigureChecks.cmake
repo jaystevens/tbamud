@@ -7,7 +7,7 @@ include(CheckPrototypeDefinition)
 include(CheckTypeSize)
 include(CheckStructHasMember)
 
-#set(CONF_H_GENERATED 0)  # set for debuging
+# set(CONF_H_GENERATED 0)  # set for debuging
 
 # setup conf file
 if(NOT CONF_H_GENERATED)
@@ -27,7 +27,7 @@ if(NOT CONF_H_GENERATED)
         CHECK_INCLUDE_FILES(sys/types.h HAVE_SYS_TYPES_H)
 
         # in C11 const should always be defined/work
-        set(const 0)
+        set(const 0 CACHE INTERNAL "")
 
         CHECK_INCLUDE_FILES(sys/wait.h HAVE_SYS_WAIT_H)
 
@@ -41,18 +41,18 @@ if(NOT CONF_H_GENERATED)
 
         CHECK_TYPE_SIZE(pid_t HAVE_PID_T)
         if(HAVE_PID_T GREATER_EQUAL 0)
-            set(pid_t 0)
+            set(pid_t 0 CACHE INTERNAL "")
         else()
-            set(pid_t int)
+            set(pid_t int CACHE INTERNAL "")
         endif()
 
         include(TestSignalType)
 
         CHECK_TYPE_SIZE(size_t HAVE_SIZE_T)
         if(HAVE_SIZE_T GREATER_EQUAL 0)
-            set(size_t 0)
+            set(size_t 0 CACHE INTERNAL "")
         else()
-            set(size_t unsigned)
+            set(size_t unsigned CACHE INTERNAL "")
         endif()
 
         # STDC_HEADERS test
@@ -61,18 +61,18 @@ if(NOT CONF_H_GENERATED)
         CHECK_INCLUDE_FILES(string.h HAVE_STRING_H)
         CHECK_INCLUDE_FILES(float.h HAVE_FLOAT_H)
         if((HAVE_STDLIB_H) AND (HAVE_STDARG_H) AND (HAVE_STRING_H) AND (HAVE_FLOAT_H))
-            set(STDC_HEADERS 1)
+            set(STDC_HEADERS 1 CACHE INTERNAL "")
         endif()
 
         CHECK_INCLUDE_FILES("sys/time.h;time.h" TIME_WITH_SYS_TIME)
 
         # CIRCLE_UNIX / CIRCLE_WINDOWS
         if(WIN32)
-            set(CIRCLE_UNIX 0)
-            set(CIRCLE_WINDOWS 1)
+            set(CIRCLE_UNIX 0 CACHE INTERNAL "")
+            set(CIRCLE_WINDOWS 1 CACHE INTERNAL "")
         else()
-            set(CIRCLE_UNIX 1)
-            set(CIRCLE_WINDOWS 0)
+            set(CIRCLE_UNIX 1 CACHE INTERNAL "")
+            set(CIRCLE_WINDOWS 0 CACHE INTERNAL "")
         endif()
 
         # CIRCLE_CRYPT test
@@ -81,9 +81,9 @@ if(NOT CONF_H_GENERATED)
 
         # CIRCLE_CRYPT
         if(HAVE_CRYPT OR HAVE_CRYPT_LIB)
-            set(CIRCLE_CRYPT 1)
+            set(CIRCLE_CRYPT 1 CACHE INTERNAL "")
         else()
-            unset(CIRCLE_CRYPT)
+            unset(CIRCLE_CRYPT CACHE INTERNAL "")
         endif()
 
         # TODO HAVE_UNSAFE_CRYPT
@@ -95,17 +95,17 @@ if(NOT CONF_H_GENERATED)
         set(CMAKE_EXTRA_INCLUDE_FILES ${CMAKE_EXTRA_INCLUDE_FILES} sys/socket.h)
         CHECK_TYPE_SIZE(socklen_t SOCKLEN_T_SIZE)
         if(SOCKLEN_T_SIZE GREATER_EQUAL 0)
-            set(socklen_t 0)
+            set(socklen_t 0 CACHE INTERNAL "")
         else()
-            set(socklen_t unsigned)
+            set(socklen_t unsigned CACHE INTERNAL "")
         endif()
         set(CMAKE_EXTRA_INCLUDE_FILES "")
 
         CHECK_TYPE_SIZE(ssize_t HAVE_SSIZE_T)
         if(HAVE_SSIZE_T GREATER_EQUAL 0)
-            set(ssize_t 0)
+            set(ssize_t 0 CACHE INTERNAL "")
         else()
-            set(ssize_t int)
+            set(ssize_t int CACHE INTERNAL "")
         endif()
 
         CHECK_FUNCTION_EXISTS(gettimeofday HAVE_GETTIMEOFDAY)  # TODO -lnsl
@@ -161,11 +161,11 @@ if(NOT CONF_H_GENERATED)
                 "-1"
                 "sys/types.h;sys/socket.h"
                 HAVE_ACCEPT_PROTO
-        )
+                )
         if(HAVE_ACCEPT_PROTO)
-            set(NEED_ACCEPT_PROTO 0)
+            set(NEED_ACCEPT_PROTO 0 CACHE INTERNAL "")
         else()
-            set(NEED_ACCEPT_PROTO 1)
+            set(NEED_ACCEPT_PROTO 1 CACHE INTERNAL "")
         endif()
 
         # NEED_ATOI_PROTO
@@ -174,24 +174,75 @@ if(NOT CONF_H_GENERATED)
                 "-1"
                 "stdlib.h;string.h"
                 HAVE_ATOI_PROTO
-        )
+                )
         if(HAVE_ATOI_PROTO)
-            set(NEED_ATOI_PROTO 0)
+            set(NEED_ATOI_PROTO 0 CACHE INTERNAL "")
         else()
-            set(NEED_ATOI_PROTO 1)
+            set(NEED_ATOI_PROTO 1 CACHE INTERNAL "")
         endif()
 
         # NEED_ATOL_PROTO
         check_prototype_definition(atol
-                ""
+                "long int atol(const char *str)"
                 "-1"
-                ".h"
+                "stdlib.h;string.h"
                 HAVE_ATOL_PROTO)
         if(HAVE_ATOL_PROTO)
-            set(NEED_ATOL_PROTO 0)
+            set(NEED_ATOL_PROTO 0 CACHE INTERNAL "")
         else()
-            set(NEED_ATOL_PROTO 1)
+            set(NEED_ATOL_PROTO 1 CACHE INTERNAL "")
         endif()
+
+        # NEED_BIND_PROTO
+        check_prototype_definition(bind
+                "int bind(int sockfd, const struct sockaddr *addr, socklen_t addlen)"
+                "-1"
+                "sys/types.h;sys/socket.h"
+                HAVE_BIND_PROTO)
+        if(HAVE_BIND_PROTO)
+            set(NEED_BIND_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_BIND_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_BZERO_PROTO
+        check_prototype_definition(bzero
+                "void bzero(void *s, size_t n)"
+                "NULL"
+                "stdio.h;strings.h"
+                HAVE_BZERO_PROTO)
+        if(HAVE_BZERO_PROTO)
+            set(NEED_BZERO_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_BZERO_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_CLOSE_PROTO
+        check_prototype_definition(close
+                "int close(int fd)"
+                "-1"
+                "unistd.h"
+                HAVE_CLOSE_PROTO)
+        if(HAVE_CLOSE_PROTO)
+            set(NEED_CLOSE_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_CLOSE_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_STRICMP_PROTO
+        check_prototype_definition(stricmp
+                "int stricmp (const char *s1, const char *s2)"
+                "-1"
+                "stdio.h;string.h"
+                HAVE_STRICMP_PROTO)
+        if(HAVE_STRICMP_PROTO)
+            set(NEED_STRICMP_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_STRICMP_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+
+
 
         # "int gettimeofday(struct timeval *tv, struct timezone *tz)"
         check_prototype_definition(gettimeofday
@@ -199,7 +250,6 @@ if(NOT CONF_H_GENERATED)
                 "-1"
                 "sys/time.h"
                 HAVE_GETTIMEOFDAY_PROTO)
-
 
         message(STATUS "PROTO detection is still incomplete")
         if(UNIX AND NOT APPLE)
@@ -211,10 +261,6 @@ if(NOT CONF_H_GENERATED)
             message(STATUS "PROTO override macOS - TODO")
         endif()
 
-        configure_file(
-                "${CMAKE_CURRENT_SOURCE_DIR}/src/conf.h.cmakein"
-                "${CMAKE_CURRENT_SOURCE_DIR}/src/conf.h"
-        )
     endif()
 
     # write conf.h
