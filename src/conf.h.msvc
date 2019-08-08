@@ -73,7 +73,7 @@
 #define HAVE_STRDUP 1
 
 /* Define if you have the strerror function.  */
-#undef HAVE_STRERROR
+/* #undef HAVE_STRERROR */
 
 /* Define if you have the stricmp function.  */
 #define HAVE_STRICMP 1
@@ -118,7 +118,7 @@
 /* #undef HAVE_MCHECK_H */
 
 /* Define if you have the <memory.h> header file.  */
-#undef HAVE_MEMORY_H
+/* #undef HAVE_MEMORY_H */
 
 /* Define if you have the <net/errno.h> header file.  */
 /* #undef HAVE_NET_ERRNO_H */
@@ -130,7 +130,7 @@
 /* #undef HAVE_NETINET_IN_H */
 
 /* Define if you have the <signal.h> header file.  */
-#undef HAVE_SIGNAL_H
+/* #undef HAVE_SIGNAL_H */
 
 /* Define if you have the <string.h> header file.  */
 #define HAVE_STRING_H 1
