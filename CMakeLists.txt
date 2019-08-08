@@ -113,7 +113,7 @@ else()
     append_c_flag("-Werror=vla")
     add_c_flag_if_supported("-Wformat")
     add_c_flag_if_supported("-fdiagnostics-color=auto")
-    add_c_flag_if_supported("-Wno-maybe-uninitialized")
+
     # fixup
     #add_c_flag_if_supported("-Wno-undef")
     #add_c_flag_if_supported("-Wno-unknown-pragmas")
@@ -124,13 +124,18 @@ else()
     #    add_c_flag_if_supported("-static-libgcc")
     #endif()
 
-    # tbamud - disable unused parameter otherwise GCC is very verbosey
+    # TODO - remove these in the future
+    # disable warning: unused parameter in fuction
     add_c_flag_if_supported("-Wno-unused-parameter")
+    # disable warning: redundant redeclaration of functions
+    add_c_flag_if_supported("-Wno-redundant-decls")
+    # disable warning: possibly unitialized value before use
+    add_c_flag_if_supported("-Wno-maybe-uninitialized")
 
     # tbamud options from old configure
     add_c_flag_if_supported("-g")  # enable debug
-    add_c_flag_if_supported("-Wno-char-subscripts")  # disable gcc warning about arrays
-    add_c_flag_if_supported("-fno-builtin")  # disable builtin
+    #add_c_flag_if_supported("-Wno-char-subscripts")  # disable gcc warning about arrays
+    #add_c_flag_if_supported("-fno-builtin")  # disable builtin
 
     if(MARCH_NATIVE)
         add_c_flag_if_supported("-march=native")
