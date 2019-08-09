@@ -23,6 +23,10 @@ if(NOT CONF_H_GENERATED)
         if(NOT HAVE_STDIO_H)
             message(ERROR "unable to find stdio.h")
         endif()
+        CHECK_INCLUDE_FILES(stdint.h HAVE_STDINT_H)
+        if(NOT_HAVE_STDINT_H)
+            message(ERROR "unable to find stdint.h")
+        endif()
 
         CHECK_INCLUDE_FILES(sys/types.h HAVE_SYS_TYPES_H)
 
