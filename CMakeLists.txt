@@ -79,6 +79,10 @@ if(MSVC)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
     # Disable MSVC warnings that suggest making code non-portable.
     add_definitions("/wd4996")
+    # Disable MSVC: warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+    add_definitions("/wd4267")
+    # Disable MSVC: warning C4334: '<<': result of 32-bit shift implicitly converted to 64 bits (was 64-bit shift intended?)
+    add_definitions("/wd4334")
     # Visual Studio - favor intel cpu, only works with 64 bit
     add_definitions("/favor:INTEL64")
 else()
