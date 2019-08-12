@@ -770,7 +770,7 @@ void weight_change_object(struct obj_data *obj, int weight) {
 void name_from_drinkcon(struct obj_data *obj) {
     char *new_name, *cur_name, *next;
     const char *liqname;
-    int liqlen, cpylen;
+    size_t liqlen, cpylen;
 
     if (!obj || (GET_OBJ_TYPE(obj) != ITEM_DRINKCON && GET_OBJ_TYPE(obj) != ITEM_FOUNTAIN))
         return;

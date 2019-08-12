@@ -534,7 +534,8 @@ static void list_zone_commands_room(struct char_data *ch, room_vnum rvnum) {
 static void do_stat_room(struct char_data *ch, struct room_data *rm) {
     char buf2[MAX_STRING_LENGTH];
     struct extra_descr_data *desc;
-    int i, found, column;
+    int i, found;
+    size_t column;
     struct obj_data *j;
     struct char_data *k;
 
@@ -738,7 +739,7 @@ static void do_stat_object(struct char_data *ch, struct obj_data *j) {
     }
 
     if (j->contains) {
-        int column;
+        size_t column;
 
         send_to_char(ch, "\r\nContents:%s", CCGRN(ch, C_NRM));
         column = 9;    /* ^^^ strlen ^^^ */
@@ -772,10 +773,11 @@ static void do_stat_object(struct char_data *ch, struct obj_data *j) {
 
 static void do_stat_character(struct char_data *ch, struct char_data *k) {
     char buf[MAX_STRING_LENGTH];
-    int i, i2, column, found = FALSE;
+    int i, i2, found = FALSE;
     struct obj_data *j;
     struct follow_type *fol;
     struct affected_type *aff;
+    size_t column;
 
     sprinttype(GET_SEX(k), genders, buf, sizeof(buf));
     send_to_char(ch, "%s %s '%s'  IDNum: [%5ld], In room [%5d], Loadroom : [%5d]\r\n",
@@ -3320,8 +3322,9 @@ static void show_set_help(struct char_data *ch) {
 ACMD(do_set) {
     struct char_data *vict = NULL, *cbuf = NULL;
     char field[MAX_INPUT_LENGTH], name[MAX_INPUT_LENGTH], buf[MAX_INPUT_LENGTH];
-    int mode, len, player_i = 0, retval;
+    int mode, player_i = 0, retval;
     char is_file = 0, is_player = 0;
+    size_t len;
 
     half_chop(argument, name, buf);
 
@@ -4137,6 +4140,10 @@ ACMD(do_checkloadstatus) {
 
 /* (c) 1996-97 Erwin S. Andreasen. */
 ACMD(do_copyover) {
+#ifdef CIRCLE_WINDOWS
+    send_to_char(ch, "Copyover is not supported on windows\r\n");
+    return;
+#else
     FILE *fp;
     struct descriptor_data *d, *d_next;
     char buf[100], buf2[100];
@@ -4168,7 +4175,7 @@ ACMD(do_copyover) {
             write_to_descriptor(d->descriptor, "\n\rSorry, we are rebooting. Come back in a few minutes.\n\r");
             close_socket(d); /* throw'em out */
         } else {
-            fprintf(fp, "%d %ld %s %s %s\n", d->descriptor, GET_PREF(och), GET_NAME(och), d->host, CopyoverGet(d));
+            fprintf(fp, "%d %ld %s %s %s\n", (int)d->descriptor, GET_PREF(och), GET_NAME(och), d->host, CopyoverGet(d));
             /* save och */
             GET_LOADROOM(och) = GET_ROOM_VNUM(IN_ROOM(och));
             Crash_rentsave(och, 0);
@@ -4199,6 +4206,7 @@ ACMD(do_copyover) {
     send_to_char(ch, "Copyover FAILED!\n\r");
 
     exit(1); /* too much trouble to try to recover! */
+#endif
 }
 
 ACMD(do_peace) {
@@ -4551,7 +4559,7 @@ ACMD(do_plist) {
 
         strftime(timestr, sizeof(timestr), "%c", localtime(&player_table[i].last));
 
-        len += snprintf(buf + len, sizeof(buf) - len, "[%3ld] (%2d) %c%-15s %s\r\n",
+        len += snprintf(buf + len, sizeof(buf) - len, "[%3" SCNd64 "] (%2d) %c%-15s %s\r\n",
                         player_table[i].id, player_table[i].level,
                         UPPER(*player_table[i].name), player_table[i].name + 1, timestr);
         count++;

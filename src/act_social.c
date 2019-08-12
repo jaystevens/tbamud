@@ -213,7 +213,8 @@ static int find_action(int cmd) {
 }
 
 ACMD(do_gmote) {
-    int act_nr, length;
+    int act_nr;
+    size_t length;
     char arg[MAX_INPUT_LENGTH], buf[MAX_INPUT_LENGTH];
     struct social_messg *action;
     struct char_data *vict = NULL;

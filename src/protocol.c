@@ -1934,13 +1934,13 @@ static void ParseATCP(descriptor_t *apDescriptor, const char *apData) {
  Local MSSP functions.
  ******************************************************************************/
 
-static const char *GetMSSP_Players() {
+static const char *GetMSSP_Players(void) {
     static char Buffer[32];
     sprintf(Buffer, "%d", s_Players);
     return Buffer;
 }
 
-static const char *GetMSSP_Uptime() {
+static const char *GetMSSP_Uptime(void) {
     static char Buffer[32];
     sprintf(Buffer, "%d", (int) s_Uptime);
     return Buffer;

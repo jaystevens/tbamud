@@ -385,6 +385,9 @@ int main(int argc, char **argv) {
 
 /* Reload players after a copyover */
 void copyover_recover() {
+#if defined(CIRCLE_WINDOWS)
+    return;
+#else
     struct descriptor_data *d;
     FILE *fp;
     char host[1024], guiopt[1024];
@@ -491,6 +494,7 @@ void copyover_recover() {
         }
     }
     fclose(fp);
+#endif
 }
 
 /* Init sockets, run game, and cleanup sockets */

@@ -1045,7 +1045,8 @@ void space_to_minus(char *str) {
 }
 
 int search_help(const char *argument, int level) {
-    int chk, bot, top, mid, minlen;
+    int chk, bot, top, mid;
+    size_t minlen;
 
     bot = 0;
     top = top_of_helpt;
@@ -1819,7 +1820,8 @@ ACMD(do_diagnose) {
 
 ACMD(do_toggle) {
     char buf2[4], arg[MAX_INPUT_LENGTH], arg2[MAX_INPUT_LENGTH];
-    int toggle, tp, wimp_lev, result = 0, len = 0, i;
+    int toggle, tp, wimp_lev, result = 0, i;
+    size_t len = 0;
     const char *types[] = {"off", "brief", "normal", "on", "\n"};
 
     const struct {
