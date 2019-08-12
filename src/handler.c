@@ -104,7 +104,7 @@ int isname(const char *str, const char *namelist) {
     return 0;
 }
 
-static void aff_apply_modify(struct char_data *ch, byte loc, sbyte mod, char *msg) {
+static void aff_apply_modify(struct char_data *ch, byte loc, sbyte mod, const char *msg) {
     switch (loc) {
         case APPLY_NONE:
             break;

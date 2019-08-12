@@ -16,6 +16,7 @@
 #include "protocol.h"
 #include "lists.h"
 //#include <stdint.h>
+#include <stdbool.h>
 #include <inttypes.h>
 
 /** If you want equipment to be automatically equipped to the same place
@@ -613,10 +614,6 @@
 typedef signed char sbyte;          /**< 1 byte; vals = -127 to 127 */
 typedef unsigned char ubyte;        /**< 1 byte; vals = 0 to 255 */
 typedef signed short int sh_int;    /**< 2 bytes; vals = -32,768 to 32,767 */
-typedef unsigned short int ush_int; /**< 2 bytes; vals = 0 to 65,535 */
-#if !defined(__cplusplus)    /* Anyone know a portable method? */
-typedef char bool; /**< Technically 1 signed byte; vals should only = TRUE or FALSE. */
-#endif
 
 #if !defined(CIRCLE_WINDOWS)   /* Hm, sysdep.h? */
 typedef signed char byte; /**< Technically 1 signed byte; vals should only = TRUE or FALSE. */
@@ -1292,7 +1289,7 @@ struct room_numbers {
 
 /** Operational game variables. */
 struct game_operation {
-    ush_int DFLT_PORT;              /**< The default port to run the game.  */
+    uint16_t DFLT_PORT;              /**< The default port to run the game.  */
     char *DFLT_IP;                  /**< Bind to all interfaces.     */
     char *DFLT_DIR;                 /**< The default directory (lib).    */
     char *LOGNAME;                  /**< The file to log messages to.    */

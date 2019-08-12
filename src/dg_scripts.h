@@ -411,7 +411,7 @@ void add_var(struct trig_var_data **var_list, const char *name, const char *valu
 
 int item_in_list(char *item, obj_data *list);
 
-char *skill_percent(struct char_data *ch, char *skill);
+const char *skill_percent(struct char_data *ch, char *skill);
 
 int char_has_item(char *item, struct char_data *ch);
 
