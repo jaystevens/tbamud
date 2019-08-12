@@ -182,14 +182,14 @@
 #define TAR_OBJ_EQUIP      (1 << 10)
 
 struct spell_info_type {
-    byte min_position;    /* Position for caster	 */
+    int8_t min_position;    /* Position for caster	 */
     int mana_min;    /* Min amount of mana used by a spell (highest lev) */
     int mana_max;    /* Max amount of mana used by a spell (lowest lev) */
     int mana_change;    /* Change in mana used by spell from lev to lev */
 
     int min_level[NUM_CLASSES];
     int routines;
-    byte violent;
+    int8_t violent;
     int targets;         /* See below for use with TAR_XXX  */
     const char *name;    /* Input size not limited. Originates from string constants. */
     const char *wear_off_msg;    /* Input size not limited. Originates from string constants. */

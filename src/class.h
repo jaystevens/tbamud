@@ -28,7 +28,7 @@ int parse_class(char arg);
 
 void roll_real_abils(struct char_data *ch);
 
-byte saving_throws(int class_num, int type, int level);
+int8_t saving_throws(int class_num, int type, int level);
 
 int thaco(int class_num, int level);
 
