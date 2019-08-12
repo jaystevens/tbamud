@@ -16,6 +16,7 @@
 #include "protocol.h"
 #include "lists.h"
 //#include <stdint.h>
+#include <stdbool.h>
 #include <inttypes.h>
 
 /** If you want equipment to be automatically equipped to the same place
@@ -610,9 +611,6 @@
 #define MAX_CMD_LENGTH 16384
 
 /* Type Definitions */
-#if !defined(__cplusplus)    /* Anyone know a portable method? */
-typedef char bool; /**< Technically 1 signed byte; vals should only = TRUE or FALSE. */
-#endif
 
 #if !defined(CIRCLE_WINDOWS)   /* Hm, sysdep.h? */
 typedef signed char byte; /**< Technically 1 signed byte; vals should only = TRUE or FALSE. */
