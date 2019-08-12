@@ -82,6 +82,7 @@ struct command_info {
 
     int16_t minimum_level;
     int subcmd;
+    int8_t command_group;
 };
 
 struct mob_script_command_t {

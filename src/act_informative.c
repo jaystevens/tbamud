@@ -2250,6 +2250,7 @@ ACMD(do_commands) {
     int socials = 0;
     const char *commands[1000];
     int overflow = sizeof(commands) / sizeof(commands[0]);
+    const char *cmd_type_name;
 
     if (!ch->desc)
         return;
@@ -2257,9 +2258,10 @@ ACMD(do_commands) {
     if (subcmd == SCMD_SOCIALS)
         socials = 1;
 
-    send_to_char(ch, "The following %s are available to you:\r\n", socials ? "socials" : "commands");
+    //send_to_char(ch, "The following %s are available to you:\r\n", socials ? "socials" : "commands");
 
     /* cmd_num starts at 1, not 0, to remove 'RESERVED' */
+    /*
     for (no = 0, cmd_num = 1;
          complete_cmd_info[cmd_sort_info[cmd_num]].command[0] != '\n';
          ++cmd_num) {
@@ -2278,13 +2280,107 @@ ACMD(do_commands) {
 
         if (--overflow < 0)
             continue;
-
+     */
         /* matching command: copy to commands list */
-        commands[no++] = complete_cmd_info[i].command;
-    }
+    //    commands[no++] = complete_cmd_info[i].command;
+    //}
 
     /* display commands list in a nice columnized format */
-    column_list(ch, 0, commands, no, false);
+    //column_list(ch, 0, commands, no, false);
+
+    int j;
+    for (j = 1; j < AMCD_TYPE_MAX; ++j) {
+        // reset commands output
+        memset(&commands, 0, sizeof(commands));
+        no = 0;
+
+        for (no = 0, cmd_num = 1; complete_cmd_info[cmd_sort_info[cmd_num]].command[0] != '\n'; ++cmd_num) {
+            i = cmd_sort_info[cmd_num];
+            if (complete_cmd_info[i].minimum_level < 0 || GET_LEVEL(ch) < complete_cmd_info[i].minimum_level)
+                continue;
+            if (complete_cmd_info[i].command_group != j)
+                continue;
+            if (j == ACMD_TYPE_MOVE) {
+                if (!CONFIG_DIAGONAL_DIRS) {
+                    if (!strcmp(complete_cmd_info[i].command, "northwest")) {
+                        continue;
+                    } else if (!strcmp(complete_cmd_info[i].command, "nw")) {
+                        continue;
+                    } else if (!strcmp(complete_cmd_info[i].command, "northeast")) {
+                        continue;
+                    } else if (!strcmp(complete_cmd_info[i].command, "ne")) {
+                        continue;
+                    } else if (!strcmp(complete_cmd_info[i].command, "southeast")) {
+                        continue;
+                    } else if (!strcmp(complete_cmd_info[i].command, "se")) {
+                        continue;
+                    } else if (!strcmp(complete_cmd_info[i].command, "southwest")) {
+                        continue;
+                    } else if (!strcmp(complete_cmd_info[i].command, "sw")) {
+                        continue;
+                    }
+                }
+            }
+            commands[no++] = complete_cmd_info[i].command;
+        }
+        //send_to_char(ch, "TYPE: %d, no: %d\r\n", x, no);
+        if (no) {
+            switch (j) {
+                case ACMD_TYPE_MISC:
+                    cmd_type_name = "Miscellaneous";
+                    break;
+                case ACMD_TYPE_COMM:
+                    cmd_type_name = "Communication";
+                    break;
+                case ACMD_TYPE_COMB:
+                    cmd_type_name = "Combat";
+                    break;
+                case ACMD_TYPE_CLAN:
+                    cmd_type_name = "Clan";
+                    break;
+                case ACMD_TYPE_INFO:
+                    cmd_type_name = "Info";
+                    break;
+                case ACMD_TYPE_HELP:
+                    cmd_type_name = "Help";
+                    break;
+                case ACMD_TYPE_OBJ:
+                    cmd_type_name = "Object";
+                    break;
+                case ACMD_TYPE_MOVE:
+                    cmd_type_name = "Movement";
+                    break;
+                case ACMD_TYPE_GROUP:
+                    cmd_type_name = "Group";
+                    break;
+                case ACMD_TYPE_PLAY:
+                    cmd_type_name = "Player";
+                    break;
+                case ACMD_TYPE_GAMB:
+                    cmd_type_name = "Gambling";
+                    break;
+                case ACMD_TYPE_SHOP:
+                    cmd_type_name = "Shop";
+                    break;
+                case ACMD_TYPE_QUEST:
+                    cmd_type_name = "Quest";
+                    break;
+                case ACMD_TYPE_OLC:
+                    cmd_type_name = "OLC";
+                    break;
+                case ACMD_TYPE_GOD:
+                    cmd_type_name = "GOD";
+                    break;
+                default:
+                    cmd_type_name = "???";
+            }
+            send_to_char(ch, "%s%s%s: %s(%s%d%s commands)%s\r\n", QBCYN, cmd_type_name, QBWHT, QBBLU, QBCYN, no, QBBLU, QNRM);
+            column_list(ch, 0, commands, no, false);
+            send_to_char(ch, "\r\n");
+        }
+    }
+
+
 }
 
 void free_history(struct char_data *ch, int type) {

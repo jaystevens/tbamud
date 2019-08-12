@@ -20,6 +20,25 @@
 
 #include "utils.h" /* for the ACMD macro */
 
+#define ACMD_TYPE_NOGROUP   0
+#define ACMD_TYPE_MISC      1
+#define ACMD_TYPE_COMM      2
+#define ACMD_TYPE_COMB      3
+#define ACMD_TYPE_CLAN      4
+#define ACMD_TYPE_INFO      5
+#define ACMD_TYPE_HELP      6
+#define ACMD_TYPE_OBJ       7
+#define ACMD_TYPE_MOVE      8
+#define ACMD_TYPE_GROUP     9
+#define ACMD_TYPE_PLAY      10
+#define ACMD_TYPE_GAMB      11
+#define ACMD_TYPE_SHOP      12
+#define ACMD_TYPE_QUEST     13
+#define ACMD_TYPE_OLC       14
+#define ACMD_TYPE_GOD       15
+#define AMCD_TYPE_MAX       16
+
+
 /*****************************************************************************
  * Begin Functions and defines for act.comm.c
  ****************************************************************************/
