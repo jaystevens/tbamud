@@ -280,7 +280,7 @@ int find_eq_pos_script(char *arg) {
 /** Figures out if an object can be worn on a defined wear location.
  * @param obj The object to check.
  * @param pos The defined wear location to check.
- * @retval int TRUE if obj can be worn on pos, FALSE if not.
+ * @retval int true if obj can be worn on pos, false if not.
  */
 int can_wear_on_pos(struct obj_data *obj, int pos) {
     switch (pos) {
@@ -317,7 +317,7 @@ int can_wear_on_pos(struct obj_data *obj, int pos) {
         case WEAR_WRIST_L:
             return CAN_WEAR(obj, ITEM_WEAR_WRIST);
         default:
-            return FALSE;
+            return false;
     }
 }
 
@@ -741,22 +741,22 @@ static EVENTFUNC(trig_wait_event) {
 
 #if 1  /* debugging */
     {
-        int found = FALSE;
+        int found = false;
         if (type == MOB_TRIGGER) {
             struct char_data *tch;
             for (tch = character_list; tch && !found; tch = tch->next)
                 if (tch == (struct char_data *) go)
-                    found = TRUE;
+                    found = true;
         } else if (type == OBJ_TRIGGER) {
             struct obj_data *obj;
             for (obj = object_list; obj && !found; obj = obj->next)
                 if (obj == (struct obj_data *) go)
-                    found = TRUE;
+                    found = true;
         } else {
             room_rnum i;
             for (i = 0; i < top_of_world && !found; i++)
                 if (&world[i] == (struct room_data *) go)
-                    found = TRUE;
+                    found = true;
         }
         if (!found) {
             log("Trigger restarted on unknown entity. Vnum: %d", GET_TRIG_VNUM(trig));
@@ -1091,7 +1091,7 @@ ACMD(do_attach) {
  * the script. */
 static int remove_trigger(struct script_data *sc, char *name) {
     trig_data *i, *j;
-    int num = 0, string = FALSE, n;
+    int num = 0, string = false, n;
     char *cname;
 
 
@@ -1099,7 +1099,7 @@ static int remove_trigger(struct script_data *sc, char *name) {
         return 0;
 
     if ((cname = strstr(name, ".")) || (!isdigit(*name))) {
-        string = TRUE;
+        string = true;
         if (cname) {
             *cname = '\0';
             num = atoi(name);
@@ -1347,17 +1347,17 @@ void script_log(const char *format, ...) {
  * true on num="------". */
 static int is_num(char *arg) {
     if (*arg == '\0')
-        return FALSE;
+        return false;
 
     if (*arg == '+' || *arg == '-')
         arg++;
 
     for (; *arg != '\0'; arg++) {
         if (!isdigit(*arg))
-            return FALSE;
+            return false;
     }
 
-    return TRUE;
+    return true;
 }
 
 /* evaluates 'lhs op rhs', and copies to result */
@@ -2821,7 +2821,7 @@ void save_char_vars(struct char_data *ch) {
 
     file = fopen(fn, "wt");
     if (!file) {
-        mudlog(NRM, LVL_GOD, TRUE,
+        mudlog(NRM, LVL_GOD, true,
                "SYSERR: Could not open player variable file %s for writing.:%s",
                fn, strerror(errno));
         return;
@@ -2997,11 +2997,11 @@ bool check_flags_by_name_ar(int *array, int numflags, char *search, const char *
     for (i = 0; i < numflags && item < 0; i++)
         if (!strcmp(search, namelist[i])) item = i;
 
-    if (item < 0) return FALSE;
+    if (item < 0) return false;
 
-    if (IS_SET_AR(array, item)) return TRUE;
+    if (IS_SET_AR(array, item)) return true;
 
-    return FALSE;
+    return false;
 }
 
 int trig_is_attached(struct script_data *sc, int trig_num) {
@@ -3031,7 +3031,7 @@ long char_script_id(char_data *ch) {
         add_to_lookup_table(ch->script_id, (void *) ch);
 
         if (max_mob_id >= ROOM_ID_BASE) {
-            mudlog(CMP, LVL_BUILDER, TRUE,
+            mudlog(CMP, LVL_BUILDER, true,
                    "SYSERR: Script IDs for mobiles have exceeded the limit -- reboot to fix this");
         }
     }
@@ -3054,7 +3054,7 @@ long obj_script_id(obj_data *obj) {
 
         /* objs don't run out of idspace, currently
         if (max_obj_id > x && reboot_control.time > 16) {
-          mudlog(CMP, LVL_BUILDER, TRUE, "SYSERR: Script IDs for objects have exceeded the limit -- reboot to fix this");
+          mudlog(CMP, LVL_BUILDER, true, "SYSERR: Script IDs for objects have exceeded the limit -- reboot to fix this");
         }
         */
     }

@@ -61,10 +61,10 @@ ACMD(do_oasis_cedit) {
         OLC_ZONE(d) = 0;
         cedit_setup(d);
         STATE(d) = CON_CEDIT;
-        act("$n starts using OLC.", TRUE, d->character, 0, 0, TO_ROOM);
+        act("$n starts using OLC.", true, d->character, 0, 0, TO_ROOM);
         SET_BIT_AR(PLR_FLAGS(ch), PLR_WRITING);
 
-        mudlog(BRF, MAX(LVL_BUILDER, GET_INVIS_LEV(ch)), TRUE,
+        mudlog(BRF, MAX(LVL_BUILDER, GET_INVIS_LEV(ch)), true,
                "OLC: %s starts editing the game configuration.", GET_NAME(ch));
         return;
     } else if (str_cmp("save", buf1) != 0) {
@@ -73,7 +73,7 @@ ACMD(do_oasis_cedit) {
     }
 
     send_to_char(ch, "Saving the game configuration.\r\n");
-    mudlog(CMP, MAX(LVL_BUILDER, GET_INVIS_LEV(ch)), TRUE,
+    mudlog(CMP, MAX(LVL_BUILDER, GET_INVIS_LEV(ch)), true,
            "OLC: %s saves the game configuration.", GET_NAME(ch));
 
     cedit_save_to_disk();
@@ -324,7 +324,7 @@ int save_config(IDXTYPE nowhere) {
 
     if (!(fl = fopen(CONFIG_CONFFILE, "w"))) {
         perror("SYSERR: save_config");
-        return (FALSE);
+        return (false);
     }
 
     fprintf(fl,
@@ -332,7 +332,7 @@ int save_config(IDXTYPE nowhere) {
             "* Please note the following information about this file's format.\n"
             "*\n"
             "* - If variable is a yes/no or true/false based variable, use 1's and 0's\n"
-            "*   where YES or TRUE = 1 and NO or FALSE = 0.\n"
+            "*   where YES or true = 1 and NO or false = 0.\n"
             "* - Variable names in this file are case-insensitive.  Variable values\n"
             "*   are not case-insensitive.\n"
             "* -----------------------------------------------------------------------\n"
@@ -577,7 +577,7 @@ int save_config(IDXTYPE nowhere) {
     if (in_save_list(NOWHERE, SL_CFG))
         remove_from_save_list(NOWHERE, SL_CFG);
 
-    return (TRUE);
+    return (true);
 }
 
 /* Menu functions - The main menu. */
@@ -814,7 +814,7 @@ void cedit_parse(struct descriptor_data *d, char *arg) {
                 case 'y':
                 case 'Y':
                     cedit_save_internally(d);
-                    mudlog(CMP, MAX(LVL_BUILDER, GET_INVIS_LEV(d->character)), TRUE,
+                    mudlog(CMP, MAX(LVL_BUILDER, GET_INVIS_LEV(d->character)), true,
                            "OLC: %s modifies the game configuration.", GET_NAME(d->character));
                     cleanup_olc(d, CLEANUP_CONFIG);
                     if (CONFIG_AUTO_SAVE) {
@@ -1711,7 +1711,7 @@ void cedit_parse(struct descriptor_data *d, char *arg) {
 
         default:  /* We should never get here, but just in case... */
             cleanup_olc(d, CLEANUP_CONFIG);
-            mudlog(BRF, LVL_BUILDER, TRUE, "SYSERR: OLC: cedit_parse(): Reached default case!");
+            mudlog(BRF, LVL_BUILDER, true, "SYSERR: OLC: cedit_parse(): Reached default case!");
             write_to_output(d, "Oops...\r\n");
             break;
     }

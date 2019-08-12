@@ -117,24 +117,24 @@ void list_skills(struct char_data *ch) {
     if (len >= sizeof(buf2))
         strcpy(buf2 + sizeof(buf2) - strlen(overflow) - 1, overflow); /* strcpy: OK */
 
-    page_string(ch->desc, buf2, TRUE);
+    page_string(ch->desc, buf2, true);
 }
 
 SPECIAL(guild) {
     int skill_num, percent;
 
     if (IS_NPC(ch) || !CMD_IS("practice"))
-        return (FALSE);
+        return (false);
 
     skip_spaces(&argument);
 
     if (!*argument) {
         list_skills(ch);
-        return (TRUE);
+        return (true);
     }
     if (GET_PRACTICES(ch) <= 0) {
         send_to_char(ch, "You do not seem to be able to practice now.\r\n");
-        return (TRUE);
+        return (true);
     }
 
     skill_num = find_skill_num(argument);
@@ -142,11 +142,11 @@ SPECIAL(guild) {
     if (skill_num < 1 ||
         GET_LEVEL(ch) < spell_info[skill_num].min_level[(int) GET_CLASS(ch)]) {
         send_to_char(ch, "You do not know of that %s.\r\n", SPLSKL(ch));
-        return (TRUE);
+        return (true);
     }
     if (GET_SKILL(ch, skill_num) >= LEARNED(ch)) {
         send_to_char(ch, "You are already learned in that area.\r\n");
-        return (TRUE);
+        return (true);
     }
     send_to_char(ch, "You practice for a while...\r\n");
     GET_PRACTICES(ch)--;
@@ -159,7 +159,7 @@ SPECIAL(guild) {
     if (GET_SKILL(ch, skill_num) >= LEARNED(ch))
         send_to_char(ch, "You are now learned in that area.\r\n");
 
-    return (TRUE);
+    return (true);
 }
 
 SPECIAL(dump) {
@@ -167,31 +167,31 @@ SPECIAL(dump) {
     int value = 0;
 
     for (k = world[IN_ROOM(ch)].contents; k; k = world[IN_ROOM(ch)].contents) {
-        act("$p vanishes in a puff of smoke!", FALSE, 0, k, 0, TO_ROOM);
+        act("$p vanishes in a puff of smoke!", false, 0, k, 0, TO_ROOM);
         extract_obj(k);
     }
 
     if (!CMD_IS("drop"))
-        return (FALSE);
+        return (false);
 
     do_drop(ch, argument, cmd, SCMD_DROP);
 
     for (k = world[IN_ROOM(ch)].contents; k; k = world[IN_ROOM(ch)].contents) {
-        act("$p vanishes in a puff of smoke!", FALSE, 0, k, 0, TO_ROOM);
+        act("$p vanishes in a puff of smoke!", false, 0, k, 0, TO_ROOM);
         value += MAX(1, MIN(50, GET_OBJ_COST(k) / 10));
         extract_obj(k);
     }
 
     if (value) {
         send_to_char(ch, "You are awarded for outstanding performance.\r\n");
-        act("$n has been awarded for being a good citizen.", TRUE, ch, 0, 0, TO_ROOM);
+        act("$n has been awarded for being a good citizen.", true, ch, 0, 0, TO_ROOM);
 
         if (GET_LEVEL(ch) < 3)
             gain_exp(ch, value);
         else
             increase_gold(ch, value);
     }
-    return (TRUE);
+    return (true);
 }
 
 SPECIAL(mayor) {
@@ -204,22 +204,22 @@ SPECIAL(mayor) {
 
     static const char *path = NULL;
     static int path_index;
-    static bool move = FALSE;
+    static bool move = false;
 
     if (!move) {
         if (time_info.hours == 6) {
-            move = TRUE;
+            move = true;
             path = open_path;
             path_index = 0;
         } else if (time_info.hours == 20) {
-            move = TRUE;
+            move = true;
             path = close_path;
             path_index = 0;
         }
     }
     if (cmd || !move || (GET_POS(ch) < POS_SLEEPING) ||
         (GET_POS(ch) == POS_FIGHTING))
-        return (FALSE);
+        return (false);
 
     switch (path[path_index]) {
         case '0':
@@ -231,39 +231,39 @@ SPECIAL(mayor) {
 
         case 'W':
             GET_POS(ch) = POS_STANDING;
-            act("$n awakens and groans loudly.", FALSE, ch, 0, 0, TO_ROOM);
+            act("$n awakens and groans loudly.", false, ch, 0, 0, TO_ROOM);
             break;
 
         case 'S':
             GET_POS(ch) = POS_SLEEPING;
-            act("$n lies down and instantly falls asleep.", FALSE, ch, 0, 0, TO_ROOM);
+            act("$n lies down and instantly falls asleep.", false, ch, 0, 0, TO_ROOM);
             break;
 
         case 'a':
-            act("$n says 'Hello Honey!'", FALSE, ch, 0, 0, TO_ROOM);
-            act("$n smirks.", FALSE, ch, 0, 0, TO_ROOM);
+            act("$n says 'Hello Honey!'", false, ch, 0, 0, TO_ROOM);
+            act("$n smirks.", false, ch, 0, 0, TO_ROOM);
             break;
 
         case 'b':
             act("$n says 'What a view!  I must get something done about that dump!'",
-                FALSE, ch, 0, 0, TO_ROOM);
+                false, ch, 0, 0, TO_ROOM);
             break;
 
         case 'c':
             act("$n says 'Vandals!  Youngsters nowadays have no respect for anything!'",
-                FALSE, ch, 0, 0, TO_ROOM);
+                false, ch, 0, 0, TO_ROOM);
             break;
 
         case 'd':
-            act("$n says 'Good day, citizens!'", FALSE, ch, 0, 0, TO_ROOM);
+            act("$n says 'Good day, citizens!'", false, ch, 0, 0, TO_ROOM);
             break;
 
         case 'e':
-            act("$n says 'I hereby declare the bazaar open!'", FALSE, ch, 0, 0, TO_ROOM);
+            act("$n says 'I hereby declare the bazaar open!'", false, ch, 0, 0, TO_ROOM);
             break;
 
         case 'E':
-            act("$n says 'I hereby declare Midgaard closed!'", FALSE, ch, 0, 0, TO_ROOM);
+            act("$n says 'I hereby declare Midgaard closed!'", false, ch, 0, 0, TO_ROOM);
             break;
 
         case 'O':
@@ -277,13 +277,13 @@ SPECIAL(mayor) {
             break;
 
         case '.':
-            move = FALSE;
+            move = false;
             break;
 
     }
 
     path_index++;
-    return (FALSE);
+    return (false);
 }
 
 /* General special procedures for mobiles. */
@@ -299,8 +299,8 @@ static void npc_steal(struct char_data *ch, struct char_data *victim) {
         return;
 
     if (AWAKE(victim) && (rand_number(0, GET_LEVEL(ch)) == 0)) {
-        act("You discover that $n has $s hands in your wallet.", FALSE, ch, 0, victim, TO_VICT);
-        act("$n tries to steal gold from $N.", TRUE, ch, 0, victim, TO_NOTVICT);
+        act("You discover that $n has $s hands in your wallet.", false, ch, 0, victim, TO_VICT);
+        act("$n tries to steal gold from $N.", true, ch, 0, victim, TO_NOTVICT);
     } else {
         /* Steal some gold coins */
         gold = (GET_GOLD(victim) * rand_number(1, 10)) / 100;
@@ -314,37 +314,37 @@ static void npc_steal(struct char_data *ch, struct char_data *victim) {
 /* Quite lethal to low-level characters. */
 SPECIAL(snake) {
     if (cmd || GET_POS(ch) != POS_FIGHTING || !FIGHTING(ch))
-        return (FALSE);
+        return (false);
 
     if (IN_ROOM(FIGHTING(ch)) != IN_ROOM(ch) || rand_number(0, GET_LEVEL(ch)) != 0)
-        return (FALSE);
+        return (false);
 
     act("$n bites $N!", 1, ch, 0, FIGHTING(ch), TO_NOTVICT);
     act("$n bites you!", 1, ch, 0, FIGHTING(ch), TO_VICT);
     call_magic(ch, FIGHTING(ch), 0, SPELL_POISON, GET_LEVEL(ch), CAST_SPELL);
-    return (TRUE);
+    return (true);
 }
 
 SPECIAL(thief) {
     struct char_data *cons;
 
     if (cmd || GET_POS(ch) != POS_STANDING)
-        return (FALSE);
+        return (false);
 
     for (cons = world[IN_ROOM(ch)].people; cons; cons = cons->next_in_room)
         if (!IS_NPC(cons) && GET_LEVEL(cons) < LVL_IMMORT && !rand_number(0, 4)) {
             npc_steal(ch, cons);
-            return (TRUE);
+            return (true);
         }
 
-    return (FALSE);
+    return (false);
 }
 
 SPECIAL(magic_user) {
     struct char_data *vict;
 
     if (cmd || GET_POS(ch) != POS_FIGHTING)
-        return (FALSE);
+        return (false);
 
     /* pseudo-randomly choose someone in the room who is fighting me */
     for (vict = world[IN_ROOM(ch)].people; vict; vict = vict->next_in_room)
@@ -357,7 +357,7 @@ SPECIAL(magic_user) {
 
     /* Hm...didn't pick anyone...I'll wait a round. */
     if (vict == NULL)
-        return (TRUE);
+        return (true);
 
     if (GET_LEVEL(ch) > 13 && rand_number(0, 10) == 0)
         cast_spell(ch, vict, NULL, SPELL_POISON);
@@ -373,7 +373,7 @@ SPECIAL(magic_user) {
     }
 
     if (rand_number(0, 4))
-        return (TRUE);
+        return (true);
 
     switch (GET_LEVEL(ch)) {
         case 4:
@@ -406,7 +406,7 @@ SPECIAL(magic_user) {
             cast_spell(ch, vict, NULL, SPELL_FIREBALL);
             break;
     }
-    return (TRUE);
+    return (true);
 }
 
 /* Special procedures for mobiles. */
@@ -417,10 +417,10 @@ SPECIAL(guild_guard) {
     const char *buf2 = "The guard humiliates $n, and blocks $s way.";
 
     if (!IS_MOVE(cmd) || AFF_FLAGGED(guard, AFF_BLIND))
-        return (FALSE);
+        return (false);
 
     if (GET_LEVEL(ch) >= LVL_IMMORT)
-        return (FALSE);
+        return (false);
 
     /* find out what direction they are trying to go */
     for (direction = 0; direction < NUM_OF_DIRS; direction++)
@@ -444,33 +444,33 @@ SPECIAL(guild_guard) {
             continue;
 
         send_to_char(ch, "%s", buf);
-        act(buf2, FALSE, ch, 0, 0, TO_ROOM);
-        return (TRUE);
+        act(buf2, false, ch, 0, 0, TO_ROOM);
+        return (true);
     }
-    return (FALSE);
+    return (false);
 }
 
 SPECIAL(puff) {
     char actbuf[MAX_INPUT_LENGTH];
 
     if (cmd)
-        return (FALSE);
+        return (false);
 
     switch (rand_number(0, 60)) {
         case 0:
             do_say(ch, strcpy(actbuf, "My god!  It's full of stars!"), 0, 0);    /* strcpy: OK */
-            return (TRUE);
+            return (true);
         case 1:
             do_say(ch, strcpy(actbuf, "How'd all those fish get up here?"), 0, 0);    /* strcpy: OK */
-            return (TRUE);
+            return (true);
         case 2:
             do_say(ch, strcpy(actbuf, "I'm a very female dragon."), 0, 0);    /* strcpy: OK */
-            return (TRUE);
+            return (true);
         case 3:
             do_say(ch, strcpy(actbuf, "I've got a peaceful, easy feeling."), 0, 0);    /* strcpy: OK */
-            return (TRUE);
+            return (true);
         default:
-            return (FALSE);
+            return (false);
     }
 }
 
@@ -478,41 +478,41 @@ SPECIAL(fido) {
     struct obj_data *i, *temp, *next_obj;
 
     if (cmd || !AWAKE(ch))
-        return (FALSE);
+        return (false);
 
     for (i = world[IN_ROOM(ch)].contents; i; i = i->next_content) {
         if (!IS_CORPSE(i))
             continue;
 
-        act("$n savagely devours a corpse.", FALSE, ch, 0, 0, TO_ROOM);
+        act("$n savagely devours a corpse.", false, ch, 0, 0, TO_ROOM);
         for (temp = i->contains; temp; temp = next_obj) {
             next_obj = temp->next_content;
             obj_from_obj(temp);
             obj_to_room(temp, IN_ROOM(ch));
         }
         extract_obj(i);
-        return (TRUE);
+        return (true);
     }
-    return (FALSE);
+    return (false);
 }
 
 SPECIAL(janitor) {
     struct obj_data *i;
 
     if (cmd || !AWAKE(ch))
-        return (FALSE);
+        return (false);
 
     for (i = world[IN_ROOM(ch)].contents; i; i = i->next_content) {
         if (!CAN_WEAR(i, ITEM_WEAR_TAKE))
             continue;
         if (GET_OBJ_TYPE(i) != ITEM_DRINKCON && GET_OBJ_COST(i) >= 15)
             continue;
-        act("$n picks up some trash.", FALSE, ch, 0, 0, TO_ROOM);
+        act("$n picks up some trash.", false, ch, 0, 0, TO_ROOM);
         obj_from_room(i);
         obj_to_char(i, ch);
-        return (TRUE);
+        return (true);
     }
-    return (FALSE);
+    return (false);
 }
 
 SPECIAL(cityguard) {
@@ -520,7 +520,7 @@ SPECIAL(cityguard) {
     int max_evil, min_cha;
 
     if (cmd || !AWAKE(ch) || FIGHTING(ch))
-        return (FALSE);
+        return (false);
 
     max_evil = 1000;
     min_cha = 6;
@@ -530,15 +530,15 @@ SPECIAL(cityguard) {
         if (!CAN_SEE(ch, tch))
             continue;
         if (!IS_NPC(tch) && PLR_FLAGGED(tch, PLR_KILLER)) {
-            act("$n screams 'HEY!!!  You're one of those PLAYER KILLERS!!!!!!'", FALSE, ch, 0, 0, TO_ROOM);
+            act("$n screams 'HEY!!!  You're one of those PLAYER KILLERS!!!!!!'", false, ch, 0, 0, TO_ROOM);
             hit(ch, tch, TYPE_UNDEFINED);
-            return (TRUE);
+            return (true);
         }
 
         if (!IS_NPC(tch) && PLR_FLAGGED(tch, PLR_THIEF)) {
-            act("$n screams 'HEY!!!  You're one of those PLAYER THIEVES!!!!!!'", FALSE, ch, 0, 0, TO_ROOM);
+            act("$n screams 'HEY!!!  You're one of those PLAYER THIEVES!!!!!!'", false, ch, 0, 0, TO_ROOM);
             hit(ch, tch, TYPE_UNDEFINED);
-            return (TRUE);
+            return (true);
         }
 
         if (FIGHTING(tch) && GET_ALIGNMENT(tch) < max_evil && (IS_NPC(tch) || IS_NPC(FIGHTING(tch)))) {
@@ -553,9 +553,9 @@ SPECIAL(cityguard) {
     }
 
     if (evil && GET_ALIGNMENT(FIGHTING(evil)) >= 0) {
-        act("$n screams 'PROTECT THE INNOCENT!  BANZAI!  CHARGE!  ARARARAGGGHH!'", FALSE, ch, 0, 0, TO_ROOM);
+        act("$n screams 'PROTECT THE INNOCENT!  BANZAI!  CHARGE!  ARARARAGGGHH!'", false, ch, 0, 0, TO_ROOM);
         hit(ch, evil, TYPE_UNDEFINED);
-        return (TRUE);
+        return (true);
     }
 
     /* Reward the socially inept. */
@@ -570,10 +570,10 @@ SPECIAL(cityguard) {
             strncpy(spitbuf, GET_NAME(spittle), sizeof(spitbuf));    /* strncpy: OK */
             spitbuf[sizeof(spitbuf) - 1] = '\0';
             do_action(ch, spitbuf, spit_social, 0);
-            return (TRUE);
+            return (true);
         }
     }
-    return (FALSE);
+    return (false);
 }
 
 #define PET_PRICE(pet) (GET_LEVEL(pet) * 300)
@@ -594,18 +594,18 @@ SPECIAL(pet_shops) {
                 continue;
             send_to_char(ch, "%8d - %s\r\n", PET_PRICE(pet), GET_NAME(pet));
         }
-        return (TRUE);
+        return (true);
     } else if (CMD_IS("buy")) {
 
         two_arguments(argument, buf, pet_name);
 
         if (!(pet = get_char_room(buf, NULL, pet_room)) || !IS_NPC(pet)) {
             send_to_char(ch, "There is no such pet!\r\n");
-            return (TRUE);
+            return (true);
         }
         if (GET_GOLD(ch) < PET_PRICE(pet)) {
             send_to_char(ch, "You don't have enough gold!\r\n");
-            return (TRUE);
+            return (true);
         }
         decrease_gold(ch, PET_PRICE(pet));
 
@@ -631,13 +631,13 @@ SPECIAL(pet_shops) {
         IS_CARRYING_N(pet) = 100;
 
         send_to_char(ch, "May you enjoy your pet.\r\n");
-        act("$n buys $N as a pet.", FALSE, ch, 0, pet, TO_ROOM);
+        act("$n buys $N as a pet.", false, ch, 0, pet, TO_ROOM);
 
-        return (TRUE);
+        return (true);
     }
 
     /* All commands except list and buy */
-    return (FALSE);
+    return (false);
 }
 
 /* Special procedures for objects. */
@@ -649,36 +649,36 @@ SPECIAL(bank) {
             send_to_char(ch, "Your current balance is %d coins.\r\n", GET_BANK_GOLD(ch));
         else
             send_to_char(ch, "You currently have no money deposited.\r\n");
-        return (TRUE);
+        return (true);
     } else if (CMD_IS("deposit")) {
         if ((amount = atoi(argument)) <= 0) {
             send_to_char(ch, "How much do you want to deposit?\r\n");
-            return (TRUE);
+            return (true);
         }
         if (GET_GOLD(ch) < amount) {
             send_to_char(ch, "You don't have that many coins!\r\n");
-            return (TRUE);
+            return (true);
         }
         decrease_gold(ch, amount);
         increase_bank(ch, amount);
         send_to_char(ch, "You deposit %d coins.\r\n", amount);
-        act("$n makes a bank transaction.", TRUE, ch, 0, FALSE, TO_ROOM);
-        return (TRUE);
+        act("$n makes a bank transaction.", true, ch, 0, false, TO_ROOM);
+        return (true);
     } else if (CMD_IS("withdraw")) {
         if ((amount = atoi(argument)) <= 0) {
             send_to_char(ch, "How much do you want to withdraw?\r\n");
-            return (TRUE);
+            return (true);
         }
         if (GET_BANK_GOLD(ch) < amount) {
             send_to_char(ch, "You don't have that many coins deposited!\r\n");
-            return (TRUE);
+            return (true);
         }
         increase_gold(ch, amount);
         decrease_bank(ch, amount);
         send_to_char(ch, "You withdraw %d coins.\r\n", amount);
-        act("$n makes a bank transaction.", TRUE, ch, 0, FALSE, TO_ROOM);
-        return (TRUE);
+        act("$n makes a bank transaction.", true, ch, 0, false, TO_ROOM);
+        return (true);
     } else
-        return (FALSE);
+        return (false);
 }
 

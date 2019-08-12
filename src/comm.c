@@ -253,7 +253,7 @@ int main(int argc, char **argv) {
                 }
                 break;
             case 'C': /* -C<socket number> - recover from copyover, this is the control socket */
-                fCopyOver = TRUE;
+                fCopyOver = true;
                 mother_desc = atoi(argv[pos] + 2);
                 break;
             case 'd':
@@ -416,7 +416,7 @@ void copyover_recover() {
         log("SYSERR: Error reading boot time.");
 
     for (;;) {
-        fOld = TRUE;
+        fOld = true;
         if (fscanf(fp, "%d %ld %s %s %s\n", &desc, &pref, name, host, guiopt) != 5) {
             if (!feof(fp)) {
                 if (ferror(fp))
@@ -465,9 +465,9 @@ void copyover_recover() {
                 REMOVE_BIT_AR(PLR_FLAGS(d->character), PLR_MAILING);
                 REMOVE_BIT_AR(PLR_FLAGS(d->character), PLR_CRYO);
             } else
-                fOld = FALSE;
+                fOld = false;
         } else
-            fOld = FALSE;
+            fOld = false;
 
         /* Player file not found?! */
         if (!fOld) {
@@ -487,9 +487,9 @@ void copyover_recover() {
             look_at_room(d->character, 0);
 
             /* Add to the list of 'recent' players (since last reboot) with copyover flag */
-            if (AddRecentPlayer(GET_NAME(d->character), d->host, FALSE, TRUE) == FALSE) {
-                mudlog(BRF, MAX(LVL_IMMORT, GET_INVIS_LEV(d->character)), TRUE,
-                       "Failure to AddRecentPlayer (returned FALSE).");
+            if (AddRecentPlayer(GET_NAME(d->character), d->host, false, true) == false) {
+                mudlog(BRF, MAX(LVL_IMMORT, GET_INVIS_LEV(d->character)), true,
+                       "Failure to AddRecentPlayer (returned false).");
             }
         }
     }
@@ -875,11 +875,11 @@ void game_loop(socket_t local_mother_desc) {
                         char_from_room(d->character);
                     char_to_room(d->character, GET_WAS_IN(d->character));
                     GET_WAS_IN(d->character) = NOWHERE;
-                    act("$n has returned.", TRUE, d->character, 0, 0, TO_ROOM);
+                    act("$n has returned.", true, d->character, 0, 0, TO_ROOM);
                 }
                 GET_WAIT_STATE(d->character) = 1;
             }
-            d->has_prompt = FALSE;
+            d->has_prompt = false;
 
             if (d->showstr_count) /* Reading something w/ pager */
                 show_string(d, comm);
@@ -889,7 +889,7 @@ void game_loop(socket_t local_mother_desc) {
                 nanny(d, comm);
             else {            /* else: we're playing normally. */
                 if (aliased)        /* To prevent recursive aliases. */
-                    d->has_prompt = TRUE;    /* To get newline before next cmd output. */
+                    d->has_prompt = true;    /* To get newline before next cmd output. */
                 else if (perform_alias(d, comm, sizeof(comm)))    /* Run it through aliasing system */
                     get_from_q(&d->input, comm, &aliased);
                 command_interpreter(d->character, comm); /* Send it to interpreter */
@@ -912,7 +912,7 @@ void game_loop(socket_t local_mother_desc) {
         for (d = descriptor_list; d; d = d->next) {
             if (!d->has_prompt) {
                 write_to_descriptor(d->descriptor, make_prompt(d));
-                d->has_prompt = TRUE;
+                d->has_prompt = true;
             }
         }
 
@@ -947,15 +947,15 @@ void game_loop(socket_t local_mother_desc) {
 
         /* signal 1 - reread wizlist */
         if (reread_wizlist) {
-            reread_wizlist = FALSE;
-            mudlog(CMP, LVL_IMMORT, TRUE, "Signal received - rereading wizlists.");
+            reread_wizlist = false;
+            mudlog(CMP, LVL_IMMORT, true, "Signal received - rereading wizlists.");
             reboot_wizlists();
         }
 
         /* signal 2 - unused
         if (emergency_unban) {
-            emergency_unban = FALSE;
-            mudlog(BRF, LVL_IMMORT, TRUE, "Received SIGUSR2 - completely unrestricting game (emergent)");
+            emergency_unban = false;
+            mudlog(BRF, LVL_IMMORT, true, "Received SIGUSR2 - completely unrestricting game (emergent)");
             ban_list = NULL;
             circle_restrict = 0;
             num_invalid = 0;
@@ -1504,7 +1504,7 @@ static int new_descriptor(socket_t s) {
     /* determine if the site is banned */
     if (isbanned(newd->host) == BAN_ALL) {
         CLOSE_SOCKET(desc);
-        mudlog(CMP, LVL_GOD, TRUE, "Connection attempt denied from [%s]", newd->host);
+        mudlog(CMP, LVL_GOD, true, "Connection attempt denied from [%s]", newd->host);
         free(newd);
         return (0);
     }
@@ -1560,7 +1560,7 @@ static int process_output(struct descriptor_data *t) {
     /* now, send the output.  If this is an 'interruption', use the prepended
      * CRLF, otherwise send the straight output sans CRLF. */
     if (t->has_prompt && !t->pProtocol->WriteOOB) {
-        t->has_prompt = FALSE;
+        t->has_prompt = false;
         result = write_to_descriptor(t->descriptor, i);
         if (result >= 2)
             result -= 2;
@@ -2041,17 +2041,17 @@ void close_socket(struct descriptor_data *d) {
             struct char_data *link_challenged = d->original ? d->original : d->character;
 
             /* We are guaranteed to have a person. */
-            act("$n has lost $s link.", TRUE, link_challenged, 0, 0, TO_ROOM);
+            act("$n has lost $s link.", true, link_challenged, 0, 0, TO_ROOM);
             save_char(link_challenged);
-            mudlog(NRM, MAX(LVL_IMMORT, GET_INVIS_LEV(link_challenged)), TRUE, "Closing link to: %s.",
+            mudlog(NRM, MAX(LVL_IMMORT, GET_INVIS_LEV(link_challenged)), true, "Closing link to: %s.",
                    GET_NAME(link_challenged));
         } else {
-            mudlog(CMP, LVL_IMMORT, TRUE, "Losing player: %s.",
+            mudlog(CMP, LVL_IMMORT, true, "Losing player: %s.",
                    GET_NAME(d->character) ? GET_NAME(d->character) : "<null>");
             free_char(d->character);
         }
     } else
-        mudlog(CMP, LVL_IMMORT, TRUE, "Losing descriptor without char.");
+        mudlog(CMP, LVL_IMMORT, true, "Losing descriptor without char.");
 
     /* JE 2/22/95 -- part of my unending quest to make switch stable */
     if (d->original && d->original->desc)
@@ -2162,13 +2162,13 @@ static void nonblock(socket_t s) {
 #if defined(CIRCLE_UNIX)
 
 static RETSIGTYPE reread_wizlists(int sig) {
-    reread_wizlist = TRUE;
+    reread_wizlist = true;
 }
 
 /* signal2 Orphaned right now  ...
 static RETSIGTYPE unrestrict_game(int sig)
 {
-  emergency_unban = TRUE;
+  emergency_unban = true;
 }
 */
 
@@ -2410,7 +2410,7 @@ void perform_act(const char *orig, struct char_data *ch, struct obj_data *obj,
                  void *vict_obj, struct char_data *to) {
     const char *i = NULL;
     char lbuf[MAX_STRING_LENGTH], *buf, *j;
-    bool uppercasenext = FALSE;
+    bool uppercasenext = false;
     struct char_data *dg_victim = NULL;
     struct obj_data *dg_target = NULL;
     char *dg_arg = NULL;
@@ -2488,7 +2488,7 @@ void perform_act(const char *orig, struct char_data *ch, struct obj_data *obj,
                     break;
                     /* uppercase next word */
                 case 'U':
-                    uppercasenext = TRUE;
+                    uppercasenext = true;
                     i = "";
                     break;
                 case '$':
@@ -2503,7 +2503,7 @@ void perform_act(const char *orig, struct char_data *ch, struct obj_data *obj,
             while ((*buf = *(i++))) {
                 if (uppercasenext && !isspace((int) *buf)) {
                     *buf = UPPER(*buf);
-                    uppercasenext = FALSE;
+                    uppercasenext = false;
                 }
                 buf++;
             }
@@ -2512,7 +2512,7 @@ void perform_act(const char *orig, struct char_data *ch, struct obj_data *obj,
             break;
         } else if (uppercasenext && !isspace((int) *(buf - 1))) {
             *(buf - 1) = UPPER(*(buf - 1));
-            uppercasenext = FALSE;
+            uppercasenext = false;
         }
     }
 
@@ -2664,11 +2664,11 @@ static int open_logfile(const char *filename, FILE *stderr_fp) {
     if (logfile) {
         printf("Using log file '%s'%s.\n",
                filename, stderr_fp ? " with redirection" : "");
-        return (TRUE);
+        return (true);
     }
 
     printf("SYSERR: Error opening file '%s': %s\n", filename, strerror(errno));
-    return (FALSE);
+    return (false);
 }
 
 /* This may not be pretty but it keeps game_loop() neater than if it was inline. */

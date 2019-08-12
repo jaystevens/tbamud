@@ -71,7 +71,7 @@ void mobile_activity(void) {
                 if (best_obj != NULL) {
                     obj_from_room(best_obj);
                     obj_to_char(best_obj, ch);
-                    act("$n gets $p.", FALSE, ch, best_obj, 0, TO_ROOM);
+                    act("$n gets $p.", false, ch, best_obj, 0, TO_ROOM);
                 }
             }
 
@@ -89,7 +89,7 @@ void mobile_activity(void) {
 
         /* Aggressive Mobs */
         if (!MOB_FLAGGED(ch, MOB_HELPER) && (!AFF_FLAGGED(ch, AFF_BLIND) || !AFF_FLAGGED(ch, AFF_CHARM))) {
-            found = FALSE;
+            found = false;
             for (vict = world[IN_ROOM(ch)].people; vict && !found; vict = vict->next_in_room) {
                 if (IS_NPC(vict) || !CAN_SEE(ch, vict) || PRF_FLAGGED(vict, PRF_NOHASSLE))
                     continue;
@@ -107,14 +107,14 @@ void mobile_activity(void) {
                         continue;
 
                     hit(ch, vict, TYPE_UNDEFINED);
-                    found = TRUE;
+                    found = true;
                 }
             }
         }
 
         /* Mob Memory */
         if (MOB_FLAGGED(ch, MOB_MEMORY) && MEMORY(ch)) {
-            found = FALSE;
+            found = false;
             for (vict = world[IN_ROOM(ch)].people; vict && !found; vict = vict->next_in_room) {
                 if (IS_NPC(vict) || !CAN_SEE(ch, vict) || PRF_FLAGGED(vict, PRF_NOHASSLE))
                     continue;
@@ -127,8 +127,8 @@ void mobile_activity(void) {
                     if (aggressive_mob_on_a_leash(ch, ch->master, vict))
                         continue;
 
-                    found = TRUE;
-                    act("'Hey!  You're the fiend that attacked me!!!', exclaims $n.", FALSE, ch, 0, 0, TO_ROOM);
+                    found = true;
+                    act("'Hey!  You're the fiend that attacked me!!!', exclaims $n.", false, ch, 0, 0, TO_ROOM);
                     hit(ch, vict, TYPE_UNDEFINED);
                 }
             }
@@ -149,7 +149,7 @@ void mobile_activity(void) {
 
         /* Helper Mobs */
         if (MOB_FLAGGED(ch, MOB_HELPER) && (!AFF_FLAGGED(ch, AFF_BLIND) || !AFF_FLAGGED(ch, AFF_CHARM))) {
-            found = FALSE;
+            found = false;
             for (vict = world[IN_ROOM(ch)].people; vict && !found; vict = vict->next_in_room) {
                 if (ch == vict || !IS_NPC(vict) || !FIGHTING(vict))
                     continue;
@@ -158,9 +158,9 @@ void mobile_activity(void) {
                 if (IS_NPC(FIGHTING(vict)) || ch == FIGHTING(vict))
                     continue;
 
-                act("$n jumps to the aid of $N!", FALSE, ch, 0, vict, TO_ROOM);
+                act("$n jumps to the aid of $N!", false, ch, 0, vict, TO_ROOM);
                 hit(ch, FIGHTING(vict), TYPE_UNDEFINED);
-                found = TRUE;
+                found = true;
             }
         }
 
@@ -173,14 +173,14 @@ void mobile_activity(void) {
 /* make ch remember victim */
 void remember(struct char_data *ch, struct char_data *victim) {
     memory_rec *tmp;
-    bool present = FALSE;
+    bool present = false;
 
     if (!IS_NPC(ch) || IS_NPC(victim) || PRF_FLAGGED(victim, PRF_NOHASSLE))
         return;
 
     for (tmp = MEMORY(ch); tmp && !present; tmp = tmp->next)
         if (tmp->id == GET_IDNUM(victim))
-            present = TRUE;
+            present = true;
 
     if (!present) {
         CREATE(tmp, memory_rec, 1);
@@ -236,7 +236,7 @@ static bool aggressive_mob_on_a_leash(struct char_data *slave, struct char_data 
     int dieroll;
 
     if (!master || !AFF_FLAGGED(slave, AFF_CHARM))
-        return (FALSE);
+        return (false);
 
     if (!snarl_cmd)
         snarl_cmd = find_command("snarl");
@@ -254,10 +254,10 @@ static bool aggressive_mob_on_a_leash(struct char_data *slave, struct char_data 
         }
 
         /* Success! But for how long? Hehe. */
-        return (TRUE);
+        return (true);
     }
 
     /* So sorry, now you're a player killer... Tsk tsk. */
-    return (FALSE);
+    return (false);
 }
 

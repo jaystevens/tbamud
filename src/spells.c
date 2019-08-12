@@ -47,7 +47,7 @@ ASPELL(spell_create_water) {
                 GET_OBJ_VAL(obj, 1) += water;
                 name_to_drinkcon(obj, LIQ_WATER);
                 weight_change_object(obj, water);
-                act("$p is filled.", FALSE, ch, obj, 0, TO_CHAR);
+                act("$p is filled.", false, ch, obj, 0, TO_CHAR);
             }
         }
     }
@@ -62,10 +62,10 @@ ASPELL(spell_recall) {
         return;
     }
 
-    act("$n disappears.", TRUE, victim, 0, 0, TO_ROOM);
+    act("$n disappears.", true, victim, 0, 0, TO_ROOM);
     char_from_room(victim);
     char_to_room(victim, r_mortal_start_room);
-    act("$n appears in the middle of the room.", TRUE, victim, 0, 0, TO_ROOM);
+    act("$n appears in the middle of the room.", true, victim, 0, 0, TO_ROOM);
     look_at_room(victim, 0);
     entry_memory_mtrigger(victim);
     greet_mtrigger(victim, -1);
@@ -90,10 +90,10 @@ ASPELL(spell_teleport) {
              ZONE_FLAGGED(GET_ROOM_ZONE(to_room), ZONE_NOASTRAL));
 
     act("$n slowly fades out of existence and is gone.",
-        FALSE, victim, 0, 0, TO_ROOM);
+        false, victim, 0, 0, TO_ROOM);
     char_from_room(victim);
     char_to_room(victim, to_room);
-    act("$n slowly fades into existence.", FALSE, victim, 0, 0, TO_ROOM);
+    act("$n slowly fades into existence.", false, victim, 0, 0, TO_ROOM);
     look_at_room(victim, 0);
     entry_memory_mtrigger(victim);
     greet_mtrigger(victim, -1);
@@ -122,7 +122,7 @@ ASPELL(spell_summon) {
             act("As the words escape your lips and $N travels\r\n"
                 "through time and space towards you, you realize that $E is\r\n"
                 "aggressive and might harm you, so you wisely send $M back.",
-                FALSE, ch, 0, victim, TO_CHAR);
+                false, ch, 0, victim, TO_CHAR);
             return;
         }
         if (!IS_NPC(victim) && !PRF_FLAGGED(victim, PRF_SUMMONABLE) &&
@@ -133,7 +133,7 @@ ASPELL(spell_summon) {
                          GET_NAME(ch), world[IN_ROOM(ch)].name);
 
             send_to_char(ch, "You failed because %s has summon protection on.\r\n", GET_NAME(victim));
-            mudlog(BRF, MAX(LVL_IMMORT, MAX(GET_INVIS_LEV(ch), GET_INVIS_LEV(victim))), TRUE,
+            mudlog(BRF, MAX(LVL_IMMORT, MAX(GET_INVIS_LEV(ch), GET_INVIS_LEV(victim))), true,
                    "%s failed summoning %s to %s.", GET_NAME(ch), GET_NAME(victim), world[IN_ROOM(ch)].name);
             return;
         }
@@ -145,13 +145,13 @@ ASPELL(spell_summon) {
         return;
     }
 
-    act("$n disappears suddenly.", TRUE, victim, 0, 0, TO_ROOM);
+    act("$n disappears suddenly.", true, victim, 0, 0, TO_ROOM);
 
     char_from_room(victim);
     char_to_room(victim, IN_ROOM(ch));
 
-    act("$n arrives suddenly.", TRUE, victim, 0, 0, TO_ROOM);
-    act("$n has summoned you!", FALSE, ch, 0, victim, TO_VICT);
+    act("$n arrives suddenly.", true, victim, 0, 0, TO_ROOM);
+    act("$n has summoned you!", false, ch, 0, victim, TO_VICT);
     look_at_room(victim, 0);
     entry_memory_mtrigger(victim);
     greet_mtrigger(victim, -1);
@@ -281,7 +281,7 @@ ASPELL(spell_charm) {
         SET_BIT_AR(af.bitvector, AFF_CHARM);
         affect_to_char(victim, &af);
 
-        act("Isn't $n just such a nice fellow?", FALSE, ch, 0, victim, TO_VICT);
+        act("Isn't $n just such a nice fellow?", false, ch, 0, victim, TO_VICT);
         if (IS_NPC(victim))
             REMOVE_BIT_AR(MOB_FLAGS(victim), MOB_SPEC);
     }
@@ -346,13 +346,13 @@ ASPELL(spell_identify) {
                 send_to_char(ch, "AC-apply is %d\r\n", GET_OBJ_VAL(obj, 0));
                 break;
         }
-        found = FALSE;
+        found = false;
         for (i = 0; i < MAX_OBJ_AFFECT; i++) {
             if ((obj->affected[i].location != APPLY_NONE) &&
                 (obj->affected[i].modifier != 0)) {
                 if (!found) {
                     send_to_char(ch, "Can affect you as :\r\n");
-                    found = TRUE;
+                    found = true;
                 }
                 sprinttype(obj->affected[i].location, apply_types, bitbuf, sizeof(bitbuf));
                 send_to_char(ch, "   Affects: %s By %d\r\n", bitbuf, obj->affected[i].modifier);
@@ -401,12 +401,12 @@ ASPELL(spell_enchant_weapon) {
 
     if (IS_GOOD(ch)) {
         SET_BIT_AR(GET_OBJ_EXTRA(obj), ITEM_ANTI_EVIL);
-        act("$p glows blue.", FALSE, ch, obj, 0, TO_CHAR);
+        act("$p glows blue.", false, ch, obj, 0, TO_CHAR);
     } else if (IS_EVIL(ch)) {
         SET_BIT_AR(GET_OBJ_EXTRA(obj), ITEM_ANTI_GOOD);
-        act("$p glows red.", FALSE, ch, obj, 0, TO_CHAR);
+        act("$p glows red.", false, ch, obj, 0, TO_CHAR);
     } else
-        act("$p glows yellow.", FALSE, ch, obj, 0, TO_CHAR);
+        act("$p glows yellow.", false, ch, obj, 0, TO_CHAR);
 }
 
 ASPELL(spell_detect_poison) {
@@ -418,9 +418,9 @@ ASPELL(spell_detect_poison) {
                 send_to_char(ch, "You feel healthy.\r\n");
         } else {
             if (AFF_FLAGGED(victim, AFF_POISON))
-                act("You sense that $E is poisoned.", FALSE, ch, 0, victim, TO_CHAR);
+                act("You sense that $E is poisoned.", false, ch, 0, victim, TO_CHAR);
             else
-                act("You sense that $E is healthy.", FALSE, ch, 0, victim, TO_CHAR);
+                act("You sense that $E is healthy.", false, ch, 0, victim, TO_CHAR);
         }
     }
 
@@ -430,9 +430,9 @@ ASPELL(spell_detect_poison) {
             case ITEM_FOUNTAIN:
             case ITEM_FOOD:
                 if (GET_OBJ_VAL(obj, 3))
-                    act("You sense that $p has been contaminated.", FALSE, ch, obj, 0, TO_CHAR);
+                    act("You sense that $p has been contaminated.", false, ch, obj, 0, TO_CHAR);
                 else
-                    act("You sense that $p is safe for consumption.", FALSE, ch, obj, 0,
+                    act("You sense that $p is safe for consumption.", false, ch, obj, 0,
                         TO_CHAR);
                 break;
             default:

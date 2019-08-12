@@ -2546,18 +2546,18 @@ int backstab_mult(int level) {
  * usable by a particular class, based on the ITEM_ANTI_{class} bitvectors. */
 int invalid_class(struct char_data *ch, struct obj_data *obj) {
     if (OBJ_FLAGGED(obj, ITEM_ANTI_MAGIC_USER) && IS_MAGIC_USER(ch))
-        return TRUE;
+        return true;
 
     if (OBJ_FLAGGED(obj, ITEM_ANTI_CLERIC) && IS_CLERIC(ch))
-        return TRUE;
+        return true;
 
     if (OBJ_FLAGGED(obj, ITEM_ANTI_WARRIOR) && IS_WARRIOR(ch))
-        return TRUE;
+        return true;
 
     if (OBJ_FLAGGED(obj, ITEM_ANTI_THIEF) && IS_THIEF(ch))
-        return TRUE;
+        return true;
 
-    return FALSE;
+    return false;
 }
 
 /* SPELLS AND SKILLS.  This area defines which spells are assigned to which

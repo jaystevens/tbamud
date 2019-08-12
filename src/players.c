@@ -237,7 +237,7 @@ int load_char(const char *name, struct char_data *ch) {
         if (!get_filename(filename, sizeof(filename), PLR_FILE, player_table[id].name))
             return (-1);
         if (!(fl = fopen(filename, "r"))) {
-            mudlog(NRM, LVL_GOD, TRUE, "SYSERR: Couldn't open player file %s", filename);
+            mudlog(NRM, LVL_GOD, true, "SYSERR: Couldn't open player file %s", filename);
             return (-1);
         }
 
@@ -487,7 +487,7 @@ int load_char(const char *name, struct char_data *ch) {
 void save_char(struct char_data *ch) {
     FILE *fl;
     char filename[40], buf[MAX_STRING_LENGTH], bits[127], bits2[127], bits3[127], bits4[127];
-    int i, j, id, save_index = FALSE;
+    int i, j, id, save_index = false;
     struct affected_type *aff, tmp_aff[MAX_AFFECT];
     struct obj_data *char_eq[NUM_WEARS];
     trig_data *t;
@@ -516,7 +516,7 @@ void save_char(struct char_data *ch) {
     if (!get_filename(filename, sizeof(filename), PLR_FILE, GET_NAME(ch)))
         return;
     if (!(fl = fopen(filename, "w"))) {
-        mudlog(NRM, LVL_GOD, TRUE, "SYSERR: Couldn't open player file %s for write", filename);
+        mudlog(NRM, LVL_GOD, true, "SYSERR: Couldn't open player file %s for write", filename);
         return;
     }
 
@@ -717,11 +717,11 @@ void save_char(struct char_data *ch) {
 
     /* update the player in the player index */
     if (player_table[id].level != GET_LEVEL(ch)) {
-        save_index = TRUE;
+        save_index = true;
         player_table[id].level = GET_LEVEL(ch);
     }
     if (player_table[id].last != ch->player.time.logon) {
-        save_index = TRUE;
+        save_index = true;
         player_table[id].last = ch->player.time.logon;
     }
     i = player_table[id].flags;

@@ -96,7 +96,7 @@ void attach_mud_event(struct mud_event_data *pMudEvent, long time) {
     struct room_data *room;
 
     pEvent = event_create(mud_event_index[pMudEvent->iId].func, pMudEvent, time);
-    pEvent->isMudEvent = TRUE;
+    pEvent->isMudEvent = true;
     pMudEvent->pEvent = pEvent;
 
     switch (mud_event_index[pMudEvent->iId].iEvent_Type) {
@@ -184,7 +184,7 @@ void free_mud_event(struct mud_event_data *pMudEvent) {
 struct mud_event_data *char_has_mud_event(struct char_data *ch, event_id iId) {
     struct event *pEvent;
     struct mud_event_data *pMudEvent = NULL;
-    bool found = FALSE;
+    bool found = false;
 
     if (ch->events == NULL)
         return NULL;
@@ -199,7 +199,7 @@ struct mud_event_data *char_has_mud_event(struct char_data *ch, event_id iId) {
             continue;
         pMudEvent = (struct mud_event_data *) pEvent->event_obj;
         if (pMudEvent->iId == iId) {
-            found = TRUE;
+            found = true;
             break;
         }
     }

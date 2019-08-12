@@ -233,11 +233,11 @@ void affect_total(struct char_data *ch) {
             for (j = 0; j < MAX_OBJ_AFFECT; j++)
                 affect_modify_ar(ch, GET_EQ(ch, i)->affected[j].location,
                                  GET_EQ(ch, i)->affected[j].modifier,
-                                 GET_OBJ_AFFECT(GET_EQ(ch, i)), FALSE);
+                                 GET_OBJ_AFFECT(GET_EQ(ch, i)), false);
     }
 
     for (af = ch->affected; af; af = af->next)
-        affect_modify_ar(ch, af->location, af->modifier, af->bitvector, FALSE);
+        affect_modify_ar(ch, af->location, af->modifier, af->bitvector, false);
 
     ch->aff_abils = ch->real_abils;
 
@@ -246,11 +246,11 @@ void affect_total(struct char_data *ch) {
             for (j = 0; j < MAX_OBJ_AFFECT; j++)
                 affect_modify_ar(ch, GET_EQ(ch, i)->affected[j].location,
                                  GET_EQ(ch, i)->affected[j].modifier,
-                                 GET_OBJ_AFFECT(GET_EQ(ch, i)), TRUE);
+                                 GET_OBJ_AFFECT(GET_EQ(ch, i)), true);
     }
 
     for (af = ch->affected; af; af = af->next)
-        affect_modify_ar(ch, af->location, af->modifier, af->bitvector, TRUE);
+        affect_modify_ar(ch, af->location, af->modifier, af->bitvector, true);
 
     /* Make certain values are between 0..25, not < 0 and not > 25! */
     i = (IS_NPC(ch) || GET_LEVEL(ch) >= LVL_GRGOD) ? 25 : 18;
@@ -284,7 +284,7 @@ void affect_to_char(struct char_data *ch, struct affected_type *af) {
     affected_alloc->next = ch->affected;
     ch->affected = affected_alloc;
 
-    affect_modify_ar(ch, af->location, af->modifier, af->bitvector, TRUE);
+    affect_modify_ar(ch, af->location, af->modifier, af->bitvector, true);
     affect_total(ch);
 }
 
@@ -299,7 +299,7 @@ void affect_remove(struct char_data *ch, struct affected_type *af) {
         return;
     }
 
-    affect_modify_ar(ch, af->location, af->modifier, af->bitvector, FALSE);
+    affect_modify_ar(ch, af->location, af->modifier, af->bitvector, false);
     REMOVE_FROM_LIST(af, ch->affected, next);
     free(af);
     affect_total(ch);
@@ -316,22 +316,22 @@ void affect_from_char(struct char_data *ch, int type) {
     }
 }
 
-/* Return TRUE if a char is affected by a spell (SPELL_XXX), FALSE indicates
+/* Return true if a char is affected by a spell (SPELL_XXX), false indicates
  * not affected. */
 bool affected_by_spell(struct char_data *ch, int type) {
     struct affected_type *hjp;
 
     for (hjp = ch->affected; hjp; hjp = hjp->next)
         if (hjp->spell == type)
-            return (TRUE);
+            return (true);
 
-    return (FALSE);
+    return (false);
 }
 
 void affect_join(struct char_data *ch, struct affected_type *af,
                  bool add_dur, bool avg_dur, bool add_mod, bool avg_mod) {
     struct affected_type *hjp, *next;
-    bool found = FALSE;
+    bool found = false;
 
     for (hjp = ch->affected; !found && hjp; hjp = next) {
         next = hjp->next;
@@ -348,7 +348,7 @@ void affect_join(struct char_data *ch, struct affected_type *af,
 
             affect_remove(ch, hjp);
             affect_to_char(ch, af);
-            found = TRUE;
+            found = true;
         }
     }
     if (!found)
@@ -477,12 +477,12 @@ static int apply_ac(struct char_data *ch, int eq_pos) {
 
 int invalid_align(struct char_data *ch, struct obj_data *obj) {
     if (OBJ_FLAGGED(obj, ITEM_ANTI_EVIL) && IS_EVIL(ch))
-        return TRUE;
+        return true;
     if (OBJ_FLAGGED(obj, ITEM_ANTI_GOOD) && IS_GOOD(ch))
-        return TRUE;
+        return true;
     if (OBJ_FLAGGED(obj, ITEM_ANTI_NEUTRAL) && IS_NEUTRAL(ch))
-        return TRUE;
-    return FALSE;
+        return true;
+    return false;
 }
 
 void equip_char(struct char_data *ch, struct obj_data *obj, int pos) {
@@ -507,8 +507,8 @@ void equip_char(struct char_data *ch, struct obj_data *obj, int pos) {
         return;
     }
     if (invalid_align(ch, obj) || invalid_class(ch, obj)) {
-        act("You are zapped by $p and instantly let go of it.", FALSE, ch, obj, 0, TO_CHAR);
-        act("$n is zapped by $p and instantly lets go of it.", FALSE, ch, obj, 0, TO_ROOM);
+        act("You are zapped by $p and instantly let go of it.", false, ch, obj, 0, TO_CHAR);
+        act("$n is zapped by $p and instantly lets go of it.", false, ch, obj, 0, TO_ROOM);
         /* Changed to drop in inventory instead of the ground. */
         obj_to_char(obj, ch);
         return;
@@ -531,7 +531,7 @@ void equip_char(struct char_data *ch, struct obj_data *obj, int pos) {
     for (j = 0; j < MAX_OBJ_AFFECT; j++)
         affect_modify_ar(ch, obj->affected[j].location,
                          obj->affected[j].modifier,
-                         GET_OBJ_AFFECT(obj), TRUE);
+                         GET_OBJ_AFFECT(obj), true);
 
     affect_total(ch);
 }
@@ -564,7 +564,7 @@ struct obj_data *unequip_char(struct char_data *ch, int pos) {
     for (j = 0; j < MAX_OBJ_AFFECT; j++)
         affect_modify_ar(ch, obj->affected[j].location,
                          obj->affected[j].modifier,
-                         GET_OBJ_AFFECT(obj), FALSE);
+                         GET_OBJ_AFFECT(obj), false);
 
     affect_total(ch);
 
@@ -823,10 +823,10 @@ void update_char_objects(struct char_data *ch) {
                 i = --GET_OBJ_VAL(GET_EQ(ch, WEAR_LIGHT), 2);
                 if (i == 1) {
                     send_to_char(ch, "Your light begins to flicker and fade.\r\n");
-                    act("$n's light begins to flicker and fade.", FALSE, ch, 0, 0, TO_ROOM);
+                    act("$n's light begins to flicker and fade.", false, ch, 0, 0, TO_ROOM);
                 } else if (i == 0) {
                     send_to_char(ch, "Your light sputters out and dies.\r\n");
-                    act("$n's light sputters out and dies.", FALSE, ch, 0, 0, TO_ROOM);
+                    act("$n's light sputters out and dies.", false, ch, 0, 0, TO_ROOM);
                     world[IN_ROOM(ch)].light--;
                 }
             }
@@ -1325,10 +1325,10 @@ int generic_find(char *arg, bitvector_t bitvector, struct char_data *ch,
     }
 
     if (IS_SET(bitvector, FIND_OBJ_EQUIP)) {
-        for (found = FALSE, i = 0; i < NUM_WEARS && !found; i++)
+        for (found = false, i = 0; i < NUM_WEARS && !found; i++)
             if (GET_EQ(ch, i) && isname(name, GET_EQ(ch, i)->name) && --number == 0) {
                 *tar_obj = GET_EQ(ch, i);
-                found = TRUE;
+                found = true;
             }
         if (found)
             return (FIND_OBJ_EQUIP);
@@ -1410,7 +1410,7 @@ void leave_group(struct char_data *ch) {
     struct group_data *group;
     struct char_data *tch;
     struct iterator_data Iterator;
-    bool found_pc = FALSE;
+    bool found_pc = false;
 
     if ((group = ch->group) == NULL)
         return;
@@ -1424,7 +1424,7 @@ void leave_group(struct char_data *ch) {
         for (tch = (struct char_data *) merge_iterator(&Iterator, group->members);
              tch; tch = next_in_list(&Iterator))
             if (!IS_NPC(tch))
-                found_pc = TRUE;
+                found_pc = true;
 
         remove_iterator(&Iterator);
     }

@@ -65,7 +65,7 @@ ACMD(do_oasis_zedit) {
         number = GET_ROOM_VNUM(IN_ROOM(ch));
     else if (!isdigit(*buf1)) {
         if (str_cmp("save", buf1) == 0) {
-            save = TRUE;
+            save = true;
 
             if (is_number(buf2))
                 number = atoidx(buf2);
@@ -130,7 +130,7 @@ ACMD(do_oasis_zedit) {
 
     /* Give the builder's descriptor an OLC structure. */
     if (d->olc) {
-        mudlog(BRF, LVL_IMMORT, TRUE, "SYSERR: do_oasis_zedit: Player already "
+        mudlog(BRF, LVL_IMMORT, true, "SYSERR: do_oasis_zedit: Player already "
                                       "had olc structure.");
         free(d->olc);
     }
@@ -161,7 +161,7 @@ ACMD(do_oasis_zedit) {
     if (save) {
         send_to_char(ch, "Saving all zone information for zone %d.\r\n",
                      zone_table[OLC_ZNUM(d)].number);
-        mudlog(CMP, MAX(LVL_BUILDER, GET_INVIS_LEV(ch)), TRUE,
+        mudlog(CMP, MAX(LVL_BUILDER, GET_INVIS_LEV(ch)), true,
                "OLC: %s saves zone information for zone %d.", GET_NAME(ch),
                zone_table[OLC_ZNUM(d)].number);
 
@@ -188,10 +188,10 @@ ACMD(do_oasis_zedit) {
     zedit_setup(d, real_num);
     STATE(d) = CON_ZEDIT;
 
-    act("$n starts using OLC.", TRUE, d->character, 0, 0, TO_ROOM);
+    act("$n starts using OLC.", true, d->character, 0, 0, TO_ROOM);
     SET_BIT_AR(PLR_FLAGS(ch), PLR_WRITING);
 
-    mudlog(CMP, MAX(LVL_IMMORT, GET_INVIS_LEV(ch)), TRUE, "OLC: %s starts editing zone %d allowed zone %d",
+    mudlog(CMP, MAX(LVL_IMMORT, GET_INVIS_LEV(ch)), true, "OLC: %s starts editing zone %d allowed zone %d",
            GET_NAME(ch), zone_table[OLC_ZNUM(d)].number, GET_OLC_ZONE(ch));
 }
 
@@ -285,15 +285,15 @@ static void zedit_new_zone(struct char_data *ch, zone_vnum vzone_num, room_vnum 
 
     zedit_save_to_disk(result); /* save to disk .. */
 
-    mudlog(BRF, MAX(LVL_BUILDER, GET_INVIS_LEV(ch)), TRUE, "OLC: %s creates new zone #%d", GET_NAME(ch), vzone_num);
+    mudlog(BRF, MAX(LVL_BUILDER, GET_INVIS_LEV(ch)), true, "OLC: %s creates new zone #%d", GET_NAME(ch), vzone_num);
     write_to_output(ch->desc, "Zone created successfully.\r\n");
 }
 
 /* Save all the information in the player's temporary buffer back into
  * the current zone table. */
 static void zedit_save_internally(struct descriptor_data *d) {
-    int mobloaded = FALSE,
-            objloaded = FALSE,
+    int mobloaded = false,
+            objloaded = false,
             subcmd, i;
     room_rnum room_num = real_room(OLC_NUM(d));
 
@@ -328,13 +328,13 @@ static void zedit_save_internally(struct descriptor_data *d) {
                 continue;
                 /* Pass cases. */
             case 'M':
-                mobloaded = TRUE;
+                mobloaded = true;
                 break;
             case 'O':
-                objloaded = TRUE;
+                objloaded = true;
                 break;
             default:
-                mobloaded = objloaded = FALSE;
+                mobloaded = objloaded = false;
                 break;
         }
         add_cmd_to_list(&(zone_table[OLC_ZNUM(d)].cmd), &MYCMD, subcmd);
@@ -378,7 +378,7 @@ static void zedit_disp_flag_menu(struct descriptor_data *d) {
     char bits[MAX_STRING_LENGTH];
 
     clear_screen(d);
-    column_list(d->character, 0, zone_bits, NUM_ZONE_FLAGS, TRUE);
+    column_list(d->character, 0, zone_bits, NUM_ZONE_FLAGS, true);
 
     sprintbitarray(OLC_ZONE(d)->zone_flags, zone_bits, ZN_ARRAY_MAX, bits);
     write_to_output(d, "\r\nZone flags: \tc%s\tn\r\n"
@@ -391,21 +391,21 @@ static bool zedit_get_levels(struct descriptor_data *d, char *buf) {
     /* Create a string for the recommended levels for this zone. */
     if ((OLC_ZONE(d)->min_level == -1) && (OLC_ZONE(d)->max_level == -1)) {
         sprintf(buf, "<Not Set!>");
-        return FALSE;
+        return false;
     }
 
     if (OLC_ZONE(d)->min_level == -1) {
         sprintf(buf, "Up to level %d", OLC_ZONE(d)->max_level);
-        return TRUE;
+        return true;
     }
 
     if (OLC_ZONE(d)->max_level == -1) {
         sprintf(buf, "Above level %d", OLC_ZONE(d)->min_level);
-        return TRUE;
+        return true;
     }
 
     sprintf(buf, "Levels %d to %d", OLC_ZONE(d)->min_level, OLC_ZONE(d)->max_level);
-    return TRUE;
+    return true;
 }
 
 /*------------------------------------------------------------------*/
@@ -414,7 +414,7 @@ static bool zedit_get_levels(struct descriptor_data *d, char *buf) {
 static void zedit_disp_menu(struct descriptor_data *d) {
     int subcmd = 0, counter = 0;
     char buf1[MAX_STRING_LENGTH], lev_string[50];
-    bool levels_set = FALSE;
+    bool levels_set = false;
 
     get_char_colors(d->character);
     clear_screen(d);
@@ -599,7 +599,7 @@ static void zedit_disp_arg1(struct descriptor_data *d) {
         default:
             /* We should never get here. */
             cleanup_olc(d, CLEANUP_ALL);
-            mudlog(BRF, LVL_BUILDER, TRUE, "SYSERR: OLC: zedit_disp_arg1(): Help!");
+            mudlog(BRF, LVL_BUILDER, true, "SYSERR: OLC: zedit_disp_arg1(): Help!");
             write_to_output(d, "Oops...\r\n");
             return;
     }
@@ -638,7 +638,7 @@ static void zedit_disp_arg2(struct descriptor_data *d) {
         default:
             /* We should never get here, but just in case.  */
             cleanup_olc(d, CLEANUP_ALL);
-            mudlog(BRF, LVL_BUILDER, TRUE, "SYSERR: OLC: zedit_disp_arg2(): Help!");
+            mudlog(BRF, LVL_BUILDER, true, "SYSERR: OLC: zedit_disp_arg2(): Help!");
             write_to_output(d, "Oops...\r\n");
             return;
     }
@@ -653,7 +653,7 @@ static void zedit_disp_arg3(struct descriptor_data *d) {
 
     switch (OLC_CMD(d).command) {
         case 'E':
-            column_list(d->character, 0, equipment_types, NUM_WEARS, TRUE);
+            column_list(d->character, 0, equipment_types, NUM_WEARS, true);
             write_to_output(d, "Location to equip : ");
             break;
         case 'P':
@@ -674,7 +674,7 @@ static void zedit_disp_arg3(struct descriptor_data *d) {
         default:
             /* We should never get here, just in case. */
             cleanup_olc(d, CLEANUP_ALL);
-            mudlog(BRF, LVL_BUILDER, TRUE, "SYSERR: OLC: zedit_disp_arg3(): Help!");
+            mudlog(BRF, LVL_BUILDER, true, "SYSERR: OLC: zedit_disp_arg3(): Help!");
             write_to_output(d, "Oops...\r\n");
             return;
     }
@@ -687,7 +687,7 @@ static void zedit_disp_arg3(struct descriptor_data *d) {
  */
 static void zedit_disp_levels(struct descriptor_data *d) {
     char lev_string[50];
-    bool levels_set = FALSE;
+    bool levels_set = false;
 
     levels_set = zedit_get_levels(d, lev_string);
 
@@ -722,7 +722,7 @@ void zedit_parse(struct descriptor_data *d, char *arg) {
                     } else
                         write_to_output(d, "Saving zone info in memory.\r\n");
 
-                    mudlog(CMP, MAX(LVL_BUILDER, GET_INVIS_LEV(d->character)), TRUE,
+                    mudlog(CMP, MAX(LVL_BUILDER, GET_INVIS_LEV(d->character)), true,
                            "OLC: %s edits zone info for room %d.", GET_NAME(d->character), OLC_NUM(d));
                     /* FALL THROUGH */
                 case 'n':
@@ -1008,7 +1008,7 @@ void zedit_parse(struct descriptor_data *d, char *arg) {
                 default:
                     /* We should never get here. */
                     cleanup_olc(d, CLEANUP_ALL);
-                    mudlog(BRF, LVL_BUILDER, TRUE, "SYSERR: OLC: zedit_parse(): case ARG1: Ack!");
+                    mudlog(BRF, LVL_BUILDER, true, "SYSERR: OLC: zedit_parse(): case ARG1: Ack!");
                     write_to_output(d, "Oops...\r\n");
                     break;
             }
@@ -1071,7 +1071,7 @@ void zedit_parse(struct descriptor_data *d, char *arg) {
                 default:
                     /* We should never get here, but just in case. */
                     cleanup_olc(d, CLEANUP_ALL);
-                    mudlog(BRF, LVL_BUILDER, TRUE, "SYSERR: OLC: zedit_parse(): case ARG2: Ack!");
+                    mudlog(BRF, LVL_BUILDER, true, "SYSERR: OLC: zedit_parse(): case ARG2: Ack!");
                     write_to_output(d, "Oops...\r\n");
                     break;
             }
@@ -1120,7 +1120,7 @@ void zedit_parse(struct descriptor_data *d, char *arg) {
                 default:
                     /* We should never get here, but just in case. */
                     cleanup_olc(d, CLEANUP_ALL);
-                    mudlog(BRF, LVL_BUILDER, TRUE, "SYSERR: OLC: zedit_parse(): case ARG3: Ack!");
+                    mudlog(BRF, LVL_BUILDER, true, "SYSERR: OLC: zedit_parse(): case ARG3: Ack!");
                     write_to_output(d, "Oops...\r\n");
                     break;
             }
@@ -1244,7 +1244,7 @@ void zedit_parse(struct descriptor_data *d, char *arg) {
         default:
             /* We should never get here, but just in case... */
             cleanup_olc(d, CLEANUP_ALL);
-            mudlog(BRF, LVL_BUILDER, TRUE, "SYSERR: OLC: zedit_parse(): Reached default case!");
+            mudlog(BRF, LVL_BUILDER, true, "SYSERR: OLC: zedit_parse(): Reached default case!");
             write_to_output(d, "Oops...\r\n");
             break;
     }

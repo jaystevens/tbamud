@@ -372,7 +372,7 @@ size_t sprinttype(int type, const char *names[], char *result, size_t reslen) {
  * bitarray are equal to 0).
  */
 void sprintbitarray(int bitvector[], const char *names[], int maxar, char *result) {
-    int nr, teller, found = FALSE;
+    int nr, teller, found = false;
 
     *result = '\0';
 
@@ -389,7 +389,7 @@ void sprintbitarray(int bitvector[], const char *names[], int maxar, char *resul
                 }
             }
             if (*names[(teller * 32) + nr] == '\n')
-                found = TRUE;
+                found = true;
         }
     }
 
@@ -479,10 +479,10 @@ bool circle_follow(struct char_data *ch, struct char_data *victim) {
 
     for (k = victim; k; k = k->master) {
         if (k == ch)
-            return (TRUE);
+            return (true);
     }
 
-    return (FALSE);
+    return (false);
 }
 
 /** Call on a character (NPC or PC) to stop them from following someone and
@@ -504,16 +504,16 @@ void stop_follower(struct char_data *ch) {
     }
 
     if (AFF_FLAGGED(ch, AFF_CHARM)) {
-        act("You realize that $N is a jerk!", FALSE, ch, 0, ch->master, TO_CHAR);
-        act("$n realizes that $N is a jerk!", FALSE, ch, 0, ch->master, TO_NOTVICT);
-        act("$n hates your guts!", FALSE, ch, 0, ch->master, TO_VICT);
+        act("You realize that $N is a jerk!", false, ch, 0, ch->master, TO_CHAR);
+        act("$n realizes that $N is a jerk!", false, ch, 0, ch->master, TO_NOTVICT);
+        act("$n hates your guts!", false, ch, 0, ch->master, TO_VICT);
         if (affected_by_spell(ch, SPELL_CHARM))
             affect_from_char(ch, SPELL_CHARM);
     } else {
-        act("You stop following $N.", FALSE, ch, 0, ch->master, TO_CHAR);
-        act("$n stops following $N.", TRUE, ch, 0, ch->master, TO_NOTVICT);
+        act("You stop following $N.", false, ch, 0, ch->master, TO_CHAR);
+        act("$n stops following $N.", true, ch, 0, ch->master, TO_NOTVICT);
         if (CAN_SEE(ch->master, ch))
-            act("$n stops following you.", TRUE, ch, 0, ch->master, TO_VICT);
+            act("$n stops following you.", true, ch, 0, ch->master, TO_VICT);
     }
 
     if (ch->master->followers->follower == ch) {    /* Head of follower-list? */
@@ -587,10 +587,10 @@ void add_follower(struct char_data *ch, struct char_data *leader) {
     k->next = leader->followers;
     leader->followers = k;
 
-    act("You now follow $N.", FALSE, ch, 0, leader, TO_CHAR);
+    act("You now follow $N.", false, ch, 0, leader, TO_CHAR);
     if (CAN_SEE(leader, ch))
-        act("$n starts following you.", TRUE, ch, 0, leader, TO_VICT);
-    act("$n starts to follow $N.", TRUE, ch, 0, leader, TO_NOTVICT);
+        act("$n starts following you.", true, ch, 0, leader, TO_VICT);
+    act("$n starts to follow $N.", true, ch, 0, leader, TO_NOTVICT);
 }
 
 /** Reads the next non-blank line off of the input stream. Empty lines are
@@ -824,22 +824,22 @@ int count_non_protocol_chars(char *str) {
 int room_is_dark(room_rnum room) {
     if (!VALID_ROOM_RNUM(room)) {
         log("room_is_dark: Invalid room rnum %d. (0-%d)", room, top_of_world);
-        return (FALSE);
+        return (false);
     }
 
     if (world[room].light)
-        return (FALSE);
+        return (false);
 
     if (ROOM_FLAGGED(room, ROOM_DARK))
-        return (TRUE);
+        return (true);
 
     if (SECT(room) == SECT_INSIDE || SECT(room) == SECT_CITY)
-        return (FALSE);
+        return (false);
 
     if (weather_info.sunlight == SUN_SET || weather_info.sunlight == SUN_DARK)
-        return (TRUE);
+        return (true);
 
-    return (FALSE);
+    return (false);
 }
 
 /** Calculates the Levenshtein distance between two strings. Currently used
@@ -998,7 +998,7 @@ void column_list(struct char_data *ch, int num_cols, const char **list, int list
         snprintf((buf + MAX_STRING_LENGTH) - 22, 22, "\r\n*** OVERFLOW ***\r\n");
 
     /* Send the list to the player */
-    page_string(ch->desc, buf, TRUE);
+    page_string(ch->desc, buf, true);
 }
 
 
@@ -1260,7 +1260,7 @@ char *strfrmt(char *str, int w, int h, int justify, int hpad, int vpad) {
     char *wp;
     int wlen = 0, llen = 0, lcount = 0;
     char last_color = 'n';
-    bool new_line_started = FALSE;
+    bool new_line_started = false;
 
     memset(line, '\0', MAX_INPUT_LENGTH);
     /* Nomalize spaces and newlines */
@@ -1328,15 +1328,15 @@ char *strfrmt(char *str, int w, int h, int justify, int hpad, int vpad) {
             if (last_color != 'n') {
                 *lp++ = '\t';  /* restore previous color */
                 *lp++ = last_color;
-                new_line_started = TRUE;
+                new_line_started = true;
             }
         }
         /* add word to line */
-        if (lp != line && new_line_started != TRUE) {
+        if (lp != line && new_line_started != true) {
             *lp++ = ' ';
             llen++;
         }
-        new_line_started = FALSE;
+        new_line_started = false;
         llen += wlen;
         for (; wp != sp; *lp++ = *wp++);
     }
