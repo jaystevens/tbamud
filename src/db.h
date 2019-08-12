@@ -447,6 +447,6 @@ extern int64_t top_of_p_file;
 extern int64_t top_idnum;
 /* end previously located in players.c */
 
-extern time_t newsmod;
-extern time_t motdmod;
+//extern time_t newsmod;
+//extern time_t motdmod;
 #endif /* _DB_H_ */

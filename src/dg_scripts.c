@@ -2426,8 +2426,8 @@ int script_driver(void *go_adress, trig_data *trig, int type, int mode) {
     unsigned long loops = 0;
     void *go = NULL;
 
-    void obj_command_interpreter(obj_data *obj, char *argument);
-    void wld_command_interpreter(struct room_data *room, char *argument);
+    //void obj_command_interpreter(obj_data *obj, char *argument);
+    //void wld_command_interpreter(struct room_data *room, char *argument);
 
     switch (type) {
         case MOB_TRIGGER:
