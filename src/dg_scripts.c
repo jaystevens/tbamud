@@ -45,7 +45,7 @@ static int remove_trigger(struct script_data *sc, char *name);
 
 static int is_num(char *arg);
 
-static void eval_op(char *op, char *lhs, char *rhs, char *result, void *go,
+static void eval_op(const char *op, char *lhs, char *rhs, char *result, void *go,
                     struct script_data *sc, trig_data *trig);
 
 static char *matching_paren(char *p);
@@ -64,8 +64,7 @@ static struct cmdlist_element *find_end(trig_data *trig, struct cmdlist_element 
 static struct cmdlist_element *find_else_end(trig_data *trig,
                                              struct cmdlist_element *cl, void *go, struct script_data *sc, int type);
 
-static void process_wait(void *go, trig_data *trig, int type, char *cmd,
-                         struct cmdlist_element *cl);
+static void process_wait(void *go, trig_data *trig, int type, const char *cmd, struct cmdlist_element *cl);
 
 static void process_set(struct script_data *sc, trig_data *trig, char *cmd);
 
@@ -1362,7 +1361,7 @@ static int is_num(char *arg) {
 }
 
 /* evaluates 'lhs op rhs', and copies to result */
-static void eval_op(char *op, char *lhs, char *rhs, char *result, void *go,
+static void eval_op(const char *op, char *lhs, char *rhs, char *result, void *go,
                     struct script_data *sc, trig_data *trig) {
     unsigned char *p;
     int n;
@@ -1505,7 +1504,7 @@ static int eval_lhs_op_rhs(char *expr, char *result, void *go, struct script_dat
      * valid operands, in order of priority
      * each must also be defined in eval_op()
      */
-    static char *ops[] = {
+    static const char *ops[] = {
             "||",
             "&&",
             "==",
@@ -1645,14 +1644,13 @@ static struct cmdlist_element *find_else_end(trig_data *trig,
 }
 
 /* processes any 'wait' commands in a trigger */
-static void process_wait(void *go, trig_data *trig, int type, char *cmd,
-                         struct cmdlist_element *cl) {
+static void process_wait(void *go, trig_data *trig, int type, const char *cmd, struct cmdlist_element *cl) {
     char buf[MAX_INPUT_LENGTH], *arg;
     struct wait_event_data *wait_event_obj;
     long when, hr, min, ntime;
     char c;
 
-    arg = any_one_arg(cmd, buf);
+    arg = any_one_arg((char*)cmd, buf);
     skip_spaces(&arg);
 
     if (!*arg) {

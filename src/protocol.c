@@ -1225,7 +1225,7 @@ void MXPSendTag(descriptor_t *apDescriptor, const char *apTag) {
  ******************************************************************************/
 
 void SoundSend(descriptor_t *apDescriptor, const char *apTrigger) {
-    const int MaxTriggerLength = 128; /* Used for the buffer size */
+    const uint16_t MaxTriggerLength = 128; /* Used for the buffer size */
 
     if (apDescriptor != NULL && apTrigger != NULL) {
         protocol_t *pProtocol = apDescriptor ? apDescriptor->pProtocol : NULL;
@@ -1412,7 +1412,7 @@ static void PerformHandshake(descriptor_t *apDescriptor, char aCmd, char aProtoc
         case (char) TELOPT_MSSP:
             if (aCmd == (char) DO)
                 SendMSSP(apDescriptor);
-            else if (aCmd == (char) DONT); /* Do nothing. */
+            else if (aCmd == (char) DONT) {}; /* Do nothing. */
             break;
 
         case (char) TELOPT_MCCP:

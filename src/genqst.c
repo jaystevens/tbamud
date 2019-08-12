@@ -194,6 +194,7 @@ int save_quests(zone_rnum zone_num) {
     for (i = genolc_zone_bottom(zone_num); i <= zone_table[zone_num].top; i++) {
         qst_rnum rnum;
         if ((rnum = real_quest(i)) != NOTHING) {
+            int n;
             /* Copy the text strings and strip off trailing newlines. */
             strncpy(quest_desc, QST_DESC(rnum) ? QST_DESC(rnum) : "undefined",
                     sizeof(quest_desc) - 1);
@@ -209,7 +210,7 @@ int save_quests(zone_rnum zone_num) {
             strip_cr(quest_quit);
             /* Save the quest details to the file.  */
             sprintascii(quest_flags, QST_FLAGS(rnum));
-            int n = snprintf(buf, MAX_STRING_LENGTH,
+            n = snprintf(buf, MAX_STRING_LENGTH,
                              "#%d\n"
                              "%s%c\n"
                              "%s%c\n"

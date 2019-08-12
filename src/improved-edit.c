@@ -100,6 +100,8 @@ void parse_edit_action(int command, char *string, struct descriptor_data *d) {
     char *s, *t, temp, *c;
     char buf[MAX_STRING_LENGTH];
     char buf2[MAX_STRING_LENGTH - 1];
+    bool has_at = FALSE;
+    char buf3[9];
 
     switch (command) {
         case PARSE_HELP:
@@ -126,7 +128,7 @@ void parse_edit_action(int command, char *string, struct descriptor_data *d) {
                 write_to_output(d, "No string.\r\n");
                 break;
             }
-            bool has_at = FALSE;
+            has_at = FALSE;
             for (c = *d->str; *c; ++c) {
                 if (*c == '@') {
                     if (*(++c) != '@') {
@@ -367,7 +369,6 @@ void parse_edit_action(int command, char *string, struct descriptor_data *d) {
                     s++;
                     temp = *s;
                     *s = '\0';
-                    char buf3[9];
                     sprintf(buf3, "%4d: ", (i - 1));
                     strncat(buf, buf3, sizeof(buf) - strlen(buf) - 1);
                     strncat(buf, t, sizeof(buf) - strlen(buf) - 1);
@@ -508,6 +509,7 @@ int format_text(char **ptr_string, int mode, struct descriptor_data *d, unsigned
     char *flow, *start = NULL, temp;
     char formatted[MAX_STRING_LENGTH] = "";
     char str[MAX_STRING_LENGTH];
+    uint32_t len;
 
     /* Fix memory overrun. */
     if (d->max_str > MAX_STRING_LENGTH) {
@@ -643,7 +645,7 @@ int format_text(char **ptr_string, int mode, struct descriptor_data *d, unsigned
     if (!*flow)
         strncat(formatted, "\r\n", sizeof(formatted) - strlen(formatted) - 1);
 
-    int len = MIN(maxlen, strlen(formatted) + 1);
+    len = MIN(maxlen, strlen(formatted) + 1);
     RECREATE(*ptr_string, char, len);
     strncpy(*ptr_string, formatted, len - 1);
     (*ptr_string)[len - 1] = '\0';
@@ -653,7 +655,8 @@ int format_text(char **ptr_string, int mode, struct descriptor_data *d, unsigned
 int replace_str(char **string, char *pattern, char *replacement, int rep_all, unsigned int max_size) {
     char *replace_buffer = NULL;
     char *flow, *jetsam, temp;
-    int len, i;
+    int i;
+    uint32_t len;
 
     if ((strlen(*string) - strlen(pattern)) + strlen(replacement) > max_size)
         return -1;

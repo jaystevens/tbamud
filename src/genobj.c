@@ -187,13 +187,14 @@ int save_objects(zone_rnum zone_num) {
     /* Start running through all objects in this zone. */
     for (counter = genolc_zone_bottom(zone_num); counter <= zone_table[zone_num].top; counter++) {
         if ((realcounter = real_object(counter)) != NOTHING) {
+            int n;
             if ((obj = &obj_proto[realcounter])->action_description) {
                 strncpy(buf, obj->action_description, sizeof(buf) - 1);
                 strip_cr(buf);
             } else
                 *buf = '\0';
 
-            int n = snprintf(buf2, MAX_STRING_LENGTH,
+            n = snprintf(buf2, MAX_STRING_LENGTH,
                              "#%d\n"
                              "%s~\n"
                              "%s~\n"

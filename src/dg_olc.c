@@ -28,7 +28,7 @@ static void trigedit_disp_menu(struct descriptor_data *d);
 
 static void trigedit_disp_types(struct descriptor_data *d);
 
-static void trigedit_create_index(int znum, char *type);
+static void trigedit_create_index(int znum, const char *type);
 
 static void trigedit_setup_new(struct descriptor_data *d);
 
@@ -848,9 +848,10 @@ void trigedit_save(struct descriptor_data *d) {
     trigedit_create_index(zone, "trg");
 }
 
-static void trigedit_create_index(int znum, char *type) {
+static void trigedit_create_index(int znum, const char *type) {
     FILE *newfile, *oldfile;
-    char new_name[128], old_name[128], *prefix;
+    char new_name[128], old_name[128];
+    const char *prefix;
     char buf[MAX_STRING_LENGTH], buf1[MAX_STRING_LENGTH];
     int num, found = FALSE;
 

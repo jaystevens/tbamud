@@ -125,9 +125,10 @@ static void free_ibt_list(IBT_DATA *first_ibt, IBT_DATA *last_ibt) {
 
 static IBT_DATA *read_ibt(char *filename, FILE *fp) {
     IBT_DATA *ibtData;
-    char *word, *id_num = NULL, *dated = NULL;
+    char *id_num = NULL, *dated = NULL;
+    const char *word;
     char buf[MAX_STRING_LENGTH];
-    bool fMatch, flgCheck;
+    bool fMatch;
     char letter;
 
     do {
@@ -176,10 +177,6 @@ static IBT_DATA *read_ibt(char *filename, FILE *fp) {
                         ibtData->notes = STRALLOC("");
                     return ibtData;
                 }
-                break;
-
-            case 'F':
-                KEY("Flags", flgCheck, fread_flags(fp, ibtData->flags, IBT_ARRAY_MAX));
                 break;
 
             case 'I':

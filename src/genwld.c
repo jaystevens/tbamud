@@ -287,6 +287,7 @@ int save_rooms(zone_rnum rzone) {
 
         if ((rnum = real_room(i)) != NOWHERE) {
             int j;
+            int n;
 
             room = (world + rnum);
 
@@ -295,7 +296,7 @@ int save_rooms(zone_rnum rzone) {
             strip_cr(buf);
 
             /* Save the numeric and string section of the file. */
-            int n = snprintf(buf2, MAX_STRING_LENGTH, "#%d\n"
+            n = snprintf(buf2, MAX_STRING_LENGTH, "#%d\n"
                                                       "%s%c\n"
                                                       "%s%c\n"
                                                       "%d %d %d %d %d %d\n",

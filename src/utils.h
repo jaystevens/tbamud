@@ -23,8 +23,7 @@
  * to be first defined in interpreter.h. The reason for using a macro is
  * to allow for easier addition of parameters to the otherwise generic and
  * static function structure. */
-#define ACMD(name)  \
-   void name(struct char_data *ch, char *argument, int cmd, int subcmd)
+#define ACMD(name)  void name(struct char_data *ch, char *argument, int cmd, int subcmd)
 
 /* external declarations and prototypes */
 
