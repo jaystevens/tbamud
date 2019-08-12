@@ -944,16 +944,6 @@ do                                                              \
 #define NULL (void *)0
 #endif
 
-#if !defined(YES)
-/** In case YES is not defined. */
-#define YES 1
-#endif
-
-#if !defined(NO)
-/** In case NO is not defined. */
-#define NO 0
-#endif
-
 /* defines for fseek */
 #ifndef SEEK_SET
 /** define for fseek */

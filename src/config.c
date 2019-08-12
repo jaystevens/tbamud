@@ -37,17 +37,17 @@
 /* YES / NO; true / false are all defined in utils.h */
 
 /* Can Scripts be attached to players? */
-int script_players = NO;
+int script_players = false;
 
 /* pk_allowed sets the tone of the entire game.  If pk_allowed is set to NO,
  * then players will not be allowed to kill, summon, charm, or sleep other
  * players, as well as a variety of other "asshole player" protections. However,
  * if you decide you want to have an all-out knock-down drag-out PK Mud, just
  * set pk_allowed to YES - and anything goes. */
-int pk_allowed = NO;
+int pk_allowed = false;
 
 /* Is playerthieving allowed? */
-int pt_allowed = NO;
+int pt_allowed = false;
 
 /* Minimum level a player must be to shout/holler/gossip/auction. */
 int level_can_shout = 1;
@@ -75,13 +75,13 @@ int idle_rent_time = 48;
 int idle_max_level = LVL_IMMORT;
 
 /* Should items in death traps automatically be junked? */
-int dts_are_dumps = YES;
+int dts_are_dumps = true;
 
 /* Whether you want items that immortals load to appear on the ground or not.
  * It is most likely best to set this to 'YES' so that something else doesn't
  * grab the item before the immortal does, but that also means people will be
  * able to carry around things like boards. */
-int load_into_inventory = YES;
+int load_into_inventory = true;
 
 /* "okay" etc. */
 const char *OK = "Okay.\r\n";
@@ -93,21 +93,21 @@ const char *NOEFFECT = "Nothing seems to happen.\r\n";
  * you want track to find paths which lead through closed or hidden doors. A
  * setting of 'NO' means to not go through the doors while 'YES' will pass
  * through doors to find the target. */
-int track_through_doors = YES;
+int track_through_doors = true;
 
 /* If you do not want mortals to level up to immortal once they have enough
  * experience, then set this to YES. Subtracting this from LVL_IMMORT gives
  * the top level that people can advance to in gain_exp() in limits.c */
-int no_mort_to_immort = YES;
+int no_mort_to_immort = true;
 
 /* Are diagonal directions enabled?
 * If set to NO, then only the 6 directions n,e,s,w,u,d are allowed */
-int diagonal_dirs = NO;
+int diagonal_dirs = false;
 
 /* RENT/CRASHSAVE OPTIONS */
 /* Should the MUD allow you to 'rent' for free?  (i.e. if you just quit, your
  * objects are saved at no cost). */
-int free_rent = YES;
+int free_rent = true;
 
 /* Maximum number of items players are allowed to rent. */
 int max_obj_save = 30;
@@ -119,7 +119,7 @@ int min_rent_cost = 100;
  * kills (on average), and Crash-save as defined below. If auto_save is YES,
  * then the 'save' command will be disabled to prevent item duplication via
  * game crashes. */
-int auto_save = YES;
+int auto_save = true;
 
 /* if auto_save (above) is yes, how often (in minutes) should the MUD Crash-save
  * people's objects?   Also, this number indicates how often the MUD will Crash-
@@ -133,7 +133,7 @@ int crash_file_timeout = 10;
 int rent_file_timeout = 30;
 
 /* Do you want to automatically wipe players who've been gone too long? */
-int auto_pwipe = NO;
+int auto_pwipe = false;
 
 /* Autowipe deletion criteria. This struct holds information used to determine
  * which players to wipe when the mud boots.  The levels must be in ascending
@@ -166,7 +166,7 @@ struct pclean_criteria_data pclean_criteria[] = {
 };
 
 /* Do you want players who self-delete to be wiped immediately with no backup? */
-int selfdelete_fastwipe = YES;
+int selfdelete_fastwipe = true;
 
 /* ROOM NUMBERS */
 /* Virtual number of room that mortals should enter at. */
@@ -250,15 +250,15 @@ int siteok_everyone = true;
  * numbers instead of names for some other reason, set the variable to YES.
  * You can experiment with the setting of nameserver_is_slow on-line using the
  * SLOWNS command from within the MUD. */
-int nameserver_is_slow = NO;
+int nameserver_is_slow = false;
 
 /* Will changes save automaticaly in OLC? */
-int auto_save_olc = YES;
+int auto_save_olc = true;
 
 /* if you wish to enable Aedit, set this to YES. This will make the mud look
  * for a file called socials.new, which is in a different format than the
  * stock socials file. */
-int use_new_socials = YES;
+int use_new_socials = true;
 
 const char *MENU =
         "\r\n"
@@ -287,7 +287,7 @@ const char *START_MESSG =
 /* Should the game automatically create a new wizlist/immlist every time someone
  * immorts, or is promoted to a higher (or lower) god level? NOTE: this only
  * works under UNIX systems. */
-int use_autowiz = YES;
+int use_autowiz = true;
 
 /* If yes, what is the lowest level which should be on the wizlist?  (All immort
  * levels below the level you specify will go on the immlist instead.) */
@@ -295,7 +295,7 @@ int min_wizlist_lev = LVL_GOD;
 
 /* To mimic stock behavior set to NO. To allow mortals to see doors in exits
  * set to YES. */
-int display_closed_doors = YES;
+int display_closed_doors = true;
 
 /* Automap and map options */
 /* Default is to have automap and map command only enabled for immortals */
@@ -304,16 +304,16 @@ int default_map_size = 6;
 int default_minimap_size = 2;
 
 /* Medit Stats menu - show 'advanced' options? */
-int medit_advanced_stats = YES;
+int medit_advanced_stats = true;
 
 /* Does "bug resolve" autosave ? */
-int ibt_autosave = YES;
+int ibt_autosave = true;
 
 /* Use the protocol negotiation system */
-int protocol_negotiation = YES;
+int protocol_negotiation = false;
 
 /* Use the special character in communication channels */
-int special_in_comm = YES;
+int special_in_comm = true;
 
 /* Current Debug Mode */
-int debug_mode = OFF;
+int debug_mode = false;
