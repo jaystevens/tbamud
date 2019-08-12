@@ -60,10 +60,10 @@ struct zone_data *zone_table; /* zone table      */
 zone_rnum top_of_zone_table = 0;/* top element of zone tab   */
 
 /* begin previously located in players.c */
-struct player_index_element *player_table = NULL; /* index to plr file   */
-int top_of_p_table = 0;   /* ref to top of table     */
-int top_of_p_file = 0;    /* ref of size of p file   */
-long top_idnum = 0;       /* highest idnum in use    */
+struct player_index_element *player_table = NULL;   /* index to plr file   */
+int64_t top_of_p_table = 0;                        /* ref to top of table     */
+int64_t top_of_p_file = 0;                         /* ref of size of p file   */
+int64_t top_idnum = 0;                             /* highest idnum in use    */
 /* end previously located in players.c */
 
 struct message_list fight_messages[MAX_MESSAGES];    /* fighting messages	 */
@@ -2480,6 +2480,7 @@ void zone_update(void) {
     int i;
     struct reset_q_element *update_u, *temp;
     static int timer = 0;
+    struct descriptor_data *pt;
 
     /* jelson 10/22/92 */
     if (((++timer * PULSE_ZONE) / PASSES_PER_SEC) >= 60) {
@@ -2523,7 +2524,7 @@ void zone_update(void) {
             reset_zone(update_u->zone_to_reset);
             mudlog(CMP, LVL_IMPL + 1, FALSE, "Auto zone reset: %s (Zone %d)",
                    zone_table[update_u->zone_to_reset].name, zone_table[update_u->zone_to_reset].number);
-            struct descriptor_data *pt;
+
             for (pt = descriptor_list; pt; pt = pt->next)
                 if (IS_PLAYING(pt) && pt->character && PRF_FLAGGED(pt->character, PRF_ZONERESETS))
                     send_to_char(pt->character, "%s[Auto zone reset: %s (Zone %d)]%s",

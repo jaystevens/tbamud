@@ -15,7 +15,8 @@
 
 #include "protocol.h"
 #include "lists.h"
-#include <stdint.h>
+//#include <stdint.h>
+#include <inttypes.h>
 
 /** If you want equipment to be automatically equipped to the same place
  *  it was when players rented, set the define below to 1 because

@@ -23,10 +23,10 @@
 #include "dg_scripts.h" /* To enable saving of player variables to disk */
 #include "quest.h"
 
-#define LOAD_HIT    0
-#define LOAD_MANA    1
-#define LOAD_MOVE    2
-#define LOAD_STRENGTH    3
+#define LOAD_HIT        0
+#define LOAD_MANA       1
+#define LOAD_MOVE       2
+#define LOAD_STRENGTH   3
 
 #define PT_PNAME(i) (player_table[(i)].name)
 #define PT_IDNUM(i) (player_table[(i)].id)
@@ -50,7 +50,7 @@ static void read_aliases_ascii(FILE *file, struct char_data *ch, int count);
 /* New version to build player index for ASCII Player Files. Generate index
  * table for the player file. */
 void build_player_index(void) {
-    int rec_count = 0, i;
+    int64_t rec_count = 0, i;
     FILE *plr_index;
     char index_name[40], line[256], bits[64];
     char arg2[80];
@@ -76,8 +76,8 @@ void build_player_index(void) {
     CREATE(player_table, struct player_index_element, rec_count);
     for (i = 0; i < rec_count; i++) {
         get_line(plr_index, line);
-        sscanf(line, "%ld %s %d %s %ld", &player_table[i].id, arg2,
-               &player_table[i].level, bits, (long *) &player_table[i].last);
+        //sscanf(line, "%ld %s %d %s %ld", &player_table[i].id, arg2, &player_table[i].level, bits, (long *) &player_table[i].last);
+        sscanf(line, "%" SCNd64 " %s %" SCNd8 " %s %" SCNd64 "", &player_table[i].id, arg2, &player_table[i].level, bits, (uint64_t *) &player_table[i].last);
         CREATE(player_table[i].name, char, strlen(arg2) + 1);
         strcpy(player_table[i].name, arg2);
         player_table[i].flags = asciiflag_conv(bits);
@@ -92,7 +92,7 @@ void build_player_index(void) {
  * name already exists, by overwriting a deleted character, then we re-use the
  * old position. */
 int create_entry(char *name) {
-    int i, pos;
+    int64_t i, pos;
 
     if (top_of_p_table == -1) {    /* no table */
         pos = top_of_p_table = 0;
@@ -119,8 +119,8 @@ int create_entry(char *name) {
 
 /* Remove an entry from the in-memory player index table.               *
  * Requires the 'pos' value returned by the get_ptable_by_name function */
-static void remove_player_from_index(int pos) {
-    int i;
+static void remove_player_from_index(int64_t pos) {
+    int64_t i;
 
     if (pos < 0 || pos > top_of_p_table)
         return;
@@ -152,7 +152,7 @@ static void remove_player_from_index(int pos) {
 
 /* This function necessary to save a seperate ASCII player index */
 void save_player_index(void) {
-    int i;
+    int64_t i;
     char index_name[50], bits[64];
     FILE *index_file;
 
@@ -175,7 +175,7 @@ void save_player_index(void) {
 }
 
 void free_player_index(void) {
-    int tp;
+    int64_t tp;
 
     if (!player_table)
         return;
@@ -189,8 +189,8 @@ void free_player_index(void) {
     top_of_p_table = 0;
 }
 
-long get_ptable_by_name(const char *name) {
-    int i;
+int64_t get_ptable_by_name(const char *name) {
+    int64_t i;
 
     for (i = 0; i <= top_of_p_table; i++)
         if (!str_cmp(player_table[i].name, name))
@@ -199,8 +199,8 @@ long get_ptable_by_name(const char *name) {
     return (-1);
 }
 
-long get_id_by_name(const char *name) {
-    int i;
+int64_t get_id_by_name(const char *name) {
+    int64_t i;
 
     for (i = 0; i <= top_of_p_table; i++)
         if (!str_cmp(player_table[i].name, name))
@@ -209,8 +209,8 @@ long get_id_by_name(const char *name) {
     return (-1);
 }
 
-char *get_name_by_id(long id) {
-    int i;
+char *get_name_by_id(int64_t id) {
+    int64_t i;
 
     for (i = 0; i <= top_of_p_table; i++)
         if (player_table[i].id == id)
@@ -790,7 +790,7 @@ void remove_player(int pfilepos) {
 }
 
 void clean_pfiles(void) {
-    int i, ci;
+    int64_t i, ci;
 
     for (i = 0; i <= top_of_p_table; i++) {
         /* We only want to go further if the player isn't protected from deletion
