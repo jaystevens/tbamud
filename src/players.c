@@ -165,7 +165,7 @@ void save_player_index(void) {
     for (i = 0; i <= top_of_p_table; i++)
         if (*player_table[i].name) {
             sprintascii(bits, player_table[i].flags);
-            fprintf(index_file, "%ld %s %d %s %ld\n", player_table[i].id,
+            fprintf(index_file, "%" PRId64 " %s %d %s %ld\n", player_table[i].id,
                     player_table[i].name, player_table[i].level, *bits ? bits : "0",
                     (long) player_table[i].last);
         }
