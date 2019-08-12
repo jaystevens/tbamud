@@ -20,7 +20,7 @@
 struct house_control_rec {
     room_vnum vnum;                 /* vnum of this house */
     room_vnum atrium;               /* vnum of atrium */
-    int16_t exit_num;                /* direction of house's exit */
+    sh_int exit_num;                /* direction of house's exit */
     time_t built_on;                /* date this house was built */
     int8_t mode;                    /* mode of ownership */
     int64_t owner;                  /* idnum of house's owner */

@@ -80,7 +80,7 @@ struct command_info {
     void (*command_pointer)
             (struct char_data *ch, char *argument, int cmd, int subcmd);
 
-    int16_t minimum_level;
+    sh_int minimum_level;
     int subcmd;
 };
 
