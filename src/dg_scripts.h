@@ -159,7 +159,7 @@ struct trig_data {
     int depth;                          /**< depth into nest ifs/whiles/etc  */
     int loops;                          /**< loop iteration counter          */
     struct event *wait_event;           /**< event to pause the trigger  */
-    ubyte purged;                       /**< trigger is set to be purged     */
+    uint8_t purged;                       /**< trigger is set to be purged     */
     struct trig_var_data *var_list;        /**< list of local vars for trigger  */
 
     struct trig_data *next;
@@ -171,7 +171,7 @@ struct script_data {
     long types;                        /**< bitvector of trigger types */
     struct trig_data *trig_list;       /**< list of triggers           */
     struct trig_var_data *global_vars; /**< list of global variables   */
-    ubyte purged;                      /**< script is set to be purged */
+    uint8_t purged;                      /**< script is set to be purged */
     long context;                      /**< current context for statics */
 
     struct script_data *next;          /**< used for purged_scripts    */
