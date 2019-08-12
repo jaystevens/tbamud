@@ -235,7 +235,7 @@ room_rnum find_target_room(struct char_data *ch, char *rawroomstr) {
         send_to_char(ch, "You are not godly enough to use that room!\r\n");
     else if (ROOM_FLAGGED(location, ROOM_PRIVATE) && world[location].people && world[location].people->next_in_room)
         send_to_char(ch, "There's a private conversation going on in that room.\r\n");
-    else if (ROOM_FLAGGED(location, ROOM_HOUSE) && !House_can_enter(ch, GET_ROOM_VNUM(location)))
+    else if (ROOM_FLAGGED(location, ROOM_HOUSE) && !house_can_enter(ch, GET_ROOM_VNUM(location)))
         send_to_char(ch, "That's private property -- no trespassing!\r\n");
     else
         return (location);
@@ -1232,7 +1232,7 @@ ACMD(do_switch) {
     else if (GET_LEVEL(ch) < LVL_GRGOD && ROOM_FLAGGED(IN_ROOM(victim), ROOM_GODROOM))
         send_to_char(ch, "You are not godly enough to use that room!\r\n");
     else if (GET_LEVEL(ch) < LVL_GRGOD && ROOM_FLAGGED(IN_ROOM(victim), ROOM_HOUSE)
-             && !House_can_enter(ch, GET_ROOM_VNUM(IN_ROOM(victim))))
+             && !house_can_enter(ch, GET_ROOM_VNUM(IN_ROOM(victim))))
         send_to_char(ch, "That's private property -- no trespassing!\r\n");
     else {
         send_to_char(ch, "%s", CONFIG_OK);
@@ -2625,7 +2625,7 @@ ACMD(do_show) {
             send_to_char(ch,
                          "Current stats:\r\n"
                          "  %5d players in game  %5d connected\r\n"
-                         "  %5d registered\r\n"
+                         "  %5" PRId64 " registered\r\n"
                          "  %5d mobiles          %5d prototypes\r\n"
                          "  %5d objects          %5d prototypes\r\n"
                          "  %5d rooms            %5d zones\r\n"
@@ -3412,7 +3412,7 @@ ACMD(do_saveall) {
         send_to_char(ch, "You are not holy enough to use this privelege.\n\r");
     else {
         save_all();
-        House_save_all();
+        house_save_all();
         send_to_char(ch, "World and house files saved.\n\r");
     }
 }

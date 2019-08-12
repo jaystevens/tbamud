@@ -777,7 +777,7 @@ void boot_db(void) {
     /* Moved here so the object limit code works. -gg 6/24/98 */
     if (!mini_mud) {
         log("Booting houses.");
-        House_boot();
+        house_boot();
     }
 
     log("Cleaning up last log.");

@@ -12,21 +12,21 @@
 #ifndef _HOUSE_H_
 #define _HOUSE_H_
 
-#define MAX_HOUSES    100
-#define MAX_GUESTS    10
+#define MAX_HOUSES      100
+#define MAX_GUESTS      10
 
-#define HOUSE_PRIVATE    0
+#define HOUSE_PRIVATE   0
 
 struct house_control_rec {
-    room_vnum vnum;        /* vnum of this house		*/
-    room_vnum atrium;        /* vnum of atrium		*/
-    sh_int exit_num;        /* direction of house's exit	*/
-    time_t built_on;        /* date this house was built	*/
-    int mode;            /* mode of ownership		*/
-    long owner;            /* idnum of house's owner	*/
-    int num_of_guests;        /* how many guests for house	*/
-    long guests[MAX_GUESTS];    /* idnums of house's guests	*/
-    time_t last_payment;        /* date of last house payment   */
+    room_vnum vnum;                 /* vnum of this house */
+    room_vnum atrium;               /* vnum of atrium */
+    sh_int exit_num;                /* direction of house's exit */
+    time_t built_on;                /* date this house was built */
+    int8_t mode;                    /* mode of ownership */
+    int64_t owner;                  /* idnum of house's owner */
+    int8_t num_of_guests;          /* how many guests for house */
+    int8_t guests[MAX_GUESTS];     /* idnums of house's guests */
+    time_t last_payment;            /* date of last house payment */
     long spare0;
     long spare1;
     long spare2;
@@ -42,17 +42,17 @@ struct house_control_rec {
 
 /* Functions in house.c made externally available */
 /* Utility Functions */
-void House_boot(void);
+void house_boot(void);
 
-void House_save_all(void);
+void house_save_all(void);
 
-int House_can_enter(struct char_data *ch, room_vnum house);
+int house_can_enter(struct char_data *ch, room_vnum house);
 
-void House_crashsave(room_vnum vnum);
+void house_crashsave(room_vnum vnum);
 
-void House_list_guests(struct char_data *ch, int i, int quiet);
+void house_list_guests(struct char_data *ch, int i, int quiet);
 
-int House_save(struct obj_data *obj, FILE *fp);
+int house_save(struct obj_data *obj, FILE *fp);
 
 void hcontrol_list_houses(struct char_data *ch, char *arg);
 /* In game Commands */

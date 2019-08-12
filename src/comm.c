@@ -1004,7 +1004,7 @@ void heartbeat(int heart_pulse) {
         if (++mins_since_crashsave >= CONFIG_AUTOSAVE_TIME) {
             mins_since_crashsave = 0;
             Crash_save_all();
-            House_save_all();
+            house_save_all();
         }
     }
 

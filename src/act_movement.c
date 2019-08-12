@@ -199,7 +199,7 @@ int do_simple_move(struct char_data *ch, int dir, int need_specials_check) {
 
     /* Houses: Can the player walk into the house? */
     if (ROOM_FLAGGED(was_in, ROOM_ATRIUM)) {
-        if (!House_can_enter(ch, GET_ROOM_VNUM(going_to))) {
+        if (!house_can_enter(ch, GET_ROOM_VNUM(going_to))) {
             send_to_char(ch, "That's private property -- no trespassing!\r\n");
             return (0);
         }

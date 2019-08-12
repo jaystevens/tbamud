@@ -25,17 +25,17 @@ static struct house_control_rec house_control[MAX_HOUSES];
 static int num_of_houses = 0;
 
 /* local functions */
-static int House_get_filename(room_vnum vnum, char *filename, size_t maxlen);
+static int house_get_filename(room_vnum vnum, char *filename, size_t maxlen);
 
-static int House_load(room_vnum vnum);
+static int house_load(room_vnum vnum);
 
-static void House_restore_weight(struct obj_data *obj);
+static void house_restore_weight(struct obj_data *obj);
 
-static void House_delete_file(room_vnum vnum);
+static void house_delete_file(room_vnum vnum);
 
 static int find_house(room_vnum vnum);
 
-static void House_save_control(void);
+static void house_save_control(void);
 
 static void hcontrol_build_house(struct char_data *ch, char *arg);
 
@@ -43,19 +43,11 @@ static void hcontrol_destroy_house(struct char_data *ch, char *arg);
 
 static void hcontrol_pay_house(struct char_data *ch, char *arg);
 
-static void House_listrent(struct char_data *ch, room_vnum vnum);
-
-/* CONVERSION code starts here -- see comment below. */
-static int ascii_convert_house(struct char_data *ch, obj_vnum vnum);
-
-static void hcontrol_convert_houses(struct char_data *ch);
-
-static struct obj_data *Obj_from_store(struct obj_file_elem object, int *location);
-/* CONVERSION code ends here -- see comment below. */
+static void house_listrent(struct char_data *ch, room_vnum vnum);
 
 /* First, the basics: finding the filename; loading/saving objects */
 /* Return a filename given a house vnum */
-static int House_get_filename(room_vnum vnum, char *filename, size_t maxlen) {
+static int house_get_filename(room_vnum vnum, char *filename, size_t maxlen) {
     if (vnum == NOWHERE)
         return (0);
 
@@ -64,7 +56,7 @@ static int House_get_filename(room_vnum vnum, char *filename, size_t maxlen) {
 }
 
 /* Load all objects for a house */
-static int House_load(room_vnum vnum) {
+static int house_load(room_vnum vnum) {
     FILE *fl;
     char filename[MAX_STRING_LENGTH];
     obj_save_data *loaded, *current;
@@ -72,7 +64,7 @@ static int House_load(room_vnum vnum) {
 
     if ((rnum = real_room(vnum)) == NOWHERE)
         return (0);
-    if (!House_get_filename(vnum, filename, sizeof(filename)))
+    if (!house_get_filename(vnum, filename, sizeof(filename)))
         return (0);
     if (!(fl = fopen(filename, "r")))    /* no file found */
         return (0);
@@ -98,13 +90,13 @@ static int House_load(room_vnum vnum) {
 
 /* Save all objects for a house (recursive; initial call must be followed by a 
  * call to House_restore_weight)  Assumes file is open already. */
-int House_save(struct obj_data *obj, FILE *fp) {
+int house_save(struct obj_data *obj, FILE *fp) {
     struct obj_data *tmp;
     int result;
 
     if (obj) {
-        House_save(obj->contains, fp);
-        House_save(obj->next_content, fp);
+        house_save(obj->contains, fp);
+        house_save(obj->next_content, fp);
         result = objsave_save_obj_record(obj, fp, 0);
         if (!result)
             return (0);
@@ -116,44 +108,44 @@ int House_save(struct obj_data *obj, FILE *fp) {
 }
 
 /* restore weight of containers after House_save has changed them for saving */
-static void House_restore_weight(struct obj_data *obj) {
+static void house_restore_weight(struct obj_data *obj) {
     if (obj) {
-        House_restore_weight(obj->contains);
-        House_restore_weight(obj->next_content);
+        house_restore_weight(obj->contains);
+        house_restore_weight(obj->next_content);
         if (obj->in_obj)
             GET_OBJ_WEIGHT(obj->in_obj) += GET_OBJ_WEIGHT(obj);
     }
 }
 
 /* Save all objects in a house */
-void House_crashsave(room_vnum vnum) {
+void house_crashsave(room_vnum vnum) {
     int rnum;
     char buf[MAX_STRING_LENGTH];
     FILE *fp;
 
     if ((rnum = real_room(vnum)) == NOWHERE)
         return;
-    if (!House_get_filename(vnum, buf, sizeof(buf)))
+    if (!house_get_filename(vnum, buf, sizeof(buf)))
         return;
     if (!(fp = fopen(buf, "wb"))) {
         perror("SYSERR: Error saving house file");
         return;
     }
-    if (!House_save(world[rnum].contents, fp)) {
+    if (!house_save(world[rnum].contents, fp)) {
         fclose(fp);
         return;
     }
     fclose(fp);
-    House_restore_weight(world[rnum].contents);
+    house_restore_weight(world[rnum].contents);
     REMOVE_BIT_AR(ROOM_FLAGS(rnum), ROOM_HOUSE_CRASH);
 }
 
 /* Delete a house save file */
-static void House_delete_file(room_vnum vnum) {
+static void house_delete_file(room_vnum vnum) {
     char filename[MAX_INPUT_LENGTH];
     FILE *fl;
 
-    if (!House_get_filename(vnum, filename, sizeof(filename)))
+    if (!house_get_filename(vnum, filename, sizeof(filename)))
         return;
     if (!(fl = fopen(filename, "rb"))) {
         if (errno != ENOENT)
@@ -166,14 +158,14 @@ static void House_delete_file(room_vnum vnum) {
 }
 
 /* List all objects in a house file */
-static void House_listrent(struct char_data *ch, room_vnum vnum) {
+static void house_listrent(struct char_data *ch, room_vnum vnum) {
     FILE *fl;
     char filename[MAX_STRING_LENGTH];
     char buf[MAX_STRING_LENGTH];
     obj_save_data *loaded, *current;
     int len = 0;
 
-    if (!House_get_filename(vnum, filename, sizeof(filename)))
+    if (!house_get_filename(vnum, filename, sizeof(filename)))
         return;
     if (!(fl = fopen(filename, "rb"))) {
         send_to_char(ch, "No objects on file for house #%d.\r\n", vnum);
@@ -214,7 +206,7 @@ static int find_house(room_vnum vnum) {
 }
 
 /* Save the house control information */
-static void House_save_control(void) {
+static void house_save_control(void) {
     FILE *fl;
 
     if (!(fl = fopen(HCONTROL_FILE, "wb"))) {
@@ -232,7 +224,7 @@ static void House_save_control(void) {
 
 /* Call from boot_db - will load control recs, load objs, set atrium bits. 
  * Should do sanity checks on vnums & remove invalid records. */
-void House_boot(void) {
+void house_boot(void) {
     struct house_control_rec temp_house;
     room_rnum real_house, real_atrium;
     FILE *fl;
@@ -276,11 +268,11 @@ void House_boot(void) {
         SET_BIT_AR(ROOM_FLAGS(real_house), ROOM_HOUSE);
         SET_BIT_AR(ROOM_FLAGS(real_house), ROOM_PRIVATE);
         SET_BIT_AR(ROOM_FLAGS(real_atrium), ROOM_ATRIUM);
-        House_load(temp_house.vnum);
+        house_load(temp_house.vnum);
     }
 
     fclose(fl);
-    House_save_control();
+    house_save_control();
 }
 
 /* "House Control" functions */
@@ -307,7 +299,7 @@ void hcontrol_list_houses(struct char_data *ch, char *arg) {
             send_to_char(ch, "Unknown house, \"%s\".\r\n", arg);
             return;
         }
-        House_listrent(ch, toshow);
+        house_listrent(ch, toshow);
         return;
     }
 
@@ -340,7 +332,7 @@ void hcontrol_list_houses(struct char_data *ch, char *arg) {
                      house_control[i].vnum, house_control[i].atrium, built_on,
                      house_control[i].num_of_guests, CAP(own_name), last_pay);
 
-        House_list_guests(ch, i, TRUE);
+        house_list_guests(ch, i, TRUE);
     }
 }
 
@@ -421,10 +413,10 @@ static void hcontrol_build_house(struct char_data *ch, char *arg) {
     SET_BIT_AR(ROOM_FLAGS(real_house), ROOM_HOUSE);
     SET_BIT_AR(ROOM_FLAGS(real_house), ROOM_PRIVATE);
     SET_BIT_AR(ROOM_FLAGS(real_atrium), ROOM_ATRIUM);
-    House_crashsave(virt_house);
+    house_crashsave(virt_house);
 
     send_to_char(ch, "House built.  Mazel tov!\r\n");
-    House_save_control();
+    house_save_control();
 }
 
 static void hcontrol_destroy_house(struct char_data *ch, char *arg) {
@@ -451,7 +443,7 @@ static void hcontrol_destroy_house(struct char_data *ch, char *arg) {
         REMOVE_BIT_AR(ROOM_FLAGS(real_house), ROOM_PRIVATE);
         REMOVE_BIT_AR(ROOM_FLAGS(real_house), ROOM_HOUSE_CRASH);
     }
-    House_delete_file(house_control[i].vnum);
+    house_delete_file(house_control[i].vnum);
 
     for (j = i; j < num_of_houses - 1; j++)
         house_control[j] = house_control[j + 1];
@@ -459,7 +451,7 @@ static void hcontrol_destroy_house(struct char_data *ch, char *arg) {
     num_of_houses--;
 
     send_to_char(ch, "House deleted.\r\n");
-    House_save_control();
+    house_save_control();
 
     /* Now, reset the ROOM_ATRIUM flag on all existing houses' atriums, just in
      * case the house we just deleted shared an atrium with another house. -JE */
@@ -480,7 +472,7 @@ static void hcontrol_pay_house(struct char_data *ch, char *arg) {
                GET_NAME(ch));
 
         house_control[i].last_payment = time(0);
-        House_save_control();
+        house_save_control();
         send_to_char(ch, "Payment recorded.\r\n");
     }
 }
@@ -499,10 +491,6 @@ ACMD(do_hcontrol) {
         hcontrol_pay_house(ch, arg2);
     else if (is_abbrev(arg1, "show"))
         hcontrol_list_houses(ch, arg2);
-/* CONVERSION code starts here -- see comment below not in hcontrol_format. */
-    else if (!str_cmp(arg1, "asciiconvert"))
-        hcontrol_convert_houses(ch);
-/* CONVERSION ends here -- read more below. */
     else
         send_to_char(ch, "%s", HCONTROL_FORMAT);
 }
@@ -521,7 +509,7 @@ ACMD(do_house) {
     else if (GET_IDNUM(ch) != house_control[i].owner)
         send_to_char(ch, "Only the primary owner can set guests.\r\n");
     else if (!*arg)
-        House_list_guests(ch, i, FALSE);
+        house_list_guests(ch, i, FALSE);
     else if ((id = get_id_by_name(arg)) < 0)
         send_to_char(ch, "No such player.\r\n");
     else if (id == GET_IDNUM(ch))
@@ -532,7 +520,7 @@ ACMD(do_house) {
                 for (; j < house_control[i].num_of_guests; j++)
                     house_control[i].guests[j] = house_control[i].guests[j + 1];
                 house_control[i].num_of_guests--;
-                House_save_control();
+                house_save_control();
                 send_to_char(ch, "Guest deleted.\r\n");
                 return;
             }
@@ -542,25 +530,25 @@ ACMD(do_house) {
         }
         j = house_control[i].num_of_guests++;
         house_control[i].guests[j] = id;
-        House_save_control();
+        house_save_control();
         send_to_char(ch, "Guest added.\r\n");
     }
 }
 
 /* Misc. administrative functions */
 /* crash-save all the houses */
-void House_save_all(void) {
+void house_save_all(void) {
     int i;
     room_rnum real_house;
 
     for (i = 0; i < num_of_houses; i++)
         if ((real_house = real_room(house_control[i].vnum)) != NOWHERE)
             if (ROOM_FLAGGED(real_house, ROOM_HOUSE_CRASH))
-                House_crashsave(house_control[i].vnum);
+                house_crashsave(house_control[i].vnum);
 }
 
 /* note: arg passed must be house vnum, so there. */
-int House_can_enter(struct char_data *ch, room_vnum house) {
+int house_can_enter(struct char_data *ch, room_vnum house) {
     int i, j;
 
     if (GET_LEVEL(ch) >= LVL_GRGOD || (i = find_house(house)) == NOWHERE)
@@ -578,7 +566,7 @@ int House_can_enter(struct char_data *ch, room_vnum house) {
     return (0);
 }
 
-void House_list_guests(struct char_data *ch, int i, int quiet) {
+void house_list_guests(struct char_data *ch, int i, int quiet) {
     int j, num_printed;
     char *temp;
 
@@ -603,136 +591,4 @@ void House_list_guests(struct char_data *ch, int i, int quiet) {
         send_to_char(ch, "all dead");
 
     send_to_char(ch, "\r\n");
-}
-
-/*************************************************************************
- * All code below this point and the code above, marked "CONVERSION"     *
- * can be removed after you have converted your house rent files using   *
- * the command                                                           *
- *   hcontrol asciiconvert                                               *
- *                                                                       *
- * You can only use this command as implementor.                         *
- * After you have converted your house files, I suggest a reboot, which  *
- * will let your house files load on the next bootup. -Welcor            *
- ************************************************************************/
-/* Code for conversion to ascii house rent files. */
-static void hcontrol_convert_houses(struct char_data *ch) {
-    int i;
-
-    if (GET_LEVEL(ch) < LVL_IMPL) {
-        send_to_char(ch, "Sorry, but you are not powerful enough to do that.\r\n");
-        return;
-    }
-
-
-    if (!num_of_houses) {
-        send_to_char(ch, "No houses have been defined.\r\n");
-        return;
-    }
-
-    send_to_char(ch, "Converting houses:\r\n");
-
-    for (i = 0; i < num_of_houses; i++) {
-        send_to_char(ch, "  %d", house_control[i].vnum);
-
-        if (!ascii_convert_house(ch, house_control[i].vnum)) {
-            /* Let ascii_convert_house() tell about the error. */
-            return;
-        } else {
-            send_to_char(ch, "...done\r\n");
-        }
-    }
-    send_to_char(ch, "All done.\r\n");
-}
-
-static int ascii_convert_house(struct char_data *ch, obj_vnum vnum) {
-    FILE *in, *out;
-    char infile[MAX_INPUT_LENGTH], *outfile;
-    struct obj_data *tmp;
-    int i, j = 0;
-
-    House_get_filename(vnum, infile, sizeof(infile));
-
-    CREATE(outfile, char, strlen(infile) + 7);
-    sprintf(outfile, "%s.ascii", infile);
-
-    if (!(in = fopen(infile, "r+b")))    /* no file found */
-    {
-        send_to_char(ch, "...no object file found\r\n");
-        free(outfile);
-        return (0);
-    }
-
-    if (!(out = fopen(outfile, "w"))) {
-        send_to_char(ch, "...cannot open output file\r\n");
-        free(outfile);
-        fclose(in);
-        return (0);
-    }
-
-    while (!feof(in)) {
-        struct obj_file_elem object;
-        if (fread(&object, sizeof(struct obj_file_elem), 1, in) != 1)
-            return (0);
-        if (ferror(in)) {
-            perror("SYSERR: Reading house file in House_load");
-            send_to_char(ch, "...read error in house rent file.\r\n");
-            free(outfile);
-            fclose(in);
-            fclose(out);
-            return (0);
-        }
-        if (!feof(in)) {
-            tmp = Obj_from_store(object, &i);
-            if (!objsave_save_obj_record(tmp, out, i)) {
-                send_to_char(ch, "...write error in house rent file.\r\n");
-                free(outfile);
-                fclose(in);
-                fclose(out);
-                return (0);
-            }
-            j++;
-        }
-    }
-
-    fprintf(out, "$~\n");
-
-    fclose(in);
-    fclose(out);
-
-    free(outfile);
-
-    send_to_char(ch, "...%d items", j);
-    return 1;
-}
-
-/* The circle 3.1 function for reading rent files. No longer used by the rent system. */
-static struct obj_data *Obj_from_store(struct obj_file_elem object, int *location) {
-    struct obj_data *obj;
-    obj_rnum itemnum;
-    int j, taeller;
-
-    *location = 0;
-    if ((itemnum = real_object(object.item_number)) == NOTHING)
-        return (NULL);
-
-    obj = read_object(itemnum, REAL);
-#if USE_AUTOEQ
-    *location = object.location;
-#endif
-    GET_OBJ_VAL(obj, 0) = object.value[0];
-    GET_OBJ_VAL(obj, 1) = object.value[1];
-    GET_OBJ_VAL(obj, 2) = object.value[2];
-    GET_OBJ_VAL(obj, 3) = object.value[3];
-    for (taeller = 0; taeller < EF_ARRAY_MAX; taeller++)
-        GET_OBJ_EXTRA(obj)[taeller] = object.extra_flags[taeller];
-    GET_OBJ_WEIGHT(obj) = object.weight;
-    GET_OBJ_TIMER(obj) = object.timer;
-    for (taeller = 0; taeller < AF_ARRAY_MAX; taeller++)
-        GET_OBJ_AFFECT(obj)[taeller] = object.bitvector[taeller];
-
-    for (j = 0; j < MAX_OBJ_AFFECT; j++)
-        obj->affected[j] = object.affected[j];
-
-    return (obj);
 }
