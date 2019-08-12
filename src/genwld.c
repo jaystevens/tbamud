@@ -267,7 +267,6 @@ int save_rooms(zone_rnum rzone) {
     char buf[MAX_STRING_LENGTH];
     char buf1[MAX_STRING_LENGTH];
     char buf2[MAX_STRING_LENGTH];
-    int n;
 
     if (rzone == NOWHERE || rzone > top_of_zone_table) {
         log("SYSERR: GenOLC: save_rooms: Invalid zone number %d passed! (0-%d)", rzone, top_of_zone_table);
@@ -296,7 +295,7 @@ int save_rooms(zone_rnum rzone) {
             strip_cr(buf);
 
             /* Save the numeric and string section of the file. */
-            n = snprintf(buf2, MAX_STRING_LENGTH, "#%d\n"
+            int n = snprintf(buf2, MAX_STRING_LENGTH, "#%d\n"
                                                       "%s%c\n"
                                                       "%s%c\n"
                                                       "%d %d %d %d %d %d\n",

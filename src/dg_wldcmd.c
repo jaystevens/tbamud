@@ -31,7 +31,7 @@
 #define SCMD_WECHOAROUND  1
 
 struct wld_command_info {
-    const char *command;
+    char *command;
 
     void (*command_pointer)
             (room_data *room, char *argument, int cmd, int subcmd);

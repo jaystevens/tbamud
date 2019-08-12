@@ -173,7 +173,6 @@ int save_objects(zone_rnum zone_num) {
     FILE *fp;
     struct obj_data *obj;
     struct extra_descr_data *ex_desc;
-    int n;
 
     if (zone_num == NOWHERE || zone_num > top_of_zone_table) {
         log("SYSERR: GenOLC: save_objects: Invalid real zone number %d. (0-%d)", zone_num, top_of_zone_table);
@@ -194,7 +193,7 @@ int save_objects(zone_rnum zone_num) {
             } else
                 *buf = '\0';
 
-            n = snprintf(buf2, MAX_STRING_LENGTH,
+            int n = snprintf(buf2, MAX_STRING_LENGTH,
                              "#%d\n"
                              "%s~\n"
                              "%s~\n"
