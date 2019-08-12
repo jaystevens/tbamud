@@ -611,8 +611,6 @@
 #define MAX_CMD_LENGTH 16384
 
 /* Type Definitions */
-typedef signed char sbyte;          /**< 1 byte; vals = -127 to 127 */
-typedef unsigned char ubyte;        /**< 1 byte; vals = 0 to 255 */
 typedef signed short int sh_int;    /**< 2 bytes; vals = -32,768 to 32,767 */
 
 #if !defined(CIRCLE_WINDOWS)   /* Hm, sysdep.h? */
@@ -679,7 +677,7 @@ struct obj_flag_data {
  * and already have a player base and don't want to do a player wipe. */
 struct obj_affected_type {
     byte location;  /**< Which ability to change (APPLY_XXX) */
-    sbyte modifier; /**< How much it changes by              */
+    int8_t modifier; /**< How much it changes by              */
 };
 
 /** The Object structure. */
@@ -832,31 +830,31 @@ struct pclean_criteria_data {
 
 /** General info used by PC's and NPC's. */
 struct char_player_data {
-    char passwd[MAX_PWD_LENGTH + 1]; /**< PC's password */
-    char *name;                    /**< PC / NPC name */
-    char *short_descr;             /**< NPC 'actions' */
-    char *long_descr;              /**< PC / NPC look description */
-    char *description;             /**< NPC Extra descriptions */
-    char *title;                   /**< PC / NPC title */
-    byte sex;                      /**< PC / NPC sex */
-    byte chclass;                  /**< PC / NPC class */
-    byte level;                    /**< PC / NPC level */
-    struct time_data time;         /**< PC AGE in days */
-    ubyte weight;                  /**< PC / NPC weight */
-    ubyte height;                  /**< PC / NPC height */
+    char passwd[MAX_PWD_LENGTH + 1];    /**< PC's password */
+    char *name;                         /**< PC / NPC name */
+    char *short_descr;                  /**< NPC 'actions' */
+    char *long_descr;                   /**< PC / NPC look description */
+    char *description;                  /**< NPC Extra descriptions */
+    char *title;                        /**< PC / NPC title */
+    byte sex;                           /**< PC / NPC sex */
+    byte chclass;                       /**< PC / NPC class */
+    byte level;                         /**< PC / NPC level */
+    struct time_data time;              /**< PC AGE in days */
+    uint8_t weight;                     /**< PC / NPC weight */
+    uint8_t height;                     /**< PC / NPC height */
 };
 
 /** Character abilities. Different instances of this structure are used for
  * both inherent and current ability scores (like when poison affects the
  * player strength). */
 struct char_ability_data {
-    sbyte str;     /**< Strength.  */
-    sbyte str_add; /**< Strength multiplier if str = 18. Usually from 0 to 100 */
-    sbyte intel;   /**< Intelligence */
-    sbyte wis;     /**< Wisdom */
-    sbyte dex;     /**< Dexterity */
-    sbyte con;     /**< Constitution */
-    sbyte cha;     /**< Charisma */
+    int8_t str;     /**< Strength.  */
+    int8_t str_add; /**< Strength multiplier if str = 18. Usually from 0 to 100 */
+    int8_t intel;   /**< Intelligence */
+    int8_t wis;     /**< Wisdom */
+    int8_t dex;     /**< Dexterity */
+    int8_t con;     /**< Constitution */
+    int8_t cha;     /**< Charisma */
 };
 
 /** Character 'points', or health statistics. */
@@ -878,8 +876,8 @@ struct char_point_data {
     int bank_gold;   /**< Gold the char has in a bank account	*/
     int exp;         /**< The experience points, or value, of the character. */
 
-    sbyte hitroll;   /**< Any bonus or penalty to the hit roll */
-    sbyte damroll;   /**< Any bonus or penalty to the damage roll */
+    int8_t hitroll;   /**< Any bonus or penalty to the hit roll */
+    int8_t damroll;   /**< Any bonus or penalty to the damage roll */
 };
 
 /** char_special_data_saved: specials which both a PC and an NPC have in
@@ -916,11 +914,11 @@ struct player_special_data_saved {
     sh_int invis_level;                       /**< level of invisibility */
     room_vnum load_room;                      /**< Which room to load PC into */
     int pref[PR_ARRAY_MAX];                   /**< preference flags */
-    ubyte bad_pws;                            /**< number of bad login attempts */
-    sbyte conditions[3];                      /**< Drunk, hunger, and thirst */
+    uint8_t bad_pws;                          /**< number of bad login attempts */
+    int8_t conditions[3];                     /**< Drunk, hunger, and thirst */
     struct txt_block *comm_hist[NUM_HIST];    /**< Communication history */
-    ubyte page_length;                        /**< Max number of rows of text to send at once */
-    ubyte screen_width;                       /**< How wide the display page is */
+    uint8_t page_length;                      /**< Max number of rows of text to send at once */
+    uint8_t screen_width;                     /**< How wide the display page is */
     int spells_to_learn;                      /**< Remaining number of practice sessions */
     int olc_zone;                             /**< Current olc permissions */
     int questpoints;                          /**< Number of quest points earned */
@@ -962,7 +960,7 @@ struct mob_special_data {
 struct affected_type {
     sh_int spell;                   /**< The spell that caused this */
     sh_int duration;                /**< For how long its effects will last      */
-    sbyte modifier;                 /**< Added/subtracted to/from apropriate ability     */
+    int8_t modifier;                /**< Added/subtracted to/from apropriate ability     */
     byte location;                  /**< Tells which ability to change(APPLY_XXX). */
     int bitvector[AF_ARRAY_MAX];    /**< Tells which bits to set (AFF_XXX). */
 
