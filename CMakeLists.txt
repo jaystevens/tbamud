@@ -73,70 +73,109 @@ option(MARCH_NATIVE "use march=native for GCC" ON)
 # compiler flags
 include(compiler_flags)
 if(MSVC)
-    add_definitions(-DUNICODE -D_UNICODE) # Visual Studio - force unicode over multi-byte
-    add_definitions(-D_CRT_SECURE_NO_WARNINGS)  # Visual Studio - turn off use secure functions
+    # force unicode over multi-byte
+    add_definitions(-DUNICODE -D_UNICODE)
+    # turn off use secure functions / non portable code
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
     # Disable MSVC warnings that suggest making code non-portable.
-    #add_compiler_flag_if_supported("/wd4996")
     add_definitions("/wd4996")
-    add_definitions("/favor:INTEL64")  # Visual Studio - favor intel cpu, only works with 64 bit
+    # Visual Studio - favor intel cpu, only works with 64 bit
+    add_definitions("/favor:INTEL64")
 else()
-    # require_c_flag("-std=c11" YES)
-    # these are from my ffmpeg build (fftools/config.mak)
-    add_c_flag_if_supported("-fomit-frame-pointer")
+    #### compiler directives ####
+    # enable position independant executable
     add_c_flag_if_supported("-fPIE")
-    # compiler warnings
-    add_c_flag_if_supported("-Wall")
-    add_c_flag_if_supported("-Wextra")
-    add_c_flag_if_supported("-Wdeclaration-after-statement")
-    add_c_flag_if_supported("-Wdisabled-optimization")
-    add_c_flag_if_supported("-Wpointer-arith")
-    add_c_flag_if_supported("-Wredundant-decls")
-    add_c_flag_if_supported("-Wwrite-strings")
-    add_c_flag_if_supported("-Wtype-limits")
-    add_c_flag_if_supported("-Wundef")
-    add_c_flag_if_supported("-Wmissing-prototypes")
-    add_c_flag_if_supported("-Wno-pointer-to-int-cast")
-    add_c_flag_if_supported("-Wstrict-prototypes")
-    add_c_flag_if_supported("-Wempty-body")
-    add_c_flag_if_supported("-Wno-parentheses")
-    add_c_flag_if_supported("-Wno-switch")
-    add_c_flag_if_supported("-Wno-format-zero-length")
-    add_c_flag_if_supported("-Wno-pointer-sign")
+    # omits the storing of stack frame pointers during function calls
+    add_c_flag_if_supported("-fomit-frame-pointer")
+    # disable math lib checks for NaN that add extra calls
     add_c_flag_if_supported("-fno-math-errno")
+    # disable the signed-ness of 0
     add_c_flag_if_supported("-fno-signed-zeros")
+    # disable gcc auto vectoriztion
     add_c_flag_if_supported("-fno-tree-vectorize")
+
+    #### compiler warnings ####
+    # enable colorized diagnostic data, i.e. warnings, data
+    add_c_flag_if_supported("-fdiagnostics-color=auto")
+    # turn on a bunch of GCC warnings
+    add_c_flag_if_supported("-Wall")
+    # turn on extra GCC warnings
+    add_c_flag_if_supported("-Wextra")
+    # Warn when a declaration is found after a statement in a block
+    add_c_flag_if_supported("-Wdeclaration-after-statement")
+    # Warn if a requested optimization pass is disabled
+    add_c_flag_if_supported("-Wdisabled-optimization")
+    # Warn about anything that depends on the “size of” a function type or of void
+    add_c_flag_if_supported("-Wpointer-arith")
+    # Warn if anything is declared more than once in the same scope, even in cases where multiple declaration is valid and changes nothing
+    add_c_flag_if_supported("-Wredundant-decls")
+    # When compiling C, give string constants the type const char[length]
+    #   so that copying the address of one into a non-const char * pointer produces a warning
+    add_c_flag_if_supported("-Wwrite-strings")
+    # Warn if a comparison is always true or always false due to the limited range of the data type, but do not warn for constant expressions
+    add_c_flag_if_supported("-Wtype-limits")
+    # Warn if an undefined identifier is evaluated in an #if directive. Such identifiers are replaced with zero.
+    add_c_flag_if_supported("-Wundef")
+    # Warn if a global function is defined without a previous prototype declaration
+    add_c_flag_if_supported("-Wmissing-prototypes")
+    # Warn if a function is declared or defined without specifying the argument types
+    add_c_flag_if_supported("-Wstrict-prototypes")
+    # Suppress warnings from casts from a pointer to an integer type of a different size.
+    add_c_flag_if_supported("-Wno-pointer-to-int-cast")
+    # Warn if an empty body occurs in an if, else or do while statement
+    add_c_flag_if_supported("-Wempty-body")
+    # Warn if a variable-length array is used in the code
+    add_c_flag_if_supported("-Wvla")
+    # check for printf / sscanf - sanity
+    add_c_flag_if_supported("-Wformat")
+
+    #### disable warnings ####
+    # Suppress warnings from casts from a pointer to an integer type of a different size.
+    add_c_flag_if_supported("-Wno-pointer-to-int-cast")
+    # DISABLE: Warn if parentheses are omitted in certain contexts
+    add_c_flag_if_supported("-Wno-parentheses")
+    # DISABLE: Warn whenever a switch statement has an index of enumerated type and lacks a case for one or more of the named codes of that enumeration
+    add_c_flag_if_supported("-Wno-switch")
+    # disable warning about zero length format strings
+    add_c_flag_if_supported("-Wno-format-zero-length")
+    # DISABLE: Warn for pointer argument passing or assignment with different signedness.
+    add_c_flag_if_supported("-Wno-pointer-sign")
+
+    #### make some warnings an error  ####
+    # ERROR: printf / sscanf - sanity
     add_c_flag_if_supported("-Werror=format-security")
+    # ERROR: Give a warning whenever a function is used before being declared
     add_c_flag_if_supported("-Werror=implicit-function-declaration")
+    # ERROR: Warn if a global function is defined without a previous prototype declaration
     #add_c_flag_if_supported("-Werror=missing-prototypes")
+    # ERROR: Warn whenever a function is defined with a return type that defaults to int
     add_c_flag_if_supported("-Werror=return-types")
     # add direct, does not support test?
     append_c_flag("-Werror=vla")
-    add_c_flag_if_supported("-Wformat")
-    add_c_flag_if_supported("-fdiagnostics-color=auto")
 
-    # fixup
-    #add_c_flag_if_supported("-Wno-undef")
-    #add_c_flag_if_supported("-Wno-unknown-pragmas")
-
-    # build statc if not MSVC not on MacOS
+    # build statc if not on macOS (macOS does not ship any static libraries to built with)
     #if(NOT APPLE)
     #    add_c_flag_if_supported("-static")
     #    add_c_flag_if_supported("-static-libgcc")
     #endif()
 
-    # TODO - remove these in the future
+    # AMCD commands are very heavy with unsed params
     # disable warning: unused parameter in fuction
     add_c_flag_if_supported("-Wno-unused-parameter")
+
+    # TODO - remove these in the future
     # disable warning: redundant redeclaration of functions
-    add_c_flag_if_supported("-Wno-redundant-decls")
+    # add_c_flag_if_supported("-Wno-redundant-decls")
     # disable warning: possibly unitialized value before use
-    add_c_flag_if_supported("-Wno-maybe-uninitialized")
+    # add_c_flag_if_supported("-Wno-maybe-uninitialized")
+    # disable warning: discards `const` qualifier - not supported in GCC 4.8.5
+    # add_c_flag_if_supported("-Wno-discarded-qualifiers")
 
     # tbamud options from old configure
-    add_c_flag_if_supported("-g")  # enable debug
-    #add_c_flag_if_supported("-Wno-char-subscripts")  # disable gcc warning about arrays
+    #add_c_flag_if_supported("-g")  # enable debug
     #add_c_flag_if_supported("-fno-builtin")  # disable builtin
 
+    #### extra compiler flags ####
     if(MARCH_NATIVE)
         add_c_flag_if_supported("-march=native")
     endif()
