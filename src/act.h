@@ -126,6 +126,10 @@ ACMD(do_scan);
 
 ACMD(do_score);
 
+ACMD(do_slist);
+
+ACMD(do_spells);
+
 ACMD(do_time);
 
 ACMD(do_toggle);

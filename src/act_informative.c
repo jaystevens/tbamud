@@ -261,16 +261,30 @@ static void diag_char_to_char(struct char_data *i, struct char_data *ch) {
 }
 
 static void look_at_char(struct char_data *i, struct char_data *ch) {
-    int j, found;
+    int j;
+    bool found = false;
 
     if (!ch->desc)
         return;
 
-    send_to_char(ch, "%s %s\r\n", i->player.name, i->player.title);
+    if (!IS_NPC(i)) {
+        // look at player
+        if (i->player.title) {
+            send_to_char(ch, "%s %s\r\n", i->player.name, i->player.title);
+        } else {
+            send_to_char(ch, "%s\r\n", i->player.name);
+        }
+    } else {
+        // look at NPC
+        if (i->player.long_descr) {
+            send_to_char(ch, "%s", i->player.long_descr);
+        } else {
+            send_to_char(ch, "%s is here\r\n", i->player.name);
+        }
+    }
 
     diag_char_to_char(i, ch);
 
-    found = false;
     for (j = 0; !found && j < NUM_WEARS; j++)
         if (GET_EQ(i, j) && CAN_SEE_OBJ(ch, GET_EQ(i, j)))
             found = true;
@@ -620,7 +634,8 @@ char *find_exdesc(char *word, struct extra_descr_data *list) {
  * the name.  Then check local objs for exdescs. Thanks to Angus Mezick for
  * the suggested fix to this problem. */
 static void look_at_target(struct char_data *ch, char *arg) {
-    int bits, found = false, j, fnum, i = 0;
+    int bits, j, fnum, i = 0;
+    bool found = false;
     struct char_data *found_char = NULL;
     struct obj_data *obj, *found_obj = NULL;
     char *desc;
@@ -698,7 +713,7 @@ static void look_at_target(struct char_data *ch, char *arg) {
 
 ACMD(do_look) {
     int look_type;
-    int found = 0;
+    bool found = false;
     char tempsave[MAX_INPUT_LENGTH];
 
     if (!ch->desc)
@@ -739,7 +754,7 @@ ACMD(do_look) {
                 if (*i->keyword != '.') {
                     send_to_char(ch, "%s%s:\r\n%s",
                                  (found ? "\r\n" : ""), i->keyword, i->description);
-                    found = 1;
+                    found = true;
                 }
             }
             if (!found)
@@ -977,6 +992,24 @@ ACMD(do_equipment) {
             send_to_char(ch, "%s     ---\r\n", wear_where[i]);
         }
     }
+}
+
+ACMD(do_slist) {
+    if (IS_NPC(ch)) {
+        return;
+    }
+
+    send_to_char(ch, "SLIST\r\n");
+    send_to_char(ch, "NOT YET IMPLEMENTED\r\n");
+}
+
+ACMD(do_spells) {
+    if (IS_NPC(ch)) {
+        return;
+    }
+
+    send_to_char(ch, "SPELLS\r\n");
+    send_to_char(ch, "NOT YET IMPLEMENTED!\r\n");
 }
 
 ACMD(do_time) {
