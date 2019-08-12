@@ -147,23 +147,23 @@ struct trig_var_data {
 
 /** structure for triggers */
 struct trig_data {
-    IDXTYPE nr;                            /**< trigger's rnum */
-    byte attach_type;                      /**< mob/obj/wld intentions */
-    byte data_type;                        /**< type of game_data for trig */
-    char *name;                            /**< name of trigger */
-    long trigger_type;                     /**< type of trigger (for bitvector) */
-    struct cmdlist_element *cmdlist;       /**< top of command list */
-    struct cmdlist_element *curr_state;    /**< ptr to current line of trigger */
-    int narg;                              /**< numerical argument */
-    char *arglist;                         /**< argument list */
-    int depth;                             /**< depth into nest ifs/whiles/etc */
-    int loops;                             /**< loop iteration counter */
-    struct event *wait_event;              /**< event to pause the trigger */
-    uint8_t purged;                        /**< trigger is set to be purged */
-    struct trig_var_data *var_list;        /**< list of local vars for trigger */
+    IDXTYPE nr;                         /**< trigger's rnum                  */
+    byte attach_type;                   /**< mob/obj/wld intentions          */
+    byte data_type;                     /**< type of game_data for trig      */
+    char *name;                         /**< name of trigger                 */
+    long trigger_type;                  /**< type of trigger (for bitvector) */
+    struct cmdlist_element *cmdlist;    /**< top of command list             */
+    struct cmdlist_element *curr_state;    /**< ptr to current line of trigger  */
+    int narg;                           /**< numerical argument              */
+    char *arglist;                      /**< argument list                   */
+    int depth;                          /**< depth into nest ifs/whiles/etc  */
+    int loops;                          /**< loop iteration counter          */
+    struct event *wait_event;           /**< event to pause the trigger  */
+    ubyte purged;                       /**< trigger is set to be purged     */
+    struct trig_var_data *var_list;        /**< list of local vars for trigger  */
 
     struct trig_data *next;
-    struct trig_data *next_in_world;       /**< next in the global trigger list */
+    struct trig_data *next_in_world;    /**< next in the global trigger list */
 };
 
 /** a complete script (composed of several triggers) */
@@ -171,7 +171,7 @@ struct script_data {
     long types;                        /**< bitvector of trigger types */
     struct trig_data *trig_list;       /**< list of triggers           */
     struct trig_var_data *global_vars; /**< list of global variables   */
-    uint8_t purged;                    /**< script is set to be purged */
+    ubyte purged;                      /**< script is set to be purged */
     long context;                      /**< current context for statics */
 
     struct script_data *next;          /**< used for purged_scripts    */

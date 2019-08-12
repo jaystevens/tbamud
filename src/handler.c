@@ -33,7 +33,7 @@ static int apply_ac(struct char_data *ch, int eq_pos);
 
 static void update_object(struct obj_data *obj, int use);
 
-static void affect_modify_ar(struct char_data *ch, byte loc, int8_t mod, int bitv[], bool add);
+static void affect_modify_ar(struct char_data *ch, byte loc, sbyte mod, int bitv[], bool add);
 
 char *fname(const char *namelist) {
     static char holder[READ_SIZE];
@@ -104,7 +104,7 @@ int isname(const char *str, const char *namelist) {
     return 0;
 }
 
-static void aff_apply_modify(struct char_data *ch, byte loc, int8_t mod, const char *msg) {
+static void aff_apply_modify(struct char_data *ch, byte loc, sbyte mod, const char *msg) {
     switch (loc) {
         case APPLY_NONE:
             break;
@@ -203,7 +203,7 @@ static void aff_apply_modify(struct char_data *ch, byte loc, int8_t mod, const c
     } /* switch */
 }
 
-static void affect_modify_ar(struct char_data *ch, byte loc, int8_t mod, int bitv[], bool add) {
+static void affect_modify_ar(struct char_data *ch, byte loc, sbyte mod, int bitv[], bool add) {
     int i, j;
 
     if (add) {
