@@ -219,9 +219,6 @@
 /* Check for a prototype to fwrite. */
 #cmakedefine NEED_FWRITE_PROTO 1
 
-/* Check for a prototype to getpeername. */
-#cmakedefine NEED_GETPEERNAME_PROTO 1
-
 /* Check for a prototype to getpid. */
 #cmakedefine NEED_GETPID_PROTO 1
 

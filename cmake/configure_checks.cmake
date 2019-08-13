@@ -367,18 +367,6 @@ if(NOT CONF_H_GENERATED)
             set(NEED_FWRITE_PROTO 1 CACHE INTERNAL "")
         endif()
 
-        # NEED_GETPEERNAME_PROTO
-        check_prototype_definition(getpeername
-                "int getpeername(int sockfd, struct sockaddr *addr, socklen_t *addrlen)"
-                "-1"
-                "sys/socket.h"
-                HAVE_GETPEERNAME_PROTO)
-        if(HAVE_GETPEERNAME_PROTO)
-            set(NEED_GETPEERNAME_PROTO 0 CACHE INTERNAL "")
-        else()
-            set(NEED_GETPEERNAME_PROTO 1 CACHE INTERNAL "")
-        endif()
-
         # NEED_GETPID_PROTO
         check_prototype_definition(getpid
                 "pid_t getpid(void)"

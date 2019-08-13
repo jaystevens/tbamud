@@ -501,10 +501,6 @@ int fputc(char c, FILE *stream);
 int fputs(const char *s, FILE *stream);
 #endif
 
-#ifdef NEED_GETPEERNAME_PROTO
-int getpeername(socket_t s, struct sockaddr *name, int *namelen);
-#endif
-
 #if defined(HAS_RLIMIT) && defined(NEED_GETRLIMIT_PROTO)
 int getrlimit(int resource, struct rlimit *rlp);
 #endif
