@@ -508,7 +508,6 @@ if(NOT CONF_H_GENERATED)
         endif()
 
 
-
         # NEED_STRICMP_PROTO
         check_prototype_definition(stricmp
                 "int stricmp (const char *s1, const char *s2)"
@@ -526,18 +525,17 @@ if(NOT CONF_H_GENERATED)
                 "size_t strlcpy(char * restrict dst, const	char * restrict	src, size_t dstsize)"
                 "0"
                 "string.h"
-                HAVE_STRLCPY_PROTO_FREEBSD)
-        check_prototype_definition(strlcpy
-                "size_t strlcpy(char *dst, const char *src, size_t size)"
-                "0"
-                "string.h"
-                HAVE_STRLCPY_PROTO_MACOS)
-        if(HAVE_STRLCPY_PROTO_FREEBSD OR HAVE_STRCPY_PROTO_MACOS)
-            message(STATUS "NEED_STRLCPY_PROTO 0")
+                HAVE_STRLCPY_PROTO)
+        if(HAVE_STRLCPY_PROTO)
             set(NEED_STRLCPY_PROTO 0 CACHE INTERNAL "")
         else()
-            message(STATUS "NEED_STRLCPY_PROTO 1")
-            set(NEED_STRLCPY_PROTO 1 CACHE INTERNAL "")
+            # FreeBSD / macOS use a macro
+            check_symbol_exists(strlcpy "string.h" HAVE_STRLCPY_SYMBOL)
+            if(HAVE_STRLCPY_SYMBOL)
+                set(NEED_STRLCPY_PROTO 0 CACHE INTERNAL "")
+            else()
+                set(NEED_STRLCPY_PROTO 1 CACHE INTERNAL "")
+            endif()
         endif()
 
 
