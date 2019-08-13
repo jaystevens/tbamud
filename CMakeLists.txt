@@ -137,6 +137,8 @@ else()
     add_c_flag_if_supported("-Wformat")
 
     #### disable warnings ####
+    # GCC 9x - disable implicit fallthrough warning on switch
+    add_c_flag_if_supported("-Wno-implicit-fallthrough")
     # Suppress warnings from casts from a pointer to an integer type of a different size.
     add_c_flag_if_supported("-Wno-pointer-to-int-cast")
     # DISABLE: Warn if parentheses are omitted in certain contexts
