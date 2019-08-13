@@ -382,12 +382,6 @@ int atoi(const char *str);
 long atol(const char *str);
 #endif
 
-/* bzero is deprecated - use memset() instead. This prototype is needed for 
- * FD_xxx macros on some machines. */
-#ifdef NEED_BZERO_PROTO
-void bzero(char *b, int length);
-#endif
-
 #ifdef NEED_CRYPT_PROTO
 char *crypt(const char *key, const char *salt);
 #endif

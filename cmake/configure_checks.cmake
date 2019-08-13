@@ -209,18 +209,6 @@ if(NOT CONF_H_GENERATED)
             set(NEED_BIND_PROTO 1 CACHE INTERNAL "")
         endif()
 
-        # NEED_BZERO_PROTO
-        check_prototype_definition(bzero
-                "void bzero(void *s, size_t n)"
-                ""  # void return
-                "stdio.h;strings.h"
-                HAVE_BZERO_PROTO)
-        if(HAVE_BZERO_PROTO)
-            set(NEED_BZERO_PROTO 0 CACHE INTERNAL "")
-        else()
-            set(NEED_BZERO_PROTO 1 CACHE INTERNAL "")
-        endif()
-
         # NEED_CHDIR_PROTO
         check_prototype_definition(chdir
                 "int chdir(const char *path)"

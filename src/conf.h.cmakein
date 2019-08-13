@@ -180,9 +180,6 @@
 /* Check for a prototype to bind. */
 #cmakedefine NEED_BIND_PROTO 1
 
-/* Check for a prototype to bzero. */
-#cmakedefine NEED_BZERO_PROTO 1
-
 /* Check for a prototype to chdir. */
 #cmakedefine NEED_CHDIR_PROTO 1
 
