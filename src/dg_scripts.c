@@ -1938,7 +1938,7 @@ static void makeuid_var(void *go, struct script_data *sc, trig_data *trig,
     }
 
     if (atoi(arg) != 0) { /* easy, if you pass an id number */
-        char result[MAX_INPUT_LENGTH];
+        char result[MAX_INPUT_LENGTH - 1];
 
         eval_expr(arg, result, go, sc, trig, type);
         snprintf(uid, sizeof(uid), "%c%s", UID_CHAR, result);
