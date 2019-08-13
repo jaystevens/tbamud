@@ -356,7 +356,7 @@ ACMD(do_page) {
 ACMD(do_gen_comm) {
     struct descriptor_data *i;
     char color_on[24];
-    char buf1[MAX_INPUT_LENGTH], buf2[MAX_INPUT_LENGTH], *msg;
+    char buf1[MAX_INPUT_LENGTH - 10], buf2[MAX_INPUT_LENGTH], *msg;
     bool emoting = false;
 
     /* Array of flags which must _not_ be set in order for comm to be heard. */
