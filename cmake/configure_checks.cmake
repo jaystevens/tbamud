@@ -521,15 +521,22 @@ if(NOT CONF_H_GENERATED)
             set(NEED_STRICMP_PROTO 1 CACHE INTERNAL "")
         endif()
 
-        # NEED_STRLCPY_PROTO - FreeBSD
+        # NEED_STRLCPY_PROTO - FreeBSD / macOS
         check_prototype_definition(strlcpy
                 "size_t strlcpy(char * restrict dst, const	char * restrict	src, size_t dstsize)"
                 "0"
                 "string.h"
-                HAVE_STRLCPY_PROTO)
-        if(HAVE_STRLCPY_PROTO)
+                HAVE_STRLCPY_PROTO_FREEBSD)
+        check_prototype_definition(strlcpy
+                "size_t strlcpy(char *dst, const char *src, size_t size)"
+                "0"
+                "string.h"
+                HAVE_STRLCPY_PROTO_MACOS)
+        if(HAVE_STRLCPY_PROTO_FREEBSD OR HAVE_STRCPY_PROTO_MACOS)
+            message(STATUS "NEED_STRLCPY_PROTO 0")
             set(NEED_STRLCPY_PROTO 0 CACHE INTERNAL "")
         else()
+            message(STATUS "NEED_STRLCPY_PROTO 1")
             set(NEED_STRLCPY_PROTO 1 CACHE INTERNAL "")
         endif()
 
