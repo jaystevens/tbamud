@@ -427,17 +427,25 @@ if(NOT CONF_H_GENERATED)
             set(NEED_GETSOCKNAME_PROTO 0 CACHE INTERNAL "")
         endif()
 
-        # NEED_GETTIMEOFDAY_PROTO
+        # NEED_GETTIMEOFDAY_PROTO - LINUX
         check_prototype_definition(gettimeofday
                 "int gettimeofday(struct timeval *tv, struct timezone *tz)"
                 "-1"
                 "sys/time.h"
-                HAVE_GETTIMEOFDAY_PROTO)
-        if(HAVE_GETTIMEOFDAY_PROTO)
+                HAVE_GETTIMEOFDAY_PROTO_LINUX)
+        check_prototype_definition(gettimeofday
+                "int gettimeofday(struct timeval *restrict tp, void *restrict tzp)"
+                "-1"
+                "sys/time.h"
+                HAVE_GETTIMEOFDAY_PROTO_MACOS)
+        if(HAVE_GETTIMEOFDAY_PROTO_LINUX OR HAVE_GETTIMEOFDAY_PROTO_MACOS)
+            message(STATUS "NEED_GETTIMEOFDAY_PROTO 0")
             set(NEED_GETTIMEOFDAY_PROTO 0 CACHE INTERNAL "")
         else()
+            message(STATUS "NEED_GETTIMEOFDAY_PROTO 1")
             set(NEED_GETTIMEOFDAY_PROTO 1 CACHE INTERNAL "")
         endif()
+
 
         # NEED_HTONL_PROTO
         check_prototype_definition(htonl
@@ -448,7 +456,7 @@ if(NOT CONF_H_GENERATED)
         if(HAVE_HTONL_PROTO)
             set(NEED_HTONL_PROTO 0 CACHE INTERNAL "")
         else()
-            # FreeBSD defines HTONL using a macro
+            # FreeBSD / macOS use a macro
             check_symbol_exists(htonl "arpa/inet.h" HAVE_HTONL_SYMBOL)
             if(HAVE_HTONL_SYMBOL)
                 set(NEED_HTONL_PROTO 0 CACHE INTERNAL "")
@@ -466,6 +474,7 @@ if(NOT CONF_H_GENERATED)
         if(HAVE_HTONS_PROTO)
             set(NEED_HTONS_PROTO 0 CACHE INTERNAL "")
         else()
+            # FreeBSD / macOS use a macro
             check_symbol_exists(htons "arpa/inet.h" HAVE_HTONS_SYMBOL)
             if(HAVE_HTONS_SYMBOL)
                 set(NEED_HTONS_PROTO 0 CACHE INTERNAL "")
@@ -512,7 +521,7 @@ if(NOT CONF_H_GENERATED)
             set(NEED_STRICMP_PROTO 1 CACHE INTERNAL "")
         endif()
 
-        # NEED_STRLCPY_PROTO - FreeBSD -lc
+        # NEED_STRLCPY_PROTO - FreeBSD
         check_prototype_definition(strlcpy
                 "size_t strlcpy(char * restrict dst, const	char * restrict	src, size_t dstsize)"
                 "0"
