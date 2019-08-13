@@ -77,7 +77,7 @@ void build_player_index(void) {
     for (i = 0; i < rec_count; i++) {
         get_line(plr_index, line);
         //sscanf(line, "%ld %s %d %s %ld", &player_table[i].id, arg2, &player_table[i].level, bits, (long *) &player_table[i].last);
-        sscanf(line, "%" SCNd64 " %s %" SCNd8 " %s %" SCNd64 "", &player_table[i].id, arg2, &player_table[i].level, bits, (uint64_t *) &player_table[i].last);
+        sscanf(line, "%" SCNd64 " %s %" SCNd8 " %s %" SCNu64 "", &player_table[i].id, arg2, &player_table[i].level, bits, (uint64_t *) &player_table[i].last);
         CREATE(player_table[i].name, char, strlen(arg2) + 1);
         strcpy(player_table[i].name, arg2);
         player_table[i].flags = asciiflag_conv(bits);
