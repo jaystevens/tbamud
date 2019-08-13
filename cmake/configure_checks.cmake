@@ -14,7 +14,7 @@ if(NOT CONF_H_GENERATED)
     if(MSVC)
         # if MSVC use prebuilt conf.h
         message(STATUS "conf.h - using prebuilt file for Visual Studio")
-        include(WindowsCache)
+        include(windows_cache)
     else()
         message(STATUS "conf.h - detecting configuration")
 

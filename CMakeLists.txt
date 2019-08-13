@@ -207,7 +207,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 # include directory required for making utils that refernce source headers
 include_directories("${CMAKE_SOURCE_DIR}/src")
 
-include(ConfigureChecks)
+include(configure_checks)
 
 # link libraries
 #list(LINK_LIBS "")
