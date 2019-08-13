@@ -539,7 +539,13 @@ if(NOT CONF_H_GENERATED)
         if(HAVE_NTOHL_PROTO)
             set(NEED_NTOHL_PROTO 0 CACHE INTERNAL "")
         else()
-            set(NEED_NTOHL_PROTO 1 CACHE INTERNAL "")
+            # FreeBSD / macOS use a macro
+            check_symbol_exists(ntohl "arpa/inet.h" HAVE_NTOHL_SYMBOL)
+            if(HAVE_NTOHL_SYMBOL)
+                set(NEED_NTOHL_PROTO 0 CACHE INTERNAL "")
+            else()
+                set(NEED_NTOHL_PROTO 1 CACHE INTERNAL "")
+            endif()
         endif()
 
         # NEED_PERROR_PROTO
