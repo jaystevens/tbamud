@@ -2375,8 +2375,9 @@ void add_history(struct char_data *ch, char *str, int type) {
 
 ACMD(do_whois) {
     struct char_data *victim = 0;
-    int hours;
-    int got_from_file = 0;
+    uint64_t hours;
+    //int got_from_file = 0;
+    bool got_from_file = false;
     char buf[MAX_STRING_LENGTH];
 
     one_argument(argument, buf);
@@ -2395,7 +2396,7 @@ ACMD(do_whois) {
         CREATE(victim->player_specials, struct player_special_data, 1);
 
         if (load_char(buf, victim) > -1)
-            got_from_file = 1;
+            got_from_file = true;
         else {
             send_to_char(ch, "There is no such player.\r\n");
             free_char(victim);
@@ -2416,7 +2417,7 @@ ACMD(do_whois) {
     if (!(GET_LEVEL(victim) < LVL_IMMORT) || (GET_LEVEL(ch) >= GET_LEVEL(victim))) {
         strftime(buf, sizeof(buf), "%a %b %d %Y", localtime(&(victim->player.time.logon)));
 
-        hours = (time(0) - victim->player.time.logon) / 3600;
+        hours = (uint64_t) ((time(0) - victim->player.time.logon) / 3600);
 
         if (!got_from_file) {
             send_to_char(ch, "Last Logon: Playing now!  (Idle %d Minutes)",
@@ -2431,10 +2432,10 @@ ACMD(do_whois) {
                 send_to_char(ch, "%s%s is afk right now, so %s may not respond to communication.%s\r\n",
                              CBGRN(ch, C_NRM), GET_NAME(victim), HSSH(victim), CCNRM(ch, C_NRM));
         } else if (hours > 0)
-            send_to_char(ch, "Last Logon: %s (%d days & %d hours ago.)\r\n", buf, hours / 24, hours % 24);
+            send_to_char(ch, "Last Logon: %s (%d days & %d hours ago.)\r\n", buf, (uint8_t) (hours / 24), (uint8_t) (hours % 24));
         else
             send_to_char(ch, "Last Logon: %s (0 hours & %d minutes ago.)\r\n",
-                         buf, (int) (time(0) - victim->player.time.logon) / 60);
+                         buf, (uint8_t) (time(0) - victim->player.time.logon) / 60);
     }
 
     if (has_mail(GET_IDNUM(victim)))
@@ -2688,15 +2689,16 @@ ACMD(do_date) {
 
 ACMD(do_uptime) {
     char timestr[25];
-    time_t mytime = boot_time;
-    unsigned int d, h, m;
+    time_t tmp_boot_time = boot_time;
+    uint64_t tmp_boot_sec = (uint64_t) (time(0) - boot_time);
+    uint32_t d = 0;
+    uint8_t h = 0, m = 0;
 
-    strftime(timestr, sizeof(timestr), "%c", localtime(&mytime));
+    strftime(timestr, sizeof(timestr), "%c", localtime(&tmp_boot_time));
 
-    mytime = time(0) - boot_time;
-    d = mytime / 86400;
-    h = (mytime / 3600) % 24;
-    m = (mytime / 60) % 60;
+    d = (uint32_t) (tmp_boot_sec / 86400);
+    h = (uint8_t) ((tmp_boot_sec / 3600) % 24);
+    m = (uint8_t) ((tmp_boot_sec / 60) % 60);
 
     send_to_char(ch, "Up since %s: %d day%s, %d hour%s, %d minute%s\r\n", timestr, d, d == 1 ? "" : "s", h, d == 1 ? "" : "s", m, m == 1 ? "" : "s");
 }
