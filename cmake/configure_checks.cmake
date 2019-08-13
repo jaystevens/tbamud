@@ -613,7 +613,7 @@ if(NOT CONF_H_GENERATED)
                 "void rewind(FILE *stream)"
                 ""
                 "stdio.h"
-                HAVE_REWINID_PROTO)
+                HAVE_REWIND_PROTO)
         if(HAVE_REWIND_PROTO)
             set(NEED_REWIND_PROTO 0 CACHE INTERNAL "")
         else()
