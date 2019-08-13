@@ -225,9 +225,6 @@
 /* Check for a prototype to getrlimit. */
 #cmakedefine NEED_GETRLIMIT_PROTO 1
 
-/* Check for a prototype to getsockname. */
-#cmakedefine NEED_GETSOCKNAME_PROTO 1
-
 /* Check for a prototype to gettimeofday. */
 #cmakedefine NEED_GETTIMEOFDAY_PROTO 1
 

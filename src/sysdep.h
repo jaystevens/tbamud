@@ -505,10 +505,6 @@ int fputs(const char *s, FILE *stream);
 int getrlimit(int resource, struct rlimit *rlp);
 #endif
 
-#ifdef NEED_GETSOCKNAME_PROTO
-int getsockname(socket_t s, struct sockaddr *name, int *namelen);
-#endif
-
 #ifdef NEED_GETTIMEOFDAY_PROTO
 void gettimeofday(struct timeval *tp, void * );
 #endif

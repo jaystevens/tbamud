@@ -391,18 +391,6 @@ if(NOT CONF_H_GENERATED)
             set(NEED_GETRLIMIT_PROTO 1 CACHE INTERNAL "")
         endif()
 
-        # NEED_GETSOCKNAME_PROTO
-        check_prototype_definition(getsockname
-                "int getsockname(int sockfd, struct sockaddr *addr, socklen_t *addrlen)"
-                "-1"
-                "sys/socket.h"
-                HAVE_GETSOCKNAME_PROTO)
-        if(HAVE_GETSOCKNAME_PROTO)
-            set(NEED_GETSOCKNAME_PROTO 0 CACHE INTERNAL "")
-        else()
-            set(NEED_GETSOCKNAME_PROTO 0 CACHE INTERNAL "")
-        endif()
-
         # NEED_GETTIMEOFDAY_PROTO - LINUX
         check_prototype_definition(gettimeofday
                 "int gettimeofday(struct timeval *tv, struct timezone *tz)"
