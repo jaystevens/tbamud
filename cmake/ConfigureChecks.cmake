@@ -212,10 +212,22 @@ if(NOT CONF_H_GENERATED)
         # NEED_BZERO_PROTO
         check_prototype_definition(bzero
                 "void bzero(void *s, size_t n)"
-                "NULL"
+                ""  # void return
                 "stdio.h;strings.h"
                 HAVE_BZERO_PROTO)
         if(HAVE_BZERO_PROTO)
+            set(NEED_BZERO_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_BZERO_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_CHDIR_PROTO
+        check_prototype_definition(chdir
+                "int chdir(const char *path)"
+                "-1"
+                "unistd.h"
+                HAVE_CHDIR_PROTO)
+        if(HAVE_CHDIR_PROTO)
             set(NEED_BZERO_PROTO 0 CACHE INTERNAL "")
         else()
             set(NEED_BZERO_PROTO 1 CACHE INTERNAL "")
@@ -233,6 +245,250 @@ if(NOT CONF_H_GENERATED)
             set(NEED_CLOSE_PROTO 1 CACHE INTERNAL "")
         endif()
 
+        # NEED_CRYPT_PROTO - TODO check, need -lcrypt ?
+        check_prototype_definition(crypt
+                "char *crypt(const char *key, const char *salt)"
+                "-1"
+                "unistd.h"
+                HAVE_CRYPT_PROTO)
+        if(HAVE_CRYPT_PROTO)
+            set(NEED_CRYPT_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_CRYPT_PROTO 1 CACHE INTERNAL "")
+        endif()
+        # TODO - override, test needs work
+        set(NEED_CRYPT_PROTO 0 CACHE INTERNAL "")
+
+        # NEED_FCLOSE_PROTO
+        check_prototype_definition(fclose
+                "int fclose(FILE *stream)"
+                "-1"
+                "stdio.h"
+                HAVE_FCLOSE_PROTO)
+        if(HAVE_FCLOSE_PROTO)
+            set(NEED_FCLOSE_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_FCLOSE_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_FCNTL_PROTO
+        check_prototype_definition(fcntl
+                "int fcntl(int fildes, int cmd, ...)"
+                "-1"
+                "unistd.h;fcntl.h"
+                HAVE_FCNTL_PROTO)
+        if(HAVE_FCNTL_PROTO)
+            set(NEED_FCNTL_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_FCNTL_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_FFLUSH_PROTO
+        check_prototype_definition(fflush
+                "int fflush(FILE *stream)"
+                "-1"
+                "stdio.h"
+                HAVE_FFLUSH_PROTO)
+        if(HAVE_FFLUSH_PROTO)
+            set(NEED_FFLUSH_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_FFLUSH_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_FPRINTF_PROTO
+        check_prototype_definition(fprintf
+                "int fprintf(FILE *stream, const char *format, ...)"
+                "-1"
+                "stdio.h"
+                HAVE_FPRINTF_PROTO)
+        if(HAVE_FPRINTF_PROTO)
+            set(NEED_FPRINTF_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_FPRINTF_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_FPUTC_PROTO
+        check_prototype_definition(fputc
+                "int fputc(int c, FILE *stream)"
+                "-1"
+                "stdio.h"
+                HAVE_FPUTC_PROTO)
+        if(HAVE_FPUTC_PROTO)
+            set(NEED_FPUTC_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_FPUTC_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_FPUTS_PROTO
+        check_prototype_definition(fputs
+                "int fputs(const char *s, FILE *stream)"
+                "-1"
+                "stdio.h"
+                HAVE_FPUTS_PROTO)
+        if(HAVE_FPUTS_PROTO)
+            set(NEED_FPUTS_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_FPUTS_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_FREAD_PROTO
+        check_prototype_definition(fread
+                "size_t fread(void *ptr, size_t size, size_t nmemb, FILE *stream)"
+                "0"
+                "stdio.h"
+                HAVE_FREAD_PROTO)
+        if(HAVE_FREAD_PROTO)
+            set(NEED_FREAD_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_FREAD_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_FSCANF_PROTO
+        check_prototype_definition(fscanf
+                "int fscanf(FILE *stream, const char *format, ...)"
+                "-1"
+                "stdio.h"
+                HAVE_FSCANF_PROTO)
+        if(HAVE_FSCANF_PROTO)
+            set(NEED_FSCANF_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_FSCANF_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_FSEEK_PROTO
+        check_prototype_definition(fseek
+                "int fseek(FILE *stream, long offset, int whence)"
+                "-1"
+                "stdio.h"
+                HAVE_FSEEK_PROTO)
+        if(HAVE_FSEEK_PROTO)
+            set(NEED_FSEEK_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_FSEEK_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_FWRITE_PROTO
+        check_prototype_definition(fwrite
+                "size_t fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream)"
+                "0"
+                "stdio.h"
+                HAVE_FWRITE_PROTO)
+        if(HAVE_FWRITE_PROTO)
+            set(NEED_FWRITE_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_FWRITE_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_GETPEERNAME_PROTO
+        check_prototype_definition(getpeername
+                "int getpeername(int sockfd, struct sockaddr *addr, socklen_t *addrlen)"
+                "-1"
+                "sys/socket.h"
+                HAVE_GETPEERNAME_PROTO)
+        if(HAVE_GETPEERNAME_PROTO)
+            set(NEED_GETPEERNAME_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_GETPEERNAME_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_GETPID_PROTO
+        check_prototype_definition(getpid
+                "pid_t getpid(void)"
+                "-1"
+                "sys/types.h;unistd.h"
+                HAVE_GETPID_PROTO)
+        if(HAVE_GETPID_PROTO)
+            set(NEED_GETPID_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_GETPID_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_GETRLIMIT_PROTO
+        check_prototype_definition(getrlimit
+                "int getrlimit(int resource, struct rlimit *rlim)"
+                "-1"
+                "sys/time.h;sys/resource.h"
+                HAVE_GETRLIMIT_PROTO)
+        if(HAVE_GETRLIMIT_PROTO)
+            set(NEED_GETRLIMIT_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_GETRLIMIT_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_GETSOCKNAME_PROTO
+        check_prototype_definition(getsockname
+                "int getsockname(int sockfd, struct sockaddr *addr, socklen_t *addrlen)"
+                "-1"
+                "sys/socket.h"
+                HAVE_GETSOCKNAME_PROTO)
+        if(HAVE_GETSOCKNAME_PROTO)
+            set(NEED_GETSOCKNAME_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_GETSOCKNAME_PROTO 0 CACHE INTERNAL "")
+        endif()
+
+        # NEED_GETTIMEOFDAY_PROTO
+        check_prototype_definition(gettimeofday
+                "int gettimeofday(struct timeval *tv, struct timezone *tz)"
+                "-1"
+                "sys/time.h"
+                HAVE_GETTIMEOFDAY_PROTO)
+        if(HAVE_GETTIMEOFDAY_PROTO)
+            set(NEED_GETTIMEOFDAY_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_GETTIMEOFDAY_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_HTONL_PROTO
+        check_prototype_definition(htonl
+                "uint32_t htonl(uint32_t hostlong)"
+                "-1"
+                "arpa/inet.h"
+                HAVE_HTONL_PROTO)
+        if(HAVE_HTONL_PROTO)
+            set(NEED_HTONL_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_HTONL_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_HTONS_PROTO
+        check_prototype_definition(htons
+                "uint16_t htons(uint16_t hostshort)"
+                "-1"
+                "arpa/inet.h"
+                HAVE_HTONS_PROTO)
+        if(HAVE_HTONS_PROTO)
+            set(NEED_HTONS_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_HTONS_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_INET_ADDR_PROTO
+        check_prototype_definition(inet_addr
+                "in_addr_t inet_addr(const char *cp)"
+                "-1"
+                "sys/socket.h;arpa/inet.h"
+                HAVE_INET_ADDR_PROTO)
+        if(HAVE_INET_ADDR_PROTO)
+            set(NEED_INET_ADDR_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_INET_ADDR_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_INET_ATON_PROTO
+        check_prototype_definition(inet_aton
+                "int inet_aton(const char *cp, struct in_addr *inp)"
+                "-1"
+                "sys/socket.h;arpa/inet.h"
+                HAVE_INET_ATON_PROTO)
+        if(HAVE_INET_ATON_PROTO)
+            set(NEED_INET_ATON_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_INET_ATON_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+
+
         # NEED_STRICMP_PROTO
         check_prototype_definition(stricmp
                 "int stricmp (const char *s1, const char *s2)"
@@ -243,6 +499,18 @@ if(NOT CONF_H_GENERATED)
             set(NEED_STRICMP_PROTO 0 CACHE INTERNAL "")
         else()
             set(NEED_STRICMP_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_STRLCPY_PROTO - FreeBSD -lc
+        check_prototype_definition(strlcpy
+                "size_t strlcpy(char * restrict dst, const	char * restrict	src, size_t dstsize)"
+                "0"
+                "string.h"
+                HAVE_STRLCPY_PROTO)
+        if(HAVE_STRLCPY_PROTO)
+            set(NEED_STRLCPY_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_STRLCPY_PROTO 1 CACHE INTERNAL "")
         endif()
 
 
@@ -259,10 +527,8 @@ if(NOT CONF_H_GENERATED)
         if(UNIX AND NOT APPLE)
             message(STATUS "PROTO override Linux")
             set(NEED_STRICMP_PROTO 1)
-            set(NEED_STRLCPY_PROTO 1)
+            # set(NEED_STRLCPY_PROTO 1)
             set(NEED_STRNICMP_PROTO 1)
-        else()
-            message(STATUS "PROTO override macOS - TODO")
         endif()
 
     endif()
