@@ -31,8 +31,9 @@ endif()
 
 # if no build type specified default to release
 if(NOT CMAKE_BUILD_TYPE)
+    message(STATUS "Defaulting to Release build")
     set(CMAKE_BUILD_TYPE "Release"
-            CACHE "Build type: Debug, Release, RelWithDebInfo or MinSizeRel" STRING FORCE)
+            CACHE STRING "Build type: Debug, Release, RelWithDebInfo or MinSizeRel" FORCE)
 endif()
 
 # append cmake/modules to MAKE_MODULE_PATH variable
@@ -57,8 +58,8 @@ set(VERSION_TWEAK 0)
 string(REGEX REPLACE "^v[0-9]+\\.[0-9]+\\-[0-9]+-(.*)" "\\1" VERSION_SHA1 "${VERSION}")
 set(VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}.${VERSION_TWEAK}")
 set(VERSION_FULL "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}.${VERSION_TWEAK} ${VERSION_SHA1}")
-message("version       :  ${VERSION}")
-message("version full  :  ${VERSION_FULL}")
+message(STATUS "version       :  ${VERSION}")
+message(STATUS "version full  :  ${VERSION_FULL}")
 cmake_host_system_information(RESULT BUILD_HOST QUERY HOSTNAME)
 
 # setup version number in application
