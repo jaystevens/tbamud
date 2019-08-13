@@ -135,10 +135,12 @@ else()
     add_c_flag_if_supported("-Wvla")
     # check for printf / sscanf - sanity
     add_c_flag_if_supported("-Wformat")
+    # check for overflow in conversion
+    add_c_flag_if_supported("-Woverflow")
     # add conversion warning
     #add_c_flag_if_supported("-Wconversion")
     # constant conversion check
-    add_c_flag_if_supported("-Wconstant-conversion")
+    #add_c_flag_if_supported("-Wconstant-conversion")
     # add shadowing warning
     add_c_flag_if_supported("-Wshadow")
 
@@ -155,6 +157,9 @@ else()
     add_c_flag_if_supported("-Wno-format-zero-length")
     # DISABLE: Warn for pointer argument passing or assignment with different signedness.
     add_c_flag_if_supported("-Wno-pointer-sign")
+    # AMCD commands are very heavy with unsed params
+    # disable warning: unused parameter in fuction
+    add_c_flag_if_supported("-Wno-unused-parameter")
 
     #### make some warnings an error  ####
     # ERROR: printf / sscanf - sanity
@@ -173,18 +178,6 @@ else()
     #    add_c_flag_if_supported("-static")
     #    add_c_flag_if_supported("-static-libgcc")
     #endif()
-
-    # AMCD commands are very heavy with unsed params
-    # disable warning: unused parameter in fuction
-    add_c_flag_if_supported("-Wno-unused-parameter")
-
-    # TODO - remove these in the future
-    # disable warning: redundant redeclaration of functions
-    # add_c_flag_if_supported("-Wno-redundant-decls")
-    # disable warning: possibly unitialized value before use
-    # add_c_flag_if_supported("-Wno-maybe-uninitialized")
-    # disable warning: discards `const` qualifier - not supported in GCC 4.8.5
-    # add_c_flag_if_supported("-Wno-discarded-qualifiers")
 
     # tbamud options from old configure
     #add_c_flag_if_supported("-g")  # enable debug
