@@ -448,7 +448,13 @@ if(NOT CONF_H_GENERATED)
         if(HAVE_HTONL_PROTO)
             set(NEED_HTONL_PROTO 0 CACHE INTERNAL "")
         else()
-            set(NEED_HTONL_PROTO 1 CACHE INTERNAL "")
+            # FreeBSD defines HTONL using a macro
+            check_symbol_exists(htonl "arpa/inet.h" HAVE_HTONL_SYMBOL)
+            if(HAVE_HTONL_SYMBOL)
+                set(NEED_HTONL_PROTO 0 CACHE INTERNAL "")
+            else()
+                set(NEED_HTONL_PROTO 1 CACHE INTERNAL "")
+            endif()
         endif()
 
         # NEED_HTONS_PROTO
@@ -460,7 +466,12 @@ if(NOT CONF_H_GENERATED)
         if(HAVE_HTONS_PROTO)
             set(NEED_HTONS_PROTO 0 CACHE INTERNAL "")
         else()
-            set(NEED_HTONS_PROTO 1 CACHE INTERNAL "")
+            check_symbol_exists(htons "arpa/inet.h" HAVE_HTONS_SYMBOL)
+            if(HAVE_HTONS_SYMBOL)
+                set(NEED_HTONS_PROTO 0 CACHE INTERNAL "")
+            else()
+                set(NEED_HTONS_PROTO 1 CACHE INTERNAL "")
+            endif()
         endif()
 
         # NEED_INET_ADDR_PROTO
