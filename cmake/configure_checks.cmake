@@ -446,7 +446,6 @@ if(NOT CONF_H_GENERATED)
             set(NEED_GETTIMEOFDAY_PROTO 1 CACHE INTERNAL "")
         endif()
 
-
         # NEED_HTONL_PROTO
         check_prototype_definition(htonl
                 "uint32_t htonl(uint32_t hostlong)"
@@ -507,6 +506,137 @@ if(NOT CONF_H_GENERATED)
             set(NEED_INET_ATON_PROTO 1 CACHE INTERNAL "")
         endif()
 
+        # NEED_INET_NTOA_PROTO
+        check_prototype_definition(inet_ntoa
+                "char *inet_ntoa(struct in_addr in)"
+                "-1"
+                "sys/socket.h;arpa/inet.h"
+                HAVE_INET_NTOA_PROTO)
+        if(HAVE_INET_NTOA_PROTO)
+            set(NEED_INET_NTOA_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_INET_NTOA_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_LISTEN_PROTO
+        check_prototype_definition(listen
+                "int listen(int sockfd, int backlog)"
+                "-1"
+                "sys/types.h;sys/socket.h"
+                HAVE_LISTEN_PROTO)
+        if(HAVE_LISTEN_PROTO)
+            set(NEED_LISTEN_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_LISTEN_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_NTOHL_PROTO
+        check_prototype_definition(ntohl
+                "uint32_t ntohl(uint32_t netlong)"
+                "0"
+                "arpa/inet.h"
+                HAVE_NTOHL_PROTO)
+        if(HAVE_NTOHL_PROTO)
+            set(NEED_NTOHL_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_NTOHL_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_PERROR_PROTO
+        check_prototype_definition(perror
+                "void perror(const char *s)"
+                ""
+                "stdio.h"
+                HAVE_PERROR_PROTO)
+        if(HAVE_PERROR_PROTO)
+            set(NEED_PERROR_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_PERROR_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_PRINTF_PROTO
+        check_prototype_definition(printf
+                "int printf(const char *format, ...)"
+                "-1"
+                "stdio.h"
+                HAVE_PRINTF_PROTO)
+        if(HAVE_PRINTF_PROTO)
+            set(NEED_PRINTF_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_PRINTF_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_QSORT_PROTO
+        check_prototype_definition(qsort
+                "void qsort(void *base, size_t nmemb, size_t size, int (*compar)(const void *, const void *))"
+                ""
+                "stdlib.h"
+                HAVE_QSORT_PROTO)
+        if(HAVE_QSORT_PROTO)
+            set(NEED_QSORT_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_QSORT_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_READ_PROTO
+        check_prototype_definition(read
+                "ssize_t read(int fd, void *buf, size_t count)"
+                "-1"
+                "unistd.h"
+                HAVE_READ_PROTO)
+        if(HAVE_READ_PROTO)
+            set(NEED_READ_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_READ_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_REMOVE_PROTO
+        check_prototype_definition(remove
+                "int remove(const char *pathname)"
+                "-1"
+                "stdio.h"
+                HAVE_REMOVE_PROTO)
+        if(HAVE_REMOVE_PROTO)
+            set(NEED_REMOVE_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_REMOVE_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_REWIND_PROTO
+        check_prototype_definition(rewind
+                "void rewind(FILE *stream)"
+                ""
+                "stdio.h"
+                HAVE_REWINID_PROTO)
+        if(HAVE_REWIND_PROTO)
+            set(NEED_REWIND_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_REWIND_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_SELECT_PROTO
+        check_prototype_definition(select
+                "int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout)"
+                "-1"
+                "sys/select.h;sys/time.h;sys/types.h;unistd.h"
+                HAVE_SELECT_PROTO)
+        if(HAVE_SELECT_PROTO)
+            set(NEED_SELECT_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_SELECT_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_SETTIMER_PROTO
+        check_prototype_definition(setitimer
+                "int setitimer(int which, const struct itimerval *new_value, struct itimerval *old_value)"
+                "-1"
+                "sys/time.h"
+                HAVE_SETITIMER_PROTO)
+        if(HAVE_SETITIMER_PROTO)
+            set(NEED_SETITIMER_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_SETITIMER_PROTO 1 CACHE INTERNAL "")
+        endif()
 
         # NEED_STRICMP_PROTO
         check_prototype_definition(stricmp
@@ -520,7 +650,7 @@ if(NOT CONF_H_GENERATED)
             set(NEED_STRICMP_PROTO 1 CACHE INTERNAL "")
         endif()
 
-        # NEED_STRLCPY_PROTO - FreeBSD / macOS
+        # NEED_STRLCPY_PROTO - FreeBSD [prototype] / macOS [macro]
         check_prototype_definition(strlcpy
                 "size_t strlcpy(char * restrict dst, const	char * restrict	src, size_t dstsize)"
                 "0"
@@ -529,7 +659,7 @@ if(NOT CONF_H_GENERATED)
         if(HAVE_STRLCPY_PROTO)
             set(NEED_STRLCPY_PROTO 0 CACHE INTERNAL "")
         else()
-            # FreeBSD / macOS use a macro
+            # macOS use a macro
             check_symbol_exists(strlcpy "string.h" HAVE_STRLCPY_SYMBOL)
             if(HAVE_STRLCPY_SYMBOL)
                 set(NEED_STRLCPY_PROTO 0 CACHE INTERNAL "")
@@ -539,14 +669,6 @@ if(NOT CONF_H_GENERATED)
         endif()
 
 
-
-
-        # "int gettimeofday(struct timeval *tv, struct timezone *tz)"
-        check_prototype_definition(gettimeofday
-                "int gettimeofday(struct timeval *tv, struct timezone *tz)"
-                "-1"
-                "sys/time.h"
-                HAVE_GETTIMEOFDAY_PROTO)
 
         message(STATUS "PROTO detection is still incomplete")
         if(UNIX AND NOT APPLE)
