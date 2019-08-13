@@ -135,6 +135,12 @@ else()
     add_c_flag_if_supported("-Wvla")
     # check for printf / sscanf - sanity
     add_c_flag_if_supported("-Wformat")
+    # add conversion warning
+    #add_c_flag_if_supported("-Wconversion")
+    # constant conversion check
+    add_c_flag_if_supported("-Wconstant-conversion")
+    # add shadowing warning
+    add_c_flag_if_supported("-Wshadow")
 
     #### disable warnings ####
     # GCC 9x - disable implicit fallthrough warning on switch
