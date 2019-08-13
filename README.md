@@ -28,7 +28,11 @@ mud server based on circle 3.0 / diku / tbaMud
 
 - broken:
 
-  - autoeq is borked by type conversion
+  - basic eq
+    - held items do not autoeq
+    - have to `hold` lights - should be `wear` -able
+    - have to `wield` weapons, should be `wear` -able 
+    - really need to merge all the wear / wield / hold code into one
   - zonereset is borked
   - copyover on windows looks borked, turned it off on windows for now, probably not worth fixing.
 
