@@ -2091,7 +2091,7 @@ static void load_zones(FILE *fl, char *zonename) {
 
     line_num += get_line(fl, buf);
 
-    if (sscanf(buf, "#%hd", &Z.number) != 1) {
+    if (sscanf(buf, "#%hu", &Z.number) != 1) {
         log("SYSERR: Format error in %s, line %d", zname, line_num);
         exit(1);
     }
