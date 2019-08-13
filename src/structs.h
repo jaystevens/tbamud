@@ -874,8 +874,8 @@ struct char_point_data {
      * Dungeons and Dragons method of dealing with character defense, or
      * Armor class. */
     int16_t armor;
-    int gold;        /* Current gold carried on character */
-    int bank_gold;   /* Gold the char has in a bank account	*/
+    int32_t gold;        /* Current gold carried on character */
+    int32_t bank_gold;   /* Gold the char has in a bank account	*/
     int exp;         /* The experience points, or value, of the character. */
 
     int8_t hitroll;   /* Any bonus or penalty to the hit roll */
