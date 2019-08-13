@@ -106,6 +106,8 @@ else()
     add_c_flag_if_supported("-Wall")
     # turn on extra GCC warnings
     add_c_flag_if_supported("-Wextra")
+    # Strict ISO C warnings
+    add_c_flag_if_supported("-Wpedantic")
     # Warn when a declaration is found after a statement in a block
     add_c_flag_if_supported("-Wdeclaration-after-statement")
     # Warn if a requested optimization pass is disabled
