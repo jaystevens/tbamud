@@ -802,7 +802,7 @@ ACMD(do_gold) {
 }
 
 ACMD(do_score) {
-    unsigned long xp_to_next_level = 0;
+    int64_t xp_to_next_level = 0;
     /* this uses alot of QBBLU so copy them here so we don't hit the macros as often */
     const char *CL_BBLU = QBBLU;
     const char *CL_NRM = QNRM;
@@ -870,7 +870,7 @@ ACMD(do_score) {
             CL_NRM, IS_CARRYING_W(ch), CL_BBLU, CL_NRM, CAN_CARRY_W(ch), CL_BBLU, CL_NRM);
     send_to_char(ch, "%sYou have been playing for%s %ld %shours.%s\r\n",
             CL_BBLU, CL_NRM,
-                 ((time(0) - ch->player.time.logon) + ch->player.time.played) / 60,
+                 ((time(0) - ch->player.time.logon) + ch->player.time.played) / 3600,
             CL_BBLU, CL_NRM);
     send_to_char(ch, "%sYour energy level is at%s %d%%%s.%s\r\n",
             CL_BBLU, CL_NRM, 0, CL_BBLU, CL_NRM);
