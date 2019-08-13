@@ -697,7 +697,7 @@ struct obj_data {
     struct extra_descr_data *ex_description;            /* List of extra descriptions */
     struct char_data *carried_by;                       /* Points to PC/NPC carrying, or NULL */
     struct char_data *worn_by;                          /* Points to PC/NPC wearing, or NULL */
-    int16_t worn_on;                                    /* If the object can be worn, where can it be worn? */
+    int8_t worn_on;                                     /* If the object can be worn, where can it be worn? */
 
     struct obj_data *in_obj;                            /* Points to carrying object, or NULL */
     struct obj_data *contains;                          /* List of objects being carried, or NULL */
