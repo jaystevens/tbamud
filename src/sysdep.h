@@ -30,8 +30,11 @@
 #include <fcntl.h>
 #include <stdbool.h>
 #include <time.h>
+// generic
+#include <errno.h>  // not C11 but on all platforms
 
 #if defined(_WIN32) || defined(_WIN64)
+// MSVC (and MinGW?)
 // visual studio does not have these functions
 #define snprintf _snprintf
 #define vsnprintf _vsnprintf
@@ -50,8 +53,19 @@
 #define ssize_t int
 // windows does not have the crypt library
 #define NOCRYPT
-#else
-// unix
+
+#ifndef _WINSOCK2API_    /* Winsock1 and Winsock 2 conflict. */
+#include <winsock.h>
+#endif
+
+/* MSVC defaults to 64 (so say the old documentation)
+ * this is used with select()
+ * should really move away from select... */
+#ifndef FD_SETSIZE
+#define FD_SETSIZE 1024
+#endif
+
+#else  // UNIX - where god wants you to be
 #include <unistd.h>
 #include <strings.h>  // now required
 #include <limits.h>  // for PATH_MAX
@@ -81,16 +95,12 @@ size_t strlcpy(char *dest, const char *src, size_t copylen);
 #endif
 #endif
 
-#ifdef HAVE_ERRNO_H
-#include <errno.h>
-#endif
-
 
 #ifdef HAVE_CRYPT_H
 #include <crypt.h>
 #endif
 
-#if HAVE_SYS_TIME_H
+#ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
 #endif
 
@@ -126,34 +136,17 @@ size_t strlcpy(char *dest, const char *src, size_t copylen);
 # include <netdb.h>
 #endif
 
-
+/* GCC has printf like checking using __attribute__
+ * you should leave this here its good for everyone involved */
 #if !defined(__GNUC__)
-# define __attribute__(x)	/* nothing */
+# define __attribute__(x)    /* convert to NOOP */
 #endif
 
-/* Socket/header miscellany. */
-
-#if defined(CIRCLE_WINDOWS)    /* Definitions for Win32 */
-
-
-# ifndef _WINSOCK2API_	/* Winsock1 and Winsock 2 conflict. */
-#  include <winsock.h>
-# endif
-
-/* MSVC defaults to 64 (so say the old documentation)
- * this is used with select()
- * should really move away from select...
- */
-#ifndef FD_SETSIZE
-#define FD_SETSIZE 1024
-#endif
-
-#endif /* CIRCLE_WINDOWS */
-
+/* cross platform socket */
+#if defined(_WIN32)
 /* SOCKET -- must be after the winsock.h #include. */
-#ifdef CIRCLE_WINDOWS
-# define CLOSE_SOCKET(sock)	closesocket(sock)
-typedef SOCKET		socket_t;
+#define CLOSE_SOCKET(sock)    closesocket(sock)
+typedef SOCKET socket_t;
 #else
 # define CLOSE_SOCKET(sock)    close(sock)
 typedef int socket_t;
@@ -167,8 +160,4 @@ typedef int socket_t;
 #endif
 #endif
 
-
-
-
 #endif /* _SYSDEP_H_ */
-
