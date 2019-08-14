@@ -18,15 +18,18 @@
 
 
 // generic C11 includes
+#include <assert.h>
 #include <stdio.h>
 #include <ctype.h>
 #include <stdarg.h>
-#include <string.h>  // now required
-#include <strings.h>  // now required
-#include <stdlib.h>  // now required
+#include <string.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <stdint.h>
-#include <assert.h>
+#include <inttypes.h>
+#include <fcntl.h>
+#include <stdbool.h>
+#include <time.h>
 
 #if defined(_WIN32) || defined(_WIN64)
 // visual studio does not have these functions
@@ -34,12 +37,17 @@
 #define vsnprintf _vsnprintf
 #define strncasecmp _strnicmp
 #define strcasecmp _stricmp
-// mimic limits.h
+// set limits.h PATH_MAX to windows MAX_PATH
 # define PATH_MAX MAX_PATH
+// fake STDOUT_FILENO / STDERR_FILENO on windows
+#define STDOUT_FILENO 1
+#define STDERR_FILENO 2
 #else
 // unix
 #include <unistd.h>
-#include <limits.h>
+#include <strings.h>  // now required
+#include <limits.h>  // for PATH_MAX
+
 
 #ifdef _POSIX_VERSION
 #define POSIX
@@ -90,10 +98,6 @@ size_t strlcpy(char *dest, const char *src, size_t copylen);
 #include <sys/select.h>
 #endif
 
-#ifdef HAVE_FCNTL_H
-#include <fcntl.h>
-#endif
-
 #ifdef HAVE_SYS_FCNTL_H
 #include <sys/fcntl.h>
 #endif
@@ -124,10 +128,6 @@ size_t strlcpy(char *dest, const char *src, size_t copylen);
 
 #ifdef HAVE_SYS_UIO_H
 # include <sys/uio.h>
-#endif
-
-#ifdef HAVE_SYS_STAT_H
-
 #endif
 
 #if !defined(__GNUC__)
