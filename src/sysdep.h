@@ -66,87 +66,37 @@
 /* Set up various machine-specific things based on the values determined from 
  * configure and conf.h. */
 
+// generic C11 includes
 #include <stdio.h>
 #include <ctype.h>
 #include <stdarg.h>
+#include <string.h>  // now required
+#include <strings.h>  // now required
+#include <stdlib.h>  // now required
+#include <sys/types.h>
+#include <stdint.h>
+#include <assert.h>
 
-#ifdef HAVE_STRING_H
-
-#include <string.h>
-
-#endif
-
-#ifdef HAVE_STRINGS_H
-
-#include <strings.h>
-
-#endif
-
-#if     (defined (STDC_HEADERS) || defined (__GNU_LIBRARY__))
-
-#include <stdlib.h>
-
-#else   /* No standard headers.  */
-
-#ifdef  HAVE_MEMORY_H
-#include <memory.h>
-#endif
-
-extern char *malloc(), *calloc(), *realloc();
-extern void free ();
-
-extern void abort (), exit ();
-
-#endif  /* Standard headers.  */
-
-/* POSIX compliance */
-#ifdef HAVE_SYS_TYPES_H
-
-# include <sys/types.h>
-
-#endif
-
-#ifdef CIRCLE_WINDOWS
-# include <sys\types.h>
-#endif
-
-#ifdef HAVE_UNISTD_H
-
-# include <unistd.h>
-
-#endif
-
-/* Now, we #define POSIX if we have a POSIX system. */
-
-#ifdef HAVE_UNISTD_H
-
-#if defined (_POSIX_VERSION)
-#define POSIX
-#endif
-
-#endif /* HAVE_UNISTD_H */
-
-/* JASON - 2019-08-06 - want to remove _AIX
- * not sure if this can safely be removed, it is not needed on Centos 7 */
-#if !defined (POSIX) && defined (_AIX) && defined (_POSIX_SOURCE)
-#define POSIX
-#endif
-
-/* Header files common to all source files */
-#ifdef HAVE_LIMITS_H
-
+#ifdef _WIN32
+// visual studio
+#include <x>
+#include <x>
+#else
+// unix
+#include <unistd.h>
 #include <limits.h>
 
+#ifdef _POSIX_VERSION
+#define POSIX
 #endif
+
+#include <signal.h>
+
+#endif
+
 
 #ifdef HAVE_ERRNO_H
-
 #include <errno.h>
-
-#endif
-
-#ifdef HAVE_NET_ERRNO_H
-#include <net/errno.h>
 #endif
 
 #ifdef HAVE_SYS_ERRNO_H
@@ -154,9 +104,7 @@ extern void abort (), exit ();
 #endif
 
 #ifdef HAVE_CRYPT_H
-
 #include <crypt.h>
-
 #endif
 
 #ifdef TIME_WITH_SYS_TIME
@@ -172,72 +120,43 @@ extern void abort (), exit ();
 # endif
 #endif
 
-#ifdef HAVE_ASSERT_H
 
-#include <assert.h>
 
-#else
-#define assert(arg)
-#endif
-
-#ifndef HAVE_STRUCT_IN_ADDR
-struct in_addr {
-  unsigned long int s_addr;	/* for inet_addr, etc. */
-}
-#endif
 
 #ifdef HAVE_SYS_SELECT_H
-
 #include <sys/select.h>
-
 #endif
 
 #ifdef HAVE_FCNTL_H
-
 #include <fcntl.h>
-
 #endif
 
 #ifdef HAVE_SYS_FCNTL_H
-
 #include <sys/fcntl.h>
-
 #endif
 
 #ifdef HAVE_SYS_SOCKET_H
-
 # include <sys/socket.h>
-
 #endif
 
 #ifdef HAVE_SYS_RESOURCE_H
-
 # include <sys/resource.h>
-
 #endif
 
 #ifdef HAVE_SYS_WAIT_H
-
 # include <sys/wait.h>
-
 #endif
 
 #ifdef HAVE_NETINET_IN_H
-
 # include <netinet/in.h>
-
 #endif
 
 #ifdef HAVE_ARPA_INET_H
-
 # include <arpa/inet.h>
-
 #endif
 
 #ifdef HAVE_NETDB_H
-
 # include <netdb.h>
-
 #endif
 
 #ifdef HAVE_SIGNAL_H
@@ -247,35 +166,21 @@ struct in_addr {
 #  undef _POSIX_C_SOURCE
 # else
 
-#  include <signal.h>    /* GNU libc 6 already defines _POSIX_C_SOURCE. */
+    /* GNU libc 6 already defines _POSIX_C_SOURCE. */
 
 # endif
 #endif
 
 #ifdef HAVE_SYS_UIO_H
-
 # include <sys/uio.h>
-
 #endif
 
 #ifdef HAVE_SYS_STAT_H
-
 # include <sys/stat.h>
-
 #endif
-
-/* Basic system dependencies. */
-#if CIRCLE_GNU_LIBC_MEMORY_TRACK && !defined(HAVE_MCHECK_H)
-#error "Cannot use GNU C library memory tracking without <mcheck.h>"
-#endif
-
 
 #if !defined(__GNUC__)
 # define __attribute__(x)	/* nothing */
-#endif
-
-#if defined(__MWERKS__)
-# define isascii(c)	(((c) & ~0x7f) == 0)	/* So easy to have, but ... */
 #endif
 
 /* Socket/header miscellany. */
@@ -285,18 +190,6 @@ struct in_addr {
 # define snprintf _snprintf
 # define vsnprintf _vsnprintf
 # define PATH_MAX MAX_PATH
-
-# if !defined(__BORLANDC__) && !defined(LCC_WIN32)	/* MSVC */
-#  define chdir _chdir
-#  pragma warning(disable:4761)		/* Integral size mismatch. */
-#  pragma warning(disable:4244)		/* Possible loss of data. */
-# endif
-
-# if defined(__BORLANDC__)	/* Silence warnings we don't care about. */
-#  pragma warn -par	/* to turn off >parameter< 'ident' is never used. */
-#  pragma warn -pia	/* to turn off possibly incorrect assignment. 'if (!(x=a))' */
-#  pragma warn -sig	/* to turn off conversion may lose significant digits. */
-# endif
 
 # ifndef _WINSOCK2API_	/* Winsock1 and Winsock 2 conflict. */
 #  include <winsock.h>
@@ -335,19 +228,6 @@ typedef int socket_t;
 #endif
 #endif
 
-/* Make sure we have STDERR_FILENO */
-#ifndef STDERR_FILENO
-#define STDERR_FILENO 2
-#endif
-
-/* Make sure we have STDOUT_FILENO too. */
-#ifndef STDOUT_FILENO
-#define STDOUT_FILENO 1
-#endif
-
-#if !defined(HAVE_SNPRINTF) || !defined(HAVE_VSNPRINTF)
-# include "bsd-snprintf.h"
-#endif
 
 /* Function prototypes. */
 /* Header files of many OS's do not contain function prototypes for the
@@ -361,202 +241,8 @@ typedef int socket_t;
 
 #ifndef NO_LIBRARY_PROTOTYPES
 
-#ifdef NEED_ATOI_PROTO
-int atoi(const char *str);
-#endif
-
-#ifdef NEED_ATOL_PROTO
-long atol(const char *str);
-#endif
-
-#ifdef NEED_CRYPT_PROTO
-char *crypt(const char *key, const char *salt);
-#endif
-
-#ifdef NEED_FCLOSE_PROTO
-int fclose(FILE *stream);
-#endif
-
-#ifdef NEED_FDOPEN_PROTO
-FILE *fdopen(int fd, const char *mode);
-#endif
-
-#ifdef NEED_FFLUSH_PROTO
-int fflush(FILE *stream);
-#endif
-
-#ifdef NEED_FPRINTF_PROTO
-int fprintf(FILE *strm, const char *format, /* args */ ... );
-#endif
-
-#ifdef NEED_FREAD_PROTO
-size_t fread(void *ptr, size_t size, size_t nitems, FILE *stream);
-#endif
-
-#ifdef NEED_FSCANF_PROTO
-int fscanf(FILE *strm, const char *format, ...);
-#endif
-
-#ifdef NEED_FSEEK_PROTO
-int fseek(FILE *stream, long offset, int ptrname);
-#endif
-
-#ifdef NEED_FWRITE_PROTO
-size_t fwrite(const void *ptr, size_t size, size_t nitems, FILE *stream);
-#endif
-
-#ifdef NEED_GETPID_PROTO
-pid_t getpid(void);
-#endif
-
-#ifdef NEED_PERROR_PROTO
-void perror(const char *s);
-#endif
-
-#ifdef NEED_QSORT_PROTO
-void qsort(void *base, size_t nel, size_t width,
-       int (*compar) (const void *, const void *));
-#endif
-
-#ifdef NEED_REWIND_PROTO
-void rewind(FILE *stream);
-#endif
-
-#ifdef NEED_SPRINTF_PROTO
-int sprintf(char *s, const char *format, /* args */ ... );
-#endif
-
-#ifdef NEED_SSCANF_PROTO
-int sscanf(const char *s, const char *format, ...);
-#endif
-
-#ifdef NEED_STRDUP_PROTO
-char *strdup(const char *txt);
-#endif
-
-#ifdef NEED_STRERROR_PROTO
-char *strerror(int errnum);
-#endif
-
-#ifdef NEED_STRLCPY_PROTO
-
+#ifndef HAVE_STRLCPY_PROTO
 size_t strlcpy(char *dest, const char *src, size_t copylen);
-
-#endif
-
-#ifdef NEED_SYSTEM_PROTO
-int system(const char *string);
-#endif
-
-#ifdef NEED_TIME_PROTO
-time_t time(time_t *tloc);
-#endif
-
-#ifdef NEED_UNLINK_PROTO
-int unlink(const char *path);
-#endif
-
-#ifdef NEED_REMOVE_PROTO
-int remove(const char *path);
-#endif
-
-#ifdef NEED_ACCEPT_PROTO
-int accept(socket_t s, struct sockaddr *addr, int *addrlen);
-#endif
-
-#ifdef NEED_BIND_PROTO
-int bind(socket_t s, const struct sockaddr *name, int namelen);
-#endif
-
-#ifdef NEED_CHDIR_PROTO
-int chdir(const char *path);
-#endif
-
-#ifdef NEED_CLOSE_PROTO
-int close(int fildes);
-#endif
-
-#ifdef NEED_FCNTL_PROTO
-int fcntl(int fildes, int cmd, /* arg */ ...);
-#endif
-
-#ifdef NEED_FPUTC_PROTO
-int fputc(char c, FILE *stream);
-#endif
-
-#ifdef NEED_FPUTS_PROTO
-int fputs(const char *s, FILE *stream);
-#endif
-
-#if defined(HAS_RLIMIT) && defined(NEED_GETRLIMIT_PROTO)
-int getrlimit(int resource, struct rlimit *rlp);
-#endif
-
-#ifdef NEED_GETTIMEOFDAY_PROTO
-void gettimeofday(struct timeval *tp, void * );
-#endif
-
-#ifdef NEED_HTONL_PROTO
-ulong htonl(u_long hostlong);
-#endif
-
-#ifdef NEED_HTONS_PROTO
-u_short htons(u_short hostshort);
-#endif
-
-#if defined(HAVE_INET_ADDR) && defined(NEED_INET_ADDR_PROTO)
-unsigned long int inet_addr(const char *cp);
-#endif
-
-#if defined(HAVE_INET_ATON) && defined(NEED_INET_ATON_PROTO)
-int inet_aton(const char *cp, struct in_addr *inp);
-#endif
-
-#ifdef NEED_INET_NTOA_PROTO
-char *inet_ntoa(const struct in_addr in);
-#endif
-
-#ifdef NEED_LISTEN_PROTO
-int listen(socket_t s, int backlog);
-#endif
-
-#ifdef NEED_NTOHL_PROTO
-u_long ntohl(u_long netlong);
-#endif
-
-#ifdef NEED_PRINTF_PROTO
-int printf(char *format, ...);
-#endif
-
-#ifdef NEED_READ_PROTO
-ssize_t read(int fildes, void *buf, size_t nbyte);
-#endif
-
-#ifdef NEED_SELECT_PROTO
-int select(int nfds, fd_set *readfds, fd_set *writefds,
-       fd_set *exceptfds, struct timeval *timeout);
-#endif
-
-#ifdef NEED_SETITIMER_PROTO
-int setitimer(int which, const struct itimerval *value,
-       struct itimerval *ovalue);
-#endif
-
-#if defined(HAS_RLIMIT) && defined(NEED_SETRLIMIT_PROTO)
-int setrlimit(int resource, const struct rlimit *rlp);
-#endif
-
-#ifdef NEED_SETSOCKOPT_PROTO
-int setsockopt(socket_t s, int level, int optname, const char *optval,
-       int optlen);
-#endif
-
-#ifdef NEED_SOCKET_PROTO
-int socket(int domain, int type, int protocol);
-#endif
-
-#ifdef NEED_WRITE_PROTO
-ssize_t write(int fildes, const void *buf, size_t nbyte);
 #endif
 
 #endif /* NO_LIBRARY_PROTOTYPES */
