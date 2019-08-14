@@ -65,7 +65,7 @@ struct command_info *complete_cmd_info;
  * commands such as "at" should have high priority; infrequently used and
  * dangerously destructive commands should have low priority. */
 
-cpp_extern const struct command_info cmd_info[] = {
+const struct command_info cmd_info[] = {
         {"RESERVED",   "",        0,              0,                 0,            0}, /* this must be first -- for specprocs */
 
         /* directions must come before other commands but after RESERVED */

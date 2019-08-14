@@ -598,7 +598,7 @@ const char *fullness[] =
 /** Strength attribute affects.
  * The fields are hit mod, damage mod, weight carried mod, and weight wielded
  * mod. */
-cpp_extern const struct str_app_type str_app[] = {
+const struct str_app_type str_app[] = {
         {-5, -4, 0,    0},    /* str = 0 */
         {-5, -4, 3,    1},    /* str = 1 */
         {-3, -2, 3,    2},
@@ -634,7 +634,7 @@ cpp_extern const struct str_app_type str_app[] = {
 
 /** Dexterity skill modifiers for thieves.
  * The fields are for pick pockets, pick locks, find traps, sneak and hide. */
-cpp_extern const struct dex_skill_type dex_app_skill[] = {
+const struct dex_skill_type dex_app_skill[] = {
         {-99, -99, -90, -99, -60},    /* dex = 0 */
         {-90, -90, -60, -90, -50},    /* dex = 1 */
         {-80, -80, -40, -80, -45},
@@ -665,7 +665,7 @@ cpp_extern const struct dex_skill_type dex_app_skill[] = {
 
 /** Dexterity attribute affects.
  * The fields are reaction, missile attacks, and defensive (armor class). */
-cpp_extern const struct dex_app_type dex_app[] = {
+const struct dex_app_type dex_app[] = {
         {-7, -7, 6},        /* dex = 0 */
         {-6, -6, 5},        /* dex = 1 */
         {-4, -4, 5},
@@ -696,7 +696,7 @@ cpp_extern const struct dex_app_type dex_app[] = {
 
 /** Constitution attribute affects.
  * The field referenced is for hitpoint bonus. */
-cpp_extern const struct con_app_type con_app[] = {
+const struct con_app_type con_app[] = {
         {-4},        /* con = 0 */
         {-3},        /* con = 1 */
         {-2},
@@ -727,7 +727,7 @@ cpp_extern const struct con_app_type con_app[] = {
 
 /** Intelligence attribute affects.
  * The field shows how much practicing affects a skill/spell. */
-cpp_extern const struct int_app_type int_app[] = {
+const struct int_app_type int_app[] = {
         {3},        /* int = 0 */
         {5},        /* int = 1 */
         {7},
@@ -758,7 +758,7 @@ cpp_extern const struct int_app_type int_app[] = {
 
 /** Wisdom attribute affects.
  * The field represents how many extra practice points are gained per level. */
-cpp_extern const struct wis_app_type wis_app[] = {
+const struct wis_app_type wis_app[] = {
         {0},    /* wis = 0 */
         {0},  /* wis = 1 */
         {0},

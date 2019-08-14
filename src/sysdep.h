@@ -159,12 +159,6 @@ typedef SOCKET		socket_t;
 typedef int socket_t;
 #endif
 
-#if defined(__cplusplus)    /* C++ */
-#define cpp_extern	extern
-#else				/* C */
-#define cpp_extern    /* Nothing */
-#endif
-
 /* Guess if we have the getrlimit()/setrlimit() functions */
 #if defined(RLIMIT_NOFILE) || defined (RLIMIT_OFILE)
 #define HAS_RLIMIT
