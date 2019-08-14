@@ -7,7 +7,7 @@ include(CheckPrototypeDefinition)
 include(CheckTypeSize)
 include(CheckStructHasMember)
 
-set(CONF_H_GENERATED 0)  # set for debuging
+# set(CONF_H_GENERATED 0)  # set for debuging
 
 # setup conf file
 if(NOT CONF_H_GENERATED)
@@ -101,7 +101,7 @@ if(NOT CONF_H_GENERATED)
                 message(STATUS "crypt works!")
                 set(HAVE_UNSAFE_CRYPT 0 CACHE INTERNAL "")
             else()
-                messsage(STATUS "crypt needs 10+ characters")
+                message(STATUS "crypt needs 10+ characters")
                 set(HAVE_UNSAFE_CRYPT 1 CACHE INTERNAL "")
             endif()
         else()
