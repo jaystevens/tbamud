@@ -63,7 +63,7 @@ size_t write_to_output(struct descriptor_data *d, const char *txt, ...) __attrib
 
 size_t vwrite_to_output(struct descriptor_data *d, const char *format, va_list args);
 
-typedef RETSIGTYPE sigfunc(int);
+typedef void sigfunc(int);
 
 void echo_off(struct descriptor_data *d);
 

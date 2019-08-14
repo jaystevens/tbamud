@@ -42,12 +42,20 @@
 // fake STDOUT_FILENO / STDERR_FILENO on windows
 #define STDOUT_FILENO 1
 #define STDERR_FILENO 2
+// fake pid_t
+#define pid_t int
+// <sys/socket.h> does not define socklen_t
+#define socklen_t int
+// <sys/types.h> does not define ssize_t
+#define ssize_t int
+// windows does not have the crypt library
+#define NOCRYPT
 #else
 // unix
 #include <unistd.h>
 #include <strings.h>  // now required
 #include <limits.h>  // for PATH_MAX
-
+# include <sys/uio.h>
 
 #ifdef _POSIX_VERSION
 #define POSIX
@@ -66,33 +74,25 @@
 size_t strlcpy(char *dest, const char *src, size_t copylen);
 #endif
 
+/* crypt on FreeBSD */
+#if defined(__FREEBSD__)
+#if !defined(HAVE_UNSAFE_CRYPT)
+#define HAVE_UNSAFE_CRYPT 1
+#endif
+#endif
+
 #ifdef HAVE_ERRNO_H
 #include <errno.h>
 #endif
 
-#ifdef HAVE_SYS_ERRNO_H
-#include <sys/errno.h>
-#endif
 
 #ifdef HAVE_CRYPT_H
 #include <crypt.h>
 #endif
 
-#ifdef TIME_WITH_SYS_TIME
-
-# include <sys/time.h>
-# include <time.h>
-
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
 #endif
-
-
-
 
 #ifdef HAVE_SYS_SELECT_H
 #include <sys/select.h>
@@ -126,9 +126,6 @@ size_t strlcpy(char *dest, const char *src, size_t copylen);
 # include <netdb.h>
 #endif
 
-#ifdef HAVE_SYS_UIO_H
-# include <sys/uio.h>
-#endif
 
 #if !defined(__GNUC__)
 # define __attribute__(x)	/* nothing */

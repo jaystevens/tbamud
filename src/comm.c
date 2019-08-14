@@ -95,16 +95,16 @@ static bool fCopyOver;          /* Are we booting in copyover mode? */
 static char *last_act_message = NULL;
 
 /* static local function prototypes (current file scope only) */
-static RETSIGTYPE reread_wizlists(int sig);
+static void reread_wizlists(int sig);
 
 /* Appears to be orphaned right now...
 static RETSIGTYPE unrestrict_game(int sig);
 */
-static RETSIGTYPE reap(int sig);
+static void reap(int sig);
 
-static RETSIGTYPE checkpointing(int sig);
+static void checkpointing(int sig);
 
-static RETSIGTYPE hupsig(int sig);
+static void hupsig(int sig);
 
 static ssize_t perform_socket_read(socket_t desc, char *read_point, size_t space_left);
 
@@ -2154,7 +2154,7 @@ static void nonblock(socket_t s) {
 /*  signal-handling functions (formerly signals.c).  UNIX only. */
 #if defined(CIRCLE_UNIX)
 
-static RETSIGTYPE reread_wizlists(int sig) {
+static void reread_wizlists(int sig) {
     reread_wizlist = true;
 }
 
@@ -2169,14 +2169,14 @@ static RETSIGTYPE unrestrict_game(int sig)
 #ifdef CIRCLE_UNIX
 
 /* clean up our zombie kids to avoid defunct processes */
-static RETSIGTYPE reap(int sig) {
+static void reap(int sig) {
     while (waitpid(-1, NULL, WNOHANG) > 0);
 
     my_signal(SIGCHLD, reap);
 }
 
 /* Dying anyway... */
-static RETSIGTYPE checkpointing(int sig) {
+static void checkpointing(int sig) {
 #ifndef MEMORY_DEBUG
     if (!tics_passed) {
         log("SYSERR: CHECKPOINT shutdown: tics not updated. (Infinite loop suspected)");
@@ -2187,7 +2187,7 @@ static RETSIGTYPE checkpointing(int sig) {
 }
 
 /* Dying anyway... */
-static RETSIGTYPE hupsig(int sig) {
+static void hupsig(int sig) {
     log("SYSERR: Received SIGHUP, SIGINT, or SIGTERM.  Shutting down...");
     exit(1); /* perhaps something more elegant should substituted */
 }
