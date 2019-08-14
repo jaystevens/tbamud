@@ -90,14 +90,16 @@ else()
     #### compiler directives ####
     # enable position independant executable
     add_c_flag_if_supported("-fPIE")
-    # omits the storing of stack frame pointers during function calls
-    add_c_flag_if_supported("-fomit-frame-pointer")
     # disable math lib checks for NaN that add extra calls
     add_c_flag_if_supported("-fno-math-errno")
     # disable the signed-ness of 0
     add_c_flag_if_supported("-fno-signed-zeros")
     # disable gcc auto vectoriztion
     add_c_flag_if_supported("-fno-tree-vectorize")
+    # omits the storing of stack frame pointers during function calls
+    # this makes debuging harder as you are missing debug information
+    #add_c_flag_if_supported("-fomit-frame-pointer")
+
 
     #### compiler warnings ####
     # enable colorized diagnostic data, i.e. warnings, data
@@ -200,9 +202,21 @@ endif()
 #endif ()
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${QTTOOLS_C_FLAGS}")
+# override release flags with debug flags, we want to be able to debug
+set(CMAKE_C_FLAGS_RELEASE ${CMAKE_C_FLAGS_DEBUG})
+message(STATUS "CFLAGS: ${CMAKE_C_FLAGS}")
+message(STATUS "CFLAGS DEBUG: ${CMAKE_C_FLAGS_DEBUG}")
+message(STATUS "CFLAGS RELEASE: ${CMAKE_C_FLAGS_RELEASE}")
+
 
 # setup runtime folder
 #set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+#set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+
+# include directory required for making utils that refernce source headers
+include_directories(/lib)
 #set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 #set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
