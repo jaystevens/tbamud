@@ -270,24 +270,24 @@ ACMD(do_bandage);
 /* do_gen_tog */
 ACMD(do_gen_tog);
 
-#define SCMD_NOSUMMON    0
-#define SCMD_NOHASSLE    1
-#define SCMD_BRIEF       2
-#define SCMD_COMPACT     3
-#define SCMD_NOTELL      4
-#define SCMD_NOAUCTION   5
-#define SCMD_NOSHOUT     6
-#define SCMD_NOGOSSIP    7
-#define SCMD_NOGRATZ     8
-#define SCMD_NOWIZ       9
-#define SCMD_QUEST       10
+#define SCMD_NOSUMMON     0
+#define SCMD_NOHASSLE     1
+#define SCMD_BRIEF        2
+#define SCMD_COMPACT      3
+#define SCMD_NOTELL       4
+#define SCMD_NOAUCTION    5
+#define SCMD_NOSHOUT      6
+#define SCMD_NOGOSSIP     7
+#define SCMD_NOGRATZ      8
+#define SCMD_NOWIZ        9
+//#define SCMD_UNUSED10  10
 #define SCMD_SHOWVNUMS   11
 #define SCMD_NOREPEAT    12
 #define SCMD_HOLYLIGHT   13
 #define SCMD_SLOWNS      14
 #define SCMD_AUTOEXIT    15
 #define SCMD_TRACK       16
-#define SCMD_CLS         17
+//#define SCMD_UNUSED17  17
 #define SCMD_BUILDWALK   18
 #define SCMD_AFK         19
 #define SCMD_AUTOLOOT    20
@@ -308,7 +308,6 @@ ACMD(do_gen_tog);
 /* do_quit */
 ACMD(do_quit);
 
-#define SCMD_QUI  0
 #define SCMD_QUIT 1
 /* do_use */
 ACMD(do_use);
