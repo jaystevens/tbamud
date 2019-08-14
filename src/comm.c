@@ -13,10 +13,6 @@
 
 /* Begin conf.h dependent includes */
 
-#if CIRCLE_GNU_LIBC_MEMORY_TRACK
-# include <mcheck.h>
-#endif
-
 #ifdef CIRCLE_WINDOWS        /* Includes for Win32 */
 # ifdef __BORLANDC__
 #  include <dir.h>
@@ -205,9 +201,6 @@ int main(int argc, char **argv) {
     zmalloc_init();
 #endif
 
-#if CIRCLE_GNU_LIBC_MEMORY_TRACK
-    mtrace();	/* This must come before any use of malloc(). */
-#endif
 
     /* Load the game configuration. We must load BEFORE we use any of the
      * constants stored in constants.c.  Otherwise, there will be no variables
