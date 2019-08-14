@@ -7,7 +7,7 @@ include(CheckPrototypeDefinition)
 include(CheckTypeSize)
 include(CheckStructHasMember)
 
-# set(CONF_H_GENERATED 0)  # set for debuging
+set(CONF_H_GENERATED 0)  # set for debuging
 
 # setup conf file
 if(NOT CONF_H_GENERATED)
@@ -91,6 +91,23 @@ if(NOT CONF_H_GENERATED)
         endif()
 
         # TODO HAVE_UNSAFE_CRYPT
+        if(CIRCLE_CRYPT)
+            message(STATUS "checking if crypt needs over 10 characters")
+            try_run(CRYPT_RUN_RESULT CRYPT_COMPILE_RESULT  ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_SOURCE_DIR}/cmake/broken_crypt_test.c
+                    LINK_LIBRARIES crypt)
+            message(STATUS "CRYPT_RUN_RESULT: ${CRYPT_RUN_RESULT}")
+            message(STATUS "CRYPT_COMPILE_RESULT: ${CRYPT_COMPILE_RESULT}")
+            if(CRYPT_RUN_RESULT)
+                message(STATUS "crypt works!")
+                set(HAVE_UNSAFE_CRYPT 0 CACHE INTERNAL "")
+            else()
+                messsage(STATUS "crypt needs 10+ characters")
+                set(HAVE_UNSAFE_CRYPT 1 CACHE INTERNAL "")
+            endif()
+        else()
+            message(STATUS "skipping check for broken crypt, crypt not found")
+            set(HAVE_UNSAFE_CRYPT 0 CACHE INTERNAL "")
+        endif()
 
         # TODO - broken on windows - need to find headers
         CHECK_STRUCT_HAS_MEMBER("struct in_addr" s_addr "netinet/in.h" HAVE_STRUCT_IN_ADDR)
@@ -608,7 +625,115 @@ if(NOT CONF_H_GENERATED)
             set(NEED_SETITIMER_PROTO 1 CACHE INTERNAL "")
         endif()
 
-        # NEED_STRICMP_PROTO
+        # NEED_SETRLIMIT_PROTO
+        check_prototype_definition(setrlimit
+                "int setrlimit(int resource, const struct rlimit *rlim)"
+                "-1"
+                "sys/time.h;sys/resource.h"
+                HAVE_SETRLIMIT_PROTO)
+        if(HAVE_SETRLIMIT_PROTO)
+            set(NEED_SETRLIMIT_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_SETRLIMIT_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_SETSOCKOPT_PROTO
+        check_prototype_definition(setsockopt
+                "int setsockopt(int socket, int level, int option_name, const void *option_value, socklen_t option_len)"
+                "-1"
+                "sys/socket.h"
+                HAVE_SETSOCKOPT_PROTO)
+        if(HAVE_SETSOCKOPT_PROTO)
+            set(NEED_SETSOCKOPT_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_SETSOCKOPT_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_SNPRINTF_PROTO
+        check_prototype_definition(snprintf
+                "int snprintf(char *str, size_t size, const char *format, ...)"
+                "-1"
+                "stdio.h"
+                HAVE_SNPRINTF_PROTO)
+        if(HAVE_SNPRINTF_PROTO)
+            set(NEED_SNPRINTF_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_SNPRINTF_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_SOCKET_PROTO
+        check_prototype_definition(socket
+                "int socket(int domain, int type, int protocol)"
+                "-1"
+                "sys/types.h;sys/socket.h"
+                HAVE_SOCKET_PROTO)
+        if(HAVE_SOCKET_PROTO)
+            set(NEED_SOCKET_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_SOCKET_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_SPRINTF_PROTO
+        check_prototype_definition(sprintf
+                "int sprintf(char *str, const char *format, ...)"
+                "-1"
+                "stdio.h"
+                HAVE_SPRINTF_PROTO)
+        if(HAVE_SPRINTF_PROTO)
+            set(NEED_SPRINTF_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_SPRINTF_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_SSCANF_PROTO
+        check_prototype_definition(sscanf
+                "int sscanf(const char *str, const char *format, ...)"
+                "-1"
+                "stdio.h"
+                HAVE_SSCANF_PROTO)
+        if(HAVE_SSCANF_PROTO)
+            set(NEED_SSCANF_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_SSCANF_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_STRCASECMP_PROTO
+        check_prototype_definition(strcasecmp
+                "int strcasecmp(const char *s1, const char *s2)"
+                "-1"
+                "strings.h"
+                HAVE_STRCASECMP_PROTO)
+        if(HAVE_STRCASECMP_PROTO)
+            set(NEED_STRCASECMP_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_STRCASECMP_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_STRDUP_PROTO
+        check_prototype_definition(strdup
+                "char *strdup(const char *s)"
+                "0"
+                "string.h"
+                HAVE_STRDUP_PROTO)
+        if(HAVE_STRDUP_PROTO)
+            set(NEED_STRDUP_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_STRDUP_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_STRERROR_PROTO
+        check_prototype_definition(strerror
+                "char *strerror(int errnum)"
+                "0"
+                "string.h"
+                HAVE_STRERROR_PROTO)
+        if(HAVE_STRERROR_PROTO)
+            set(NEED_STRERROR_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_STRERROR_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_STRICMP_PROTO - TODO - removed in C99 / linux 4.0
         check_prototype_definition(stricmp
                 "int stricmp (const char *s1, const char *s2)"
                 "-1"
@@ -638,14 +763,88 @@ if(NOT CONF_H_GENERATED)
             endif()
         endif()
 
+        # NEED_STRNCASECMP_PROTO
+        check_prototype_definition(strncasecmp
+                "int strncasecmp(const char *s1, const char *s2, size_t n)"
+                "-1"
+                "strings.h"
+                HAVE_STRNCASECMP_PROTO)
+        if(HAVE_STRNCASECMP_PROTO)
+            set(NEED_STRNCASECMP_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_STRNCASECMP_PROTO 1 CACHE INTERNAL "")
+        endif()
 
+        # NEED_STRNICMP_PROTO - TODO - removed in C99 / linux 4.0
+        check_prototype_definition(strnicmp
+                "int strnicmp(const char * s1, const char * s2, size_t len)"
+                "-1"
+                "string.h"
+                HAVE_STRNICMP_PROTO)
+        if(HAVE_STRNICMP_PROTO)
+            set(NEED_STRNICMP_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_STRNICMP_PROTO 1 CACHE INTERNAL "")
+        endif()
 
-        message(STATUS "PROTO detection is still incomplete")
-        if(UNIX AND NOT APPLE)
-            message(STATUS "PROTO override Linux")
-            set(NEED_STRICMP_PROTO 1)
-            # set(NEED_STRLCPY_PROTO 1)
-            set(NEED_STRNICMP_PROTO 1)
+        # NEED_SYSTEM_PROTO
+        check_prototype_definition(system
+                "int system(const char *command)"
+                "-1"
+                "stdlib.h"
+                HAVE_SYSTEM_PROTO)
+        if(HAVE_SYSTEM_PROTO)
+            set(NEED_SYSTEM_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_SYSTEM_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_TIME_PROTO
+        check_prototype_definition(time
+                "time_t time(time_t *tloc)"
+                "-1"
+                "time.h"
+                HAVE_TIME_PROTO)
+        if(HAVE_TIME_PROTO)
+            set(NEED_TIME_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_TIME_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_UNLINK_PROTO
+        check_prototype_definition(unlink
+                "int unlink(const char *pathname)"
+                "-1"
+                "unistd.h"
+                HAVE_UNLINK_PROTO)
+        if(HAVE_UNLINK_PROTO)
+            set(NEED_UNLINK_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_UNLINK_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_VSNPRINTF_PROTO
+        check_prototype_definition(vsnprintf
+                "int vsnprintf(char *str, size_t size, const char *format, va_list ap)"
+                "-1"
+                "stdio.h;stdarg.h"
+                HAVE_VSNPRINTF_PROTO)
+        if(HAVE_VSNPRINTF_PROTO)
+            set(NEED_VSNPRINTF_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_VSNPRINTF_PROTO 1 CACHE INTERNAL "")
+        endif()
+
+        # NEED_WRITE_PROTO
+        check_prototype_definition(write
+                "ssize_t write(int fd, const void *buf, size_t count)"
+                "-1"
+                "unistd.h"
+                HAVE_WRITE_PROTO)
+        if(HAVE_WRITE_PROTO)
+            set(NEED_WRITE_PROTO 0 CACHE INTERNAL "")
+        else()
+            set(NEED_WRITE_PROTO 1 CACHE INTERNAL "")
         endif()
 
     endif()
