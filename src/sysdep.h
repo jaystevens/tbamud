@@ -269,19 +269,6 @@ struct in_addr {
 #error "Cannot use GNU C library memory tracking without <mcheck.h>"
 #endif
 
-/* strcasecmp -> stricmp -> str_cmp */
-#if defined(HAVE_STRCASECMP)
-# define str_cmp strcasecmp
-#elif defined(HAVE_STRICMP)
-# define str_cmp stricmp
-#endif
-
-/* strncasecmp -> strnicmp -> strn_cmp */
-#if defined(HAVE_STRNCASECMP)
-# define strn_cmp strncasecmp
-#elif defined(HAVE_STRNICMP)
-# define strn_cmp strnicmp
-#endif
 
 #if !defined(__GNUC__)
 # define __attribute__(x)	/* nothing */

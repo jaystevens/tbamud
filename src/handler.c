@@ -1029,7 +1029,7 @@ struct char_data *get_player_vis(struct char_data *ch, char *name, int *number, 
             continue;
         if (inroom == FIND_CHAR_ROOM && IN_ROOM(i) != IN_ROOM(ch))
             continue;
-        if (str_cmp(i->player.name, name)) /* If not same, continue */
+        if (strcasecmp(i->player.name, name)) /* If not same, continue */
             continue;
         if (!CAN_SEE(ch, i))
             continue;
@@ -1051,7 +1051,7 @@ struct char_data *get_char_room_vis(struct char_data *ch, char *name, int *numbe
     }
 
     /* JE */
-    if (!str_cmp(name, "self") || !str_cmp(name, "me"))
+    if (!strcasecmp(name, "self") || !strcasecmp(name, "me"))
         return (ch);
 
     /* 0.<name> means PC with name */

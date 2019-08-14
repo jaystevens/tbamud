@@ -153,12 +153,12 @@ ACMD(do_ban) {
         send_to_char(ch, "Usage: ban {all | select | new} site_name\r\n");
         return;
     }
-    if (!(!str_cmp(flag, "select") || !str_cmp(flag, "all") || !str_cmp(flag, "new"))) {
+    if (!(!strcasecmp(flag, "select") || !strcasecmp(flag, "all") || !strcasecmp(flag, "new"))) {
         send_to_char(ch, "Flag must be ALL, SELECT, or NEW.\r\n");
         return;
     }
     for (ban_node = ban_list; ban_node; ban_node = ban_node->next) {
-        if (!str_cmp(ban_node->site, site)) {
+        if (!strcasecmp(ban_node->site, site)) {
             send_to_char(ch, "That site has already been banned -- unban it to change the ban type.\r\n");
             return;
         }
@@ -174,7 +174,7 @@ ACMD(do_ban) {
     ban_node->date = time(0);
 
     for (i = BAN_NEW; i <= BAN_ALL; i++)
-        if (!str_cmp(flag, ban_types[i]))
+        if (!strcasecmp(flag, ban_types[i]))
             ban_node->type = i;
 
     ban_node->next = ban_list;
@@ -200,7 +200,7 @@ ACMD(do_unban) {
     }
     ban_node = ban_list;
     while (ban_node && !found) {
-        if (!str_cmp(ban_node->site, site))
+        if (!strcasecmp(ban_node->site, site))
             found = 1;
         else
             ban_node = ban_node->next;
@@ -235,7 +235,7 @@ int valid_name(char *newname) {
      * we are checking, then the name is invalid, to prevent character duping.
      * THIS SHOULD FIX THE 'invalid name' if disconnected from OLC-bug - Welcor */
     for (dt = descriptor_list; dt; dt = dt->next)
-        if (dt->character && GET_NAME(dt->character) && !str_cmp(GET_NAME(dt->character), newname))
+        if (dt->character && GET_NAME(dt->character) && !strcasecmp(GET_NAME(dt->character), newname))
             if (GET_IDNUM(dt->character) == -1)
                 return (IS_PLAYING(dt));
 

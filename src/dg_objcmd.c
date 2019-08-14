@@ -182,7 +182,7 @@ static OCMD(do_oforce) {
         return;
     }
 
-    if (!str_cmp(arg1, "all")) {
+    if (!strcasecmp(arg1, "all")) {
         if ((room = obj_room(obj)) == NOWHERE)
             obj_log(obj, "oforce called by object in NOWHERE");
         else {
@@ -395,7 +395,7 @@ static OCMD(do_oteleport) {
     if (target == NOWHERE)
         obj_log(obj, "oteleport target is an invalid room");
 
-    else if (!str_cmp(arg1, "all")) {
+    else if (!strcasecmp(arg1, "all")) {
         rm = obj_room(obj);
         if (target == rm)
             obj_log(obj, "oteleport target is itself");

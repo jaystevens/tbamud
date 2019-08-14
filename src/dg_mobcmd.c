@@ -153,7 +153,7 @@ ACMD(do_mjunk) {
         return;
     }
 
-    if (!str_cmp(arg, "all")) junk_all = 1;
+    if (!strcasecmp(arg, "all")) junk_all = 1;
 
     if ((find_all_dots(arg) != FIND_INDIV) && !junk_all) {
         /* Thanks to Carlos Myers for fixing the line below */
@@ -583,7 +583,7 @@ ACMD(do_mteleport) {
         return;
     }
 
-    if (!str_cmp(arg1, "all")) {
+    if (!strcasecmp(arg1, "all")) {
         if (target == IN_ROOM(ch)) {
             mob_log(ch, "mteleport all target is itself");
             return;
@@ -674,7 +674,7 @@ ACMD(do_mforce) {
         return;
     }
 
-    if (!str_cmp(arg, "all")) {
+    if (!strcasecmp(arg, "all")) {
         struct descriptor_data *i;
         char_data *vch;
 

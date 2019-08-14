@@ -151,14 +151,14 @@ static IBT_DATA *read_ibt(char *filename, FILE *fp) {
 
         switch (UPPER(word[0])) {
             case 'B':
-                if (!str_cmp(word, "Body")) STRFREE(ibtData->body);
+                if (!strcasecmp(word, "Body")) STRFREE(ibtData->body);
                 KEY("Body", ibtData->body, fread_clean_string(fp, buf));
                 break;
             case 'D':
                 TXT_KEY("Dated", dated, fread_line(fp));
                 break;
             case 'E':
-                if (!str_cmp(word, "End")) {
+                if (!strcasecmp(word, "End")) {
                     if (id_num) {
                         ibtData->id_num = atol(id_num);
                         STRFREE(id_num);
@@ -188,8 +188,8 @@ static IBT_DATA *read_ibt(char *filename, FILE *fp) {
                 break;
 
             case 'N':
-                if (!str_cmp(word, "Name") && ibtData->name) STRFREE(ibtData->name);
-                if (!str_cmp(word, "Notes") && ibtData->notes) STRFREE(ibtData->notes);
+                if (!strcasecmp(word, "Name") && ibtData->name) STRFREE(ibtData->name);
+                if (!strcasecmp(word, "Notes") && ibtData->notes) STRFREE(ibtData->notes);
                 TXT_KEY("Name", ibtData->name, fread_line(fp));
                 KEY("Notes", ibtData->notes, fread_clean_string(fp, buf));
                 break;
@@ -199,7 +199,7 @@ static IBT_DATA *read_ibt(char *filename, FILE *fp) {
                 break;
 
             case 'T':
-                if (!str_cmp(word, "Text")) STRFREE(ibtData->text);
+                if (!strcasecmp(word, "Text")) STRFREE(ibtData->text);
                 TXT_KEY("Text", ibtData->text, fread_line(fp));
                 break;
 

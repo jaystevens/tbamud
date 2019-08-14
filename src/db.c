@@ -365,7 +365,7 @@ ACMD(do_reboot) {
 
     one_argument(argument, arg);
 
-    if (!str_cmp(arg, "all") || *arg == '*') {
+    if (!strcasecmp(arg, "all") || *arg == '*') {
         if (file_to_string_alloc(GREETINGS_FILE, &GREETINGS) == 0)
             prune_crlf(GREETINGS);
         if (file_to_string_alloc(WIZLIST_FILE, &wizlist) < 0)
@@ -396,48 +396,48 @@ ACMD(do_reboot) {
             free_help_table();
             index_boot(DB_BOOT_HLP);
         }
-    } else if (!str_cmp(arg, "wizlist")) {
+    } else if (!strcasecmp(arg, "wizlist")) {
         if (file_to_string_alloc(WIZLIST_FILE, &wizlist) < 0)
             send_to_char(ch, "Cannot read wizlist\r\n");
-    } else if (!str_cmp(arg, "immlist")) {
+    } else if (!strcasecmp(arg, "immlist")) {
         if (file_to_string_alloc(IMMLIST_FILE, &immlist) < 0)
             send_to_char(ch, "Cannot read immlist\r\n");
-    } else if (!str_cmp(arg, "news")) {
+    } else if (!strcasecmp(arg, "news")) {
         if (file_to_string_alloc(NEWS_FILE, &news) < 0)
             send_to_char(ch, "Cannot read news\r\n");
-    } else if (!str_cmp(arg, "credits")) {
+    } else if (!strcasecmp(arg, "credits")) {
         if (file_to_string_alloc(CREDITS_FILE, &credits) < 0)
             send_to_char(ch, "Cannot read credits\r\n");
-    } else if (!str_cmp(arg, "motd")) {
+    } else if (!strcasecmp(arg, "motd")) {
         if (file_to_string_alloc(MOTD_FILE, &motd) < 0)
             send_to_char(ch, "Cannot read motd\r\n");
-    } else if (!str_cmp(arg, "imotd")) {
+    } else if (!strcasecmp(arg, "imotd")) {
         if (file_to_string_alloc(IMOTD_FILE, &imotd) < 0)
             send_to_char(ch, "Cannot read imotd\r\n");
-    } else if (!str_cmp(arg, "help")) {
+    } else if (!strcasecmp(arg, "help")) {
         if (file_to_string_alloc(HELP_PAGE_FILE, &help) < 0)
             send_to_char(ch, "Cannot read help front page\r\n");
-    } else if (!str_cmp(arg, "ihelp")) {
+    } else if (!strcasecmp(arg, "ihelp")) {
         if (file_to_string_alloc(IHELP_PAGE_FILE, &ihelp) < 0)
             send_to_char(ch, "Cannot read help front page\r\n");
-    } else if (!str_cmp(arg, "info")) {
+    } else if (!strcasecmp(arg, "info")) {
         if (file_to_string_alloc(INFO_FILE, &info) < 0)
             send_to_char(ch, "Cannot read info\r\n");
-    } else if (!str_cmp(arg, "policy")) {
+    } else if (!strcasecmp(arg, "policy")) {
         if (file_to_string_alloc(POLICIES_FILE, &policies) < 0)
             send_to_char(ch, "Cannot read policy\r\n");
-    } else if (!str_cmp(arg, "handbook")) {
+    } else if (!strcasecmp(arg, "handbook")) {
         if (file_to_string_alloc(HANDBOOK_FILE, &handbook) < 0)
             send_to_char(ch, "Cannot read handbook\r\n");
-    } else if (!str_cmp(arg, "background")) {
+    } else if (!strcasecmp(arg, "background")) {
         if (file_to_string_alloc(BACKGROUND_FILE, &background) < 0)
             send_to_char(ch, "Cannot read background\r\n");
-    } else if (!str_cmp(arg, "greetings")) {
+    } else if (!strcasecmp(arg, "greetings")) {
         if (file_to_string_alloc(GREETINGS_FILE, &GREETINGS) == 0)
             prune_crlf(GREETINGS);
         else
             send_to_char(ch, "Cannot read greetings.\r\n");
-    } else if (!str_cmp(arg, "xhelp")) {
+    } else if (!strcasecmp(arg, "xhelp")) {
         if (help_table) {
             free_help_table();
             index_boot(DB_BOOT_HLP);
@@ -1594,7 +1594,7 @@ static void parse_simple_mob(FILE *mob_f, int i, int nr) {
  * changes need to be made anywhere in the code.
  * CASE		: Requires a parameter through 'value'. */
 #define CASE(test)    \
-    if (value && !matched && !str_cmp(keyword, test) && (matched = true))
+    if (value && !matched && !strcasecmp(keyword, test) && (matched = true))
 #define RANGE(low, high)    \
     (num_arg = MAX((low), MIN((high), (num_arg))))
 
@@ -1733,8 +1733,8 @@ void parse_mobile(FILE *mob_f, int nr) {
     mob_proto[i].player.name = fread_string(mob_f, buf2);
     tmpptr = mob_proto[i].player.short_descr = fread_string(mob_f, buf2);
     if (tmpptr && *tmpptr)
-        if (!str_cmp(fname(tmpptr), "a") || !str_cmp(fname(tmpptr), "an") ||
-            !str_cmp(fname(tmpptr), "the"))
+        if (!strcasecmp(fname(tmpptr), "a") || !strcasecmp(fname(tmpptr), "an") ||
+            !strcasecmp(fname(tmpptr), "the"))
             *tmpptr = LOWER(*tmpptr);
     mob_proto[i].player.long_descr = fread_string(mob_f, buf2);
     mob_proto[i].player.description = fread_string(mob_f, buf2);
@@ -1882,8 +1882,8 @@ char *parse_object(FILE *obj_f, int nr) {
     }
     tmpptr = obj_proto[i].short_description = fread_string(obj_f, buf2);
     if (tmpptr && *tmpptr)
-        if (!str_cmp(fname(tmpptr), "a") || !str_cmp(fname(tmpptr), "an") ||
-            !str_cmp(fname(tmpptr), "the"))
+        if (!strcasecmp(fname(tmpptr), "a") || !strcasecmp(fname(tmpptr), "an") ||
+            !strcasecmp(fname(tmpptr), "the"))
             *tmpptr = LOWER(*tmpptr);
 
     tmpptr = obj_proto[i].description = fread_string(obj_f, buf2);
@@ -2311,7 +2311,7 @@ static int hsort(const void *a, const void *b) {
     a1 = (const struct help_index_element *) a;
     b1 = (const struct help_index_element *) b;
 
-    return (str_cmp(a1->keywords, b1->keywords));
+    return (strcasecmp(a1->keywords, b1->keywords));
 }
 
 int vnum_mobile(char *searchname, struct char_data *ch) {
@@ -3702,7 +3702,7 @@ static int check_object_spell_number(struct obj_data *obj, int val) {
     /* Now check for unnamed spells. */
     spellname = skill_name(GET_OBJ_VAL(obj, val));
 
-    if ((spellname == unused_spellname || !str_cmp("UNDEFINED", spellname)) && (error = true))
+    if ((spellname == unused_spellname || !strcasecmp("UNDEFINED", spellname)) && (error = true))
         log("SYSERR: Object #%d (%s) uses '%s' spell #%d.",
             GET_OBJ_VNUM(obj), obj->short_description, spellname,
             GET_OBJ_VAL(obj, val));
@@ -3844,76 +3844,76 @@ void load_config(void) {
 
         switch (LOWER(*tag)) {
             case 'a':
-                if (!str_cmp(tag, "auto_save"))
+                if (!strcasecmp(tag, "auto_save"))
                     CONFIG_AUTO_SAVE = num;
-                else if (!str_cmp(tag, "autosave_time"))
+                else if (!strcasecmp(tag, "autosave_time"))
                     CONFIG_AUTOSAVE_TIME = num;
-                else if (!str_cmp(tag, "auto_save_olc"))
+                else if (!strcasecmp(tag, "auto_save_olc"))
                     CONFIG_OLC_SAVE = num;
                 break;
 
             case 'c':
-                if (!str_cmp(tag, "crash_file_timeout"))
+                if (!strcasecmp(tag, "crash_file_timeout"))
                     CONFIG_CRASH_TIMEOUT = num;
                 break;
 
             case 'd':
-                if (!str_cmp(tag, "debug_mode"))
+                if (!strcasecmp(tag, "debug_mode"))
                     CONFIG_DEBUG_MODE = num;
-                else if (!str_cmp(tag, "display_closed_doors"))
+                else if (!strcasecmp(tag, "display_closed_doors"))
                     CONFIG_DISP_CLOSED_DOORS = num;
-                else if (!str_cmp(tag, "diagonal_dirs"))
+                else if (!strcasecmp(tag, "diagonal_dirs"))
                     CONFIG_DIAGONAL_DIRS = num;
-                else if (!str_cmp(tag, "dts_are_dumps"))
+                else if (!strcasecmp(tag, "dts_are_dumps"))
                     CONFIG_DTS_ARE_DUMPS = num;
-                else if (!str_cmp(tag, "donation_room_1"))
+                else if (!strcasecmp(tag, "donation_room_1"))
                     if (num == -1)
                         CONFIG_DON_ROOM_1 = NOWHERE;
                     else
                         CONFIG_DON_ROOM_1 = num;
-                else if (!str_cmp(tag, "donation_room_2"))
+                else if (!strcasecmp(tag, "donation_room_2"))
                     if (num == -1)
                         CONFIG_DON_ROOM_2 = NOWHERE;
                     else
                         CONFIG_DON_ROOM_2 = num;
-                else if (!str_cmp(tag, "donation_room_3"))
+                else if (!strcasecmp(tag, "donation_room_3"))
                     if (num == -1)
                         CONFIG_DON_ROOM_3 = NOWHERE;
                     else
                         CONFIG_DON_ROOM_3 = num;
-                else if (!str_cmp(tag, "dflt_dir")) {
+                else if (!strcasecmp(tag, "dflt_dir")) {
                     if (CONFIG_DFLT_DIR)
                         free(CONFIG_DFLT_DIR);
                     if (*line)
                         CONFIG_DFLT_DIR = strdup(line);
                     else
                         CONFIG_DFLT_DIR = strdup(DFLT_DIR);
-                } else if (!str_cmp(tag, "dflt_ip")) {
+                } else if (!strcasecmp(tag, "dflt_ip")) {
                     if (CONFIG_DFLT_IP)
                         free(CONFIG_DFLT_IP);
                     if (*line)
                         CONFIG_DFLT_IP = strdup(line);
                     else
                         CONFIG_DFLT_IP = NULL;
-                } else if (!str_cmp(tag, "dflt_port"))
+                } else if (!strcasecmp(tag, "dflt_port"))
                     CONFIG_DFLT_PORT = num;
-                else if (!str_cmp(tag, "default_map_size"))
+                else if (!strcasecmp(tag, "default_map_size"))
                     CONFIG_MAP_SIZE = num;
-                else if (!str_cmp(tag, "default_minimap_size"))
+                else if (!strcasecmp(tag, "default_minimap_size"))
                     CONFIG_MINIMAP_SIZE = num;
                 break;
 
             case 'f':
-                if (!str_cmp(tag, "free_rent"))
+                if (!strcasecmp(tag, "free_rent"))
                     CONFIG_FREE_RENT = num;
-                else if (!str_cmp(tag, "frozen_start_room"))
+                else if (!strcasecmp(tag, "frozen_start_room"))
                     CONFIG_FROZEN_START = num;
                 break;
 
             case 'h':
-                if (!str_cmp(tag, "holler_move_cost"))
+                if (!strcasecmp(tag, "holler_move_cost"))
                     CONFIG_HOLLER_MOVE_COST = num;
-                else if (!str_cmp(tag, "huh")) {
+                else if (!strcasecmp(tag, "huh")) {
                     char tmp[READ_SIZE];
                     if (CONFIG_HUH)
                         free(CONFIG_HUH);
@@ -3923,24 +3923,24 @@ void load_config(void) {
                 break;
 
             case 'i':
-                if (!str_cmp(tag, "idle_void"))
+                if (!strcasecmp(tag, "idle_void"))
                     CONFIG_IDLE_VOID = num;
-                else if (!str_cmp(tag, "idle_rent_time"))
+                else if (!strcasecmp(tag, "idle_rent_time"))
                     CONFIG_IDLE_RENT_TIME = num;
-                else if (!str_cmp(tag, "idle_max_level"))
+                else if (!strcasecmp(tag, "idle_max_level"))
                     CONFIG_IDLE_MAX_LEVEL = num;
-                else if (!str_cmp(tag, "immort_start_room"))
+                else if (!strcasecmp(tag, "immort_start_room"))
                     CONFIG_IMMORTAL_START = num;
-                else if (!str_cmp(tag, "ibt_autosave"))
+                else if (!strcasecmp(tag, "ibt_autosave"))
                     CONFIG_IBT_AUTOSAVE = num;
                 break;
 
             case 'l':
-                if (!str_cmp(tag, "level_can_shout"))
+                if (!strcasecmp(tag, "level_can_shout"))
                     CONFIG_LEVEL_CAN_SHOUT = num;
-                else if (!str_cmp(tag, "load_into_inventory"))
+                else if (!strcasecmp(tag, "load_into_inventory"))
                     CONFIG_LOAD_INVENTORY = num;
-                else if (!str_cmp(tag, "logname")) {
+                else if (!strcasecmp(tag, "logname")) {
                     if (CONFIG_LOGNAME)
                         free(CONFIG_LOGNAME);
                     if (*line)
@@ -3951,52 +3951,52 @@ void load_config(void) {
                 break;
 
             case 'm':
-                if (!str_cmp(tag, "max_bad_pws"))
+                if (!strcasecmp(tag, "max_bad_pws"))
                     CONFIG_MAX_BAD_PWS = num;
-                else if (!str_cmp(tag, "max_exp_gain"))
+                else if (!strcasecmp(tag, "max_exp_gain"))
                     CONFIG_MAX_EXP_GAIN = num;
-                else if (!str_cmp(tag, "max_exp_loss"))
+                else if (!strcasecmp(tag, "max_exp_loss"))
                     CONFIG_MAX_EXP_LOSS = num;
-                else if (!str_cmp(tag, "max_filesize"))
+                else if (!strcasecmp(tag, "max_filesize"))
                     CONFIG_MAX_FILESIZE = num;
-                else if (!str_cmp(tag, "max_npc_corpse_time"))
+                else if (!strcasecmp(tag, "max_npc_corpse_time"))
                     CONFIG_MAX_NPC_CORPSE_TIME = num;
-                else if (!str_cmp(tag, "max_obj_save"))
+                else if (!strcasecmp(tag, "max_obj_save"))
                     CONFIG_MAX_OBJ_SAVE = num;
-                else if (!str_cmp(tag, "max_pc_corpse_time"))
+                else if (!strcasecmp(tag, "max_pc_corpse_time"))
                     CONFIG_MAX_PC_CORPSE_TIME = num;
-                else if (!str_cmp(tag, "max_playing"))
+                else if (!strcasecmp(tag, "max_playing"))
                     CONFIG_MAX_PLAYING = num;
-                else if (!str_cmp(tag, "menu")) {
+                else if (!strcasecmp(tag, "menu")) {
                     if (CONFIG_MENU)
                         free(CONFIG_MENU);
                     strncpy(buf, "Reading menu in load_config()", sizeof(buf));
                     CONFIG_MENU = fread_string(fl, buf);
                     parse_at(CONFIG_MENU);
-                } else if (!str_cmp(tag, "min_rent_cost"))
+                } else if (!strcasecmp(tag, "min_rent_cost"))
                     CONFIG_MIN_RENT_COST = num;
-                else if (!str_cmp(tag, "min_wizlist_lev"))
+                else if (!strcasecmp(tag, "min_wizlist_lev"))
                     CONFIG_MIN_WIZLIST_LEV = num;
-                else if (!str_cmp(tag, "mortal_start_room"))
+                else if (!strcasecmp(tag, "mortal_start_room"))
                     CONFIG_MORTAL_START = num;
-                else if (!str_cmp(tag, "map_option"))
+                else if (!strcasecmp(tag, "map_option"))
                     CONFIG_MAP = num;
-                else if (!str_cmp(tag, "medit_advanced_stats"))
+                else if (!strcasecmp(tag, "medit_advanced_stats"))
                     CONFIG_MEDIT_ADVANCED = num;
                 break;
 
             case 'n':
-                if (!str_cmp(tag, "nameserver_is_slow"))
+                if (!strcasecmp(tag, "nameserver_is_slow"))
                     CONFIG_NS_IS_SLOW = num;
-                else if (!str_cmp(tag, "no_mort_to_immort"))
+                else if (!strcasecmp(tag, "no_mort_to_immort"))
                     CONFIG_NO_MORT_TO_IMMORT = num;
-                else if (!str_cmp(tag, "noperson")) {
+                else if (!strcasecmp(tag, "noperson")) {
                     char tmp[READ_SIZE];
                     if (CONFIG_NOPERSON)
                         free(CONFIG_NOPERSON);
                     snprintf(tmp, sizeof(tmp), "%s\r\n", line);
                     CONFIG_NOPERSON = strdup(tmp);
-                } else if (!str_cmp(tag, "noeffect")) {
+                } else if (!strcasecmp(tag, "noeffect")) {
                     char tmp[READ_SIZE];
                     if (CONFIG_NOEFFECT)
                         free(CONFIG_NOEFFECT);
@@ -4006,7 +4006,7 @@ void load_config(void) {
                 break;
 
             case 'o':
-                if (!str_cmp(tag, "ok")) {
+                if (!strcasecmp(tag, "ok")) {
                     char tmp[READ_SIZE];
                     if (CONFIG_OK)
                         free(CONFIG_OK);
@@ -4016,27 +4016,27 @@ void load_config(void) {
                 break;
 
             case 'p':
-                if (!str_cmp(tag, "pk_allowed"))
+                if (!strcasecmp(tag, "pk_allowed"))
                     CONFIG_PK_ALLOWED = num;
-                else if (!str_cmp(tag, "protocol_negotiation"))
+                else if (!strcasecmp(tag, "protocol_negotiation"))
                     CONFIG_PROTOCOL_NEGOTIATION = num;
-                else if (!str_cmp(tag, "pt_allowed"))
+                else if (!strcasecmp(tag, "pt_allowed"))
                     CONFIG_PT_ALLOWED = num;
                 break;
 
             case 'r':
-                if (!str_cmp(tag, "rent_file_timeout"))
+                if (!strcasecmp(tag, "rent_file_timeout"))
                     CONFIG_RENT_TIMEOUT = num;
                 break;
 
             case 's':
-                if (!str_cmp(tag, "siteok_everyone"))
+                if (!strcasecmp(tag, "siteok_everyone"))
                     CONFIG_SITEOK_ALL = num;
-                else if (!str_cmp(tag, "script_players"))
+                else if (!strcasecmp(tag, "script_players"))
                     CONFIG_SCRIPT_PLAYERS = num;
-                else if (!str_cmp(tag, "special_in_comm"))
+                else if (!strcasecmp(tag, "special_in_comm"))
                     CONFIG_SPECIAL_IN_COMM = num;
-                else if (!str_cmp(tag, "start_messg")) {
+                else if (!strcasecmp(tag, "start_messg")) {
                     strncpy(buf, "Reading start message in load_config()", sizeof(buf));
                     if (CONFIG_START_MESSG)
                         free(CONFIG_START_MESSG);
@@ -4046,21 +4046,21 @@ void load_config(void) {
                 break;
 
             case 't':
-                if (!str_cmp(tag, "tunnel_size"))
+                if (!strcasecmp(tag, "tunnel_size"))
                     CONFIG_TUNNEL_SIZE = num;
-                else if (!str_cmp(tag, "track_through_doors"))
+                else if (!strcasecmp(tag, "track_through_doors"))
                     CONFIG_TRACK_T_DOORS = num;
                 break;
 
             case 'u':
-                if (!str_cmp(tag, "use_autowiz"))
+                if (!strcasecmp(tag, "use_autowiz"))
                     CONFIG_USE_AUTOWIZ = num;
-                else if (!str_cmp(tag, "use_new_socials"))
+                else if (!strcasecmp(tag, "use_new_socials"))
                     CONFIG_NEW_SOCIALS = num;
                 break;
 
             case 'w':
-                if (!str_cmp(tag, "welc_messg")) {
+                if (!strcasecmp(tag, "welc_messg")) {
                     strncpy(buf, "Reading welcome message in load_config()", sizeof(buf));
                     if (CONFIG_WELC_MESSG)
                         free(CONFIG_WELC_MESSG);

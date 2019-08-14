@@ -75,17 +75,11 @@
 /* Define if you have the strerror function.  */
 #cmakedefine HAVE_STRERROR 1
 
-/* Define if you have the stricmp function.  */
-#cmakedefine HAVE_STRICMP 1
-
 /* Define if you have the strlcpy function.  */
 #cmakedefine HAVE_STRLCPY 1
 
 /* Define if you have the strncasecmp function.  */
 #cmakedefine HAVE_STRNCASECMP 1
-
-/* Define if you have the strnicmp function.  */
-#cmakedefine HAVE_STRNICMP 1
 
 /* Define if you have the strstr function.  */
 #cmakedefine HAVE_STRSTR 1
@@ -331,6 +325,7 @@
 
 /* needed defines for protocol.c on windows MSVC */
 
+/* TODO - this is a VERY VERY VERY BAD THING! WE WILL LEAK MEMORY */
 #define alloca(x) malloc(x)
 
 /*

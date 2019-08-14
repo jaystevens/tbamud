@@ -64,7 +64,7 @@ ACMD(do_oasis_zedit) {
     if (!*buf1)
         number = GET_ROOM_VNUM(IN_ROOM(ch));
     else if (!isdigit(*buf1)) {
-        if (str_cmp("save", buf1) == 0) {
+        if (strcasecmp("save", buf1) == 0) {
             save = true;
 
             if (is_number(buf2))
@@ -83,7 +83,7 @@ ACMD(do_oasis_zedit) {
                 return;
             }
         } else if (GET_LEVEL(ch) >= LVL_IMPL) {
-            if (str_cmp("new", buf1) || !stop || !*stop)
+            if (strcasecmp("new", buf1) || !stop || !*stop)
                 send_to_char(ch, "Format: zedit new <zone number> <bottom-room> "
                                  "<upper-room>\r\n");
             else {

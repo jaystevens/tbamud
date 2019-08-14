@@ -49,7 +49,7 @@ typedef struct ibt_data IBT_DATA;
 #undef KEY
 #endif
 #define KEY(literal, field, value)                                    \
-                                if ( !str_cmp( word, literal ) )        \
+                                if ( !strcasecmp( word, literal ) )        \
                                 {                                       \
                                     field  = value;                     \
                                     fMatch = true;                      \
@@ -61,7 +61,7 @@ typedef struct ibt_data IBT_DATA;
 #undef TXT_KEY
 #endif
 #define TXT_KEY(literal, field, value)                                \
-                                if ( !str_cmp( word, literal ) )        \
+                                if ( !strcasecmp( word, literal ) )        \
                                 {                                       \
                                     if (field) STRFREE(field);          \
                                     field  = STRALLOC(value);           \

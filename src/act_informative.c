@@ -1088,13 +1088,13 @@ int search_help(const char *argument, int level) {
     while (bot <= top) {
         mid = (bot + top) / 2;
 
-        if (!(chk = strn_cmp(argument, help_table[mid].keywords, minlen))) {
-            while ((mid > 0) && !strn_cmp(argument, help_table[mid - 1].keywords, minlen))
+        if (!(chk = strncasecmp(argument, help_table[mid].keywords, minlen))) {
+            while ((mid > 0) && !strncasecmp(argument, help_table[mid - 1].keywords, minlen))
                 mid--;
 
             while (level < help_table[mid].min_level && mid < (bot + top) / 2)
                 mid++;
-            if (strn_cmp(argument, help_table[mid].keywords, minlen) || level < help_table[mid].min_level)
+            if (strncasecmp(argument, help_table[mid].keywords, minlen) || level < help_table[mid].min_level)
                 break;
 
             return (mid);
@@ -1245,7 +1245,7 @@ ACMD(do_who) {
             continue;
 
         if (CAN_SEE(ch, tch) && IS_PLAYING(d)) {
-            if (*name_search && str_cmp(GET_NAME(tch), name_search) &&
+            if (*name_search && strcasecmp(GET_NAME(tch), name_search) &&
                 !strstr(GET_TITLE(tch), name_search))
                 continue;
             if (!CAN_SEE(ch, tch) || GET_LEVEL(tch) < low || GET_LEVEL(tch) > high)
@@ -1289,7 +1289,7 @@ ACMD(do_who) {
                 continue;
             if (!IS_PLAYING(d))
                 continue;
-            if (*name_search && str_cmp(GET_NAME(tch), name_search) &&
+            if (*name_search && strcasecmp(GET_NAME(tch), name_search) &&
                 !strstr(GET_TITLE(tch), name_search))
                 continue;
             if (!CAN_SEE(ch, tch) || GET_LEVEL(tch) < low || GET_LEVEL(tch) > high)
@@ -1482,7 +1482,7 @@ ACMD(do_users) {
 
             if (*host_search && !strstr(d->host, host_search))
                 continue;
-            if (*name_search && str_cmp(GET_NAME(tch), name_search))
+            if (*name_search && strcasecmp(GET_NAME(tch), name_search))
                 continue;
             if (!CAN_SEE(ch, tch) || GET_LEVEL(tch) < low || GET_LEVEL(tch) > high)
                 continue;

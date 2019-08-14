@@ -549,7 +549,7 @@ ACMD(do_drop) {
     } else if (is_number(arg)) {
         multi = atoi(arg);
         one_argument(argument, arg);
-        if (!str_cmp("coins", arg) || !str_cmp("coin", arg))
+        if (!strcasecmp("coins", arg) || !strcasecmp("coin", arg))
             perform_drop_gold(ch, multi, mode, RDR);
         else if (multi <= 0)
             send_to_char(ch, "Yeah, that makes sense.\r\n");
@@ -697,7 +697,7 @@ ACMD(do_give) {
     else if (is_number(arg)) {
         amount = atoi(arg);
         argument = one_argument(argument, arg);
-        if (!str_cmp("coins", arg) || !str_cmp("coin", arg)) {
+        if (!strcasecmp("coins", arg) || !strcasecmp("coin", arg)) {
             one_argument(argument, arg);
             if ((vict = give_find_vict(ch, arg)) != NULL)
                 perform_give_gold(ch, vict, amount);
@@ -796,7 +796,7 @@ void name_from_drinkcon(struct obj_data *obj) {
         else
             cpylen = strlen(cur_name);
 
-        if (!strn_cmp(cur_name, liqname, liqlen))
+        if (!strncasecmp(cur_name, liqname, liqlen))
             continue;
 
         if (*new_name)
@@ -1081,7 +1081,7 @@ ACMD(do_pour) {
             send_to_char(ch, "Where do you want it?  Out or in what?\r\n");
             return;
         }
-        if (!str_cmp(arg2, "out")) {
+        if (!strcasecmp(arg2, "out")) {
             if (GET_OBJ_VAL(from_obj, 0) > 0) {
                 act("$n empties $p.", true, ch, from_obj, 0, TO_ROOM);
                 act("You empty $p.", false, ch, from_obj, 0, TO_CHAR);

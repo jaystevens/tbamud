@@ -68,7 +68,7 @@ ACMD(do_oasis_qedit) {
         send_to_char(ch, "Specify a quest VNUM to edit.\r\n");
         return;
     } else if (!isdigit(*buf1)) {
-        if (str_cmp("save", buf1) != 0) {
+        if (strcasecmp("save", buf1) != 0) {
             send_to_char(ch, "Yikes!  Stop that, someone will get hurt!\r\n");
             return;
         }
@@ -321,11 +321,11 @@ static void qedit_disp_menu(struct descriptor_data *d) {
                     quest->vnum,
                     quest->name,
                     quest->desc,
-                    quest->info && (str_cmp(quest->info, "undefined"))
+                    quest->info && (strcasecmp(quest->info, "undefined"))
                     ? quest->info : "Nothing\r\n",
-                    quest->done && (str_cmp(quest->done, "undefined"))
+                    quest->done && (strcasecmp(quest->done, "undefined"))
                     ? quest->done : "Nothing\r\n",
-                    quest->quit && (str_cmp(quest->quit, "undefined"))
+                    quest->quit && (strcasecmp(quest->quit, "undefined"))
                     ? quest->quit : "Nothing\r\n",
                     quest_flags,
                     quest_types[quest->type],

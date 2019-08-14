@@ -67,7 +67,7 @@ ACMD(do_oasis_cedit) {
         mudlog(BRF, MAX(LVL_BUILDER, GET_INVIS_LEV(ch)), true,
                "OLC: %s starts editing the game configuration.", GET_NAME(ch));
         return;
-    } else if (str_cmp("save", buf1) != 0) {
+    } else if (strcasecmp("save", buf1) != 0) {
         send_to_char(ch, "Yikes!  Stop that, someone will get hurt!\r\n");
         return;
     }

@@ -308,7 +308,7 @@ ACMD(do_trans) {
     one_argument(argument, buf);
     if (!*buf)
         send_to_char(ch, "Whom do you wish to transfer?\r\n");
-    else if (str_cmp("all", buf)) {
+    else if (strcasecmp("all", buf)) {
         if (!(victim = get_char_vis(ch, buf, NULL, FIND_CHAR_WORLD)))
             send_to_char(ch, "%s", CONFIG_NOPERSON);
         else if (victim == ch)
@@ -1113,23 +1113,23 @@ ACMD(do_shutdown) {
         log("(GC) Shutdown by %s.", GET_NAME(ch));
         send_to_all("Shutting down.\r\n");
         circle_shutdown = 1;
-    } else if (!str_cmp(arg, "reboot")) {
+    } else if (!strcasecmp(arg, "reboot")) {
         log("(GC) Reboot by %s.", GET_NAME(ch));
         send_to_all("Rebooting.. come back in a few minutes.\r\n");
         touch(FASTBOOT_FILE);
         circle_shutdown = 1;
         circle_reboot = 2; /* do not autosave olc */
-    } else if (!str_cmp(arg, "die")) {
+    } else if (!strcasecmp(arg, "die")) {
         log("(GC) Shutdown by %s.", GET_NAME(ch));
         send_to_all("Shutting down for maintenance.\r\n");
         touch(KILLSCRIPT_FILE);
         circle_shutdown = 1;
-    } else if (!str_cmp(arg, "now")) {
+    } else if (!strcasecmp(arg, "now")) {
         log("(GC) Shutdown NOW by %s.", GET_NAME(ch));
         send_to_all("Rebooting.. come back in a minute or two.\r\n");
         circle_shutdown = 1;
         circle_reboot = 2; /* do not autosave olc */
-    } else if (!str_cmp(arg, "pause")) {
+    } else if (!strcasecmp(arg, "pause")) {
         log("(GC) Shutdown by %s.", GET_NAME(ch));
         send_to_all("Shutting down for maintenance.\r\n");
         touch(PAUSE_FILE);
@@ -2081,7 +2081,7 @@ ACMD(do_last) {
             return;
         }
         fseek(fp, -1 * ((long) sizeof(struct last_entry)), SEEK_CUR);
-        if (!*name || (*name && !str_cmp(name, mlast.username))) {
+        if (!*name || (*name && !strcasecmp(name, mlast.username))) {
             strftime(timestr, sizeof(timestr), "%a %b %d %Y %H:%M", localtime(&mlast.time));
             send_to_char(ch, "%10.10s %20.20s %20.21s - ",
                          mlast.username, mlast.hostname, timestr);
@@ -2115,7 +2115,7 @@ ACMD(do_force) {
 
     if (!*arg || !*to_force)
         send_to_char(ch, "Whom do you wish to force do what?\r\n");
-    else if ((GET_LEVEL(ch) < LVL_GRGOD) || (str_cmp("all", arg) && str_cmp("room", arg))) {
+    else if ((GET_LEVEL(ch) < LVL_GRGOD) || (strcasecmp("all", arg) && strcasecmp("room", arg))) {
         if (!(vict = get_char_vis(ch, arg, NULL, FIND_CHAR_WORLD)))
             send_to_char(ch, "%s", CONFIG_NOPERSON);
         else if (!IS_NPC(vict) && GET_LEVEL(ch) < LVL_GOD)
@@ -2129,7 +2129,7 @@ ACMD(do_force) {
                    to_force);
             command_interpreter(vict, to_force);
         }
-    } else if (!str_cmp("room", arg)) {
+    } else if (!strcasecmp("room", arg)) {
         send_to_char(ch, "%s", CONFIG_OK);
         mudlog(NRM, MAX(LVL_GOD, GET_INVIS_LEV(ch)), true, "(GC) %s forced room %d to %s",
                GET_NAME(ch), GET_ROOM_VNUM(IN_ROOM(ch)), to_force);
@@ -2539,7 +2539,7 @@ ACMD(do_show) {
                     if (*value) {
                         buf2 = strtok(strdup(zone_table[zrn].builders), " ");
                         while (buf2) {
-                            if (!str_cmp(buf2, value)) {
+                            if (!strcasecmp(buf2, value)) {
                                 if (builder == 1)
                                     builder++;
                                 break;
@@ -2983,7 +2983,7 @@ static int perform_set(struct char_data *ch, struct char_data *vict, int mode, c
             affect_total(vict);
             break;
         case 13: /* drunk */
-            if (!str_cmp(val_arg, "off")) {
+            if (!strcasecmp(val_arg, "off")) {
                 GET_COND(vict, DRUNK) = -1;
                 send_to_char(ch, "%s's drunkenness is now off.\r\n", GET_NAME(vict));
             } else if (is_number(val_arg)) {
@@ -3022,7 +3022,7 @@ static int perform_set(struct char_data *ch, struct char_data *vict, int mode, c
             affect_total(vict);
             break;
         case 20: /* hunger */
-            if (!str_cmp(val_arg, "off")) {
+            if (!strcasecmp(val_arg, "off")) {
                 GET_COND(vict, HUNGER) = -1;
                 send_to_char(ch, "%s's hunger is now off.\r\n", GET_NAME(vict));
             } else if (is_number(val_arg)) {
@@ -3065,7 +3065,7 @@ static int perform_set(struct char_data *ch, struct char_data *vict, int mode, c
             vict->player.level = value;
             break;
         case 26: /* loadroom */
-            if (!str_cmp(val_arg, "off")) {
+            if (!strcasecmp(val_arg, "off")) {
                 REMOVE_BIT_AR(PLR_FLAGS(vict), PLR_LOADROOM);
             } else if (is_number(val_arg)) {
                 rvnum = atoi(val_arg);
@@ -3232,7 +3232,7 @@ static int perform_set(struct char_data *ch, struct char_data *vict, int mode, c
         SET_OR_REMOVE(PLR_FLAGS(vict), PLR_THIEF);
             break;
         case 51: /* thirst */
-            if (!str_cmp(val_arg, "off")) {
+            if (!strcasecmp(val_arg, "off")) {
                 GET_COND(vict, THIRST) = -1;
                 send_to_char(ch, "%s's thirst is now off.\r\n", GET_NAME(vict));
             } else if (is_number(val_arg)) {
@@ -3331,13 +3331,13 @@ ACMD(do_set) {
     if (!strcmp(name, "file")) {
         is_file = 1;
         half_chop(buf, name, buf);
-    } else if (!str_cmp(name, "help")) {
+    } else if (!strcasecmp(name, "help")) {
         show_set_help(ch);
         return;
-    } else if (!str_cmp(name, "player")) {
+    } else if (!strcasecmp(name, "player")) {
         is_player = 1;
         half_chop(buf, name, buf);
-    } else if (!str_cmp(name, "mob"))
+    } else if (!strcasecmp(name, "mob"))
         half_chop(buf, name, buf);
 
     half_chop(buf, field, buf);
@@ -4549,7 +4549,7 @@ ACMD(do_plist) {
 
         time_away = *real_time_passed(time(0), player_table[i].last);
 
-        if (*name_search && str_cmp(name_search, player_table[i].name))
+        if (*name_search && strcasecmp(name_search, player_table[i].name))
             continue;
 
         if (time_away.day > high_day || time_away.day < low_day)

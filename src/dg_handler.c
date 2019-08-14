@@ -48,7 +48,7 @@ void free_varlist(struct trig_var_data *vd) {
 int remove_var(struct trig_var_data **var_list, char *name) {
     struct trig_var_data *i, *j;
 
-    for (j = NULL, i = *var_list; i && str_cmp(name, i->name);
+    for (j = NULL, i = *var_list; i && strcasecmp(name, i->name);
          j = i, i = i->next);
 
     if (i) {

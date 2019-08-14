@@ -87,7 +87,7 @@ if(NOT CONF_H_GENERATED)
         if(HAVE_CRYPT OR HAVE_CRYPT_LIB)
             set(CIRCLE_CRYPT 1 CACHE INTERNAL "")
         else()
-            unset(CIRCLE_CRYPT CACHE INTERNAL "")
+            set(CIRCLE_CRYPT 0 CACHE INTERNAL "")
         endif()
 
         # TODO HAVE_UNSAFE_CRYPT
@@ -773,18 +773,6 @@ if(NOT CONF_H_GENERATED)
             set(NEED_STRNCASECMP_PROTO 0 CACHE INTERNAL "")
         else()
             set(NEED_STRNCASECMP_PROTO 1 CACHE INTERNAL "")
-        endif()
-
-        # NEED_STRNICMP_PROTO - TODO - removed in C99 / linux 4.0
-        check_prototype_definition(strnicmp
-                "int strnicmp(const char * s1, const char * s2, size_t len)"
-                "-1"
-                "string.h"
-                HAVE_STRNICMP_PROTO)
-        if(HAVE_STRNICMP_PROTO)
-            set(NEED_STRNICMP_PROTO 0 CACHE INTERNAL "")
-        else()
-            set(NEED_STRNICMP_PROTO 1 CACHE INTERNAL "")
         endif()
 
         # NEED_SYSTEM_PROTO

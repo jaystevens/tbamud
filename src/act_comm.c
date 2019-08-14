@@ -332,7 +332,7 @@ ACMD(do_page) {
         char buf[MAX_STRING_LENGTH];
 
         snprintf(buf, sizeof(buf), "\007\007*$n* %s", buf2);
-        if (!str_cmp(arg, "all")) {
+        if (!strcasecmp(arg, "all")) {
             if (GET_LEVEL(ch) > LVL_GOD) {
                 for (d = descriptor_list; d; d = d->next)
                     if (STATE(d) == CON_PLAYING && d->character)

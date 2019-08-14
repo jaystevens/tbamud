@@ -658,7 +658,7 @@ ACMD(do_enter) {
         for (door = 0; door < DIR_COUNT; door++)
             if (EXIT(ch, door))
                 if (EXIT(ch, door)->keyword)
-                    if (!str_cmp(EXIT(ch, door)->keyword, buf)) {
+                    if (!strcasecmp(EXIT(ch, door)->keyword, buf)) {
                         perform_move(ch, door, 1);
                         return;
                     }

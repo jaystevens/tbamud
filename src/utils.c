@@ -135,7 +135,7 @@ void prune_crlf(char *txt) {
         txt[i--] = '\0';
 }
 
-#ifndef str_cmp
+#ifndef strcasecmp
 /** a portable, case-insensitive version of strcmp(). Returns: 0 if equal, > 0
  * if arg1 > arg2, or < 0 if arg1 < arg2. Scan until strings are found
  * different or we reach the end of both. */
@@ -156,7 +156,7 @@ int str_cmp(const char *arg1, const char *arg2)
 }
 #endif
 
-#ifndef strn_cmp
+#ifndef strncasecmp
 /** a portable, case-insensitive version of strncmp(). Returns: 0 if equal, > 0
  * if arg1 > arg2, or < 0 if arg1 < arg2. Scan until strings are found
  * different, the end of both, or n is reached. */

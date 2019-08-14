@@ -115,7 +115,7 @@ void create_command_list(void) {
     for (j = 0; j < top_of_socialt; j++) {
         k = j;
         for (i = j + 1; i <= top_of_socialt; i++)
-            if (str_cmp(soc_mess_list[i].sort_as, soc_mess_list[k].sort_as) < 0)
+            if (strcasecmp(soc_mess_list[i].sort_as, soc_mess_list[k].sort_as) < 0)
                 k = i;
         if (j != k) {
             temp = soc_mess_list[j];
@@ -137,7 +137,7 @@ void create_command_list(void) {
     k = 0;
     while ((*cmd_info[i].command != '\n') || (j <= top_of_socialt)) {
         if ((i < RESERVE_CMDS) || (j > top_of_socialt) ||
-            (str_cmp(cmd_info[i].sort_as, soc_mess_list[j].sort_as) < 1))
+            (strcasecmp(cmd_info[i].sort_as, soc_mess_list[j].sort_as) < 1))
             complete_cmd_info[k++] = cmd_info[i++];
         else {
             soc_mess_list[j].act_nr = k;

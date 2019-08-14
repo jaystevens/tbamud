@@ -1082,14 +1082,14 @@ int format_script(struct descriptor_data *d) {
     while (t) {
         line_num++;
         skip_spaces(&t);
-        if (!strn_cmp(t, "if ", 3) ||
-            !strn_cmp(t, "switch ", 7)) {
+        if (!strncasecmp(t, "if ", 3) ||
+            !strncasecmp(t, "switch ", 7)) {
             indent_next = true;
-        } else if (!strn_cmp(t, "while ", 6)) {
+        } else if (!strncasecmp(t, "while ", 6)) {
             found_case = true;  /* so you can 'break' a loop without complains */
             indent_next = true;
-        } else if (!strn_cmp(t, "end", 3) ||
-                   !strn_cmp(t, "done", 4)) {
+        } else if (!strncasecmp(t, "end", 3) ||
+                   !strncasecmp(t, "done", 4)) {
             if (!indent) {
                 write_to_output(d, "Unmatched 'end' or 'done' (line %d)!\r\n", line_num);
                 free(sc);
@@ -1097,7 +1097,7 @@ int format_script(struct descriptor_data *d) {
             }
             indent--;
             indent_next = false;
-        } else if (!strn_cmp(t, "else", 4)) {
+        } else if (!strncasecmp(t, "else", 4)) {
             if (!indent) {
                 write_to_output(d, "Unmatched 'else' (line %d)!\r\n", line_num);
                 free(sc);
@@ -1105,8 +1105,8 @@ int format_script(struct descriptor_data *d) {
             }
             indent--;
             indent_next = true;
-        } else if (!strn_cmp(t, "case", 4) ||
-                   !strn_cmp(t, "default", 7)) {
+        } else if (!strncasecmp(t, "case", 4) ||
+                   !strncasecmp(t, "default", 7)) {
             if (!indent) {
                 write_to_output(d, "Case/default outside switch (line %d)!\r\n", line_num);
                 free(sc);
@@ -1115,7 +1115,7 @@ int format_script(struct descriptor_data *d) {
             if (!found_case) /* so we don't indent multiple case statements without a break */
                 indent_next = true;
             found_case = true;
-        } else if (!strn_cmp(t, "break", 5)) {
+        } else if (!strncasecmp(t, "break", 5)) {
             if (!found_case || !indent) {
                 write_to_output(d, "Break not in case (line %d)!\r\n", line_num);
                 free(sc);

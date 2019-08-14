@@ -180,7 +180,7 @@ ACMD(do_steal) {
     if (GET_LEVEL(vict) >= LVL_IMMORT || pcsteal || GET_MOB_SPEC(vict) == shop_keeper)
         percent = 101;        /* Failure */
 
-    if (str_cmp(obj_name, "coins") && str_cmp(obj_name, "gold")) {
+    if (strcasecmp(obj_name, "coins") && strcasecmp(obj_name, "gold")) {
 
         if (!(obj = get_obj_in_list_vis(ch, obj_name, NULL, vict->carrying))) {
 
@@ -613,17 +613,17 @@ ACMD(do_display) {
         return;
     }
 
-    if (!str_cmp(argument, "auto")) {
+    if (!strcasecmp(argument, "auto")) {
         TOGGLE_BIT_AR(PRF_FLAGS(ch), PRF_DISPAUTO);
         send_to_char(ch, "Auto prompt %sabled.\r\n", PRF_FLAGGED(ch, PRF_DISPAUTO) ? "en" : "dis");
         return;
     }
 
-    if (!str_cmp(argument, "on") || !str_cmp(argument, "all")) {
+    if (!strcasecmp(argument, "on") || !strcasecmp(argument, "all")) {
         SET_BIT_AR(PRF_FLAGS(ch), PRF_DISPHP);
         SET_BIT_AR(PRF_FLAGS(ch), PRF_DISPMANA);
         SET_BIT_AR(PRF_FLAGS(ch), PRF_DISPMOVE);
-    } else if (!str_cmp(argument, "off") || !str_cmp(argument, "none")) {
+    } else if (!strcasecmp(argument, "off") || !strcasecmp(argument, "none")) {
         REMOVE_BIT_AR(PRF_FLAGS(ch), PRF_DISPHP);
         REMOVE_BIT_AR(PRF_FLAGS(ch), PRF_DISPMANA);
         REMOVE_BIT_AR(PRF_FLAGS(ch), PRF_DISPMOVE);

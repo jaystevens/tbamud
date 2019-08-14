@@ -573,7 +573,7 @@ static void quest_quit(struct char_data *ch) {
         save_char(ch);
     } else {
         clear_quest(ch);
-        if (QST_QUIT(rnum) && (str_cmp(QST_QUIT(rnum), "undefined") != 0))
+        if (QST_QUIT(rnum) && (strcasecmp(QST_QUIT(rnum), "undefined") != 0))
             send_to_char(ch, "%s", QST_QUIT(rnum));
         else
             send_to_char(ch, "You are now no longer part of the quest.\r\n");
@@ -684,7 +684,7 @@ static void quest_stat(struct char_data *ch, char argument[MAX_STRING_LENGTH]) {
                      QST_NAME(rnum), QST_DESC(rnum),
                      QST_INFO(rnum), QST_DONE(rnum),
                      (QST_QUIT(rnum) &&
-                      (str_cmp(QST_QUIT(rnum), "undefined") != 0)
+                      (strcasecmp(QST_QUIT(rnum), "undefined") != 0)
                       ? QST_QUIT(rnum) : "Nothing\r\n"),
                      quest_types[QST_TYPE(rnum)],
                      QST_TARGET(rnum) == NOBODY ? -1 : QST_TARGET(rnum),

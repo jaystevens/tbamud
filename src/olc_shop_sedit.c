@@ -70,7 +70,7 @@ ACMD(do_oasis_sedit) {
         send_to_char(ch, "Specify a shop VNUM to edit.\r\n");
         return;
     } else if (!isdigit(*buf1)) {
-        if (str_cmp("save", buf1) != 0) {
+        if (strcasecmp("save", buf1) != 0) {
             send_to_char(ch, "Yikes!  Stop that, someone will get hurt!\r\n");
             return;
         }

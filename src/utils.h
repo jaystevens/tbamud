@@ -113,10 +113,10 @@ void weather_and_time(int mode);
 
 /* Only provide our versions if one isn't in the C library. These macro names
  * will be defined by sysdep.h if a strcasecmp or stricmp exists. */
-#ifndef str_cmp
+#ifndef strcasecmp
 int	str_cmp(const char *arg1, const char *arg2);
 #endif
-#ifndef strn_cmp
+#ifndef strncasecmp
 int	strn_cmp(const char *arg1, const char *arg2, int n);
 #endif
 

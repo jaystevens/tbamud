@@ -54,7 +54,7 @@ ACMD(do_oasis_redit) {
     if (!*buf1)
         number = GET_ROOM_VNUM(IN_ROOM(ch));
     else if (!isdigit(*buf1)) {
-        if (str_cmp("save", buf1) != 0) {
+        if (strcasecmp("save", buf1) != 0) {
             send_to_char(ch, "Yikes!  Stop that, someone will get hurt!\r\n");
             return;
         }

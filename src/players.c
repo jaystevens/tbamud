@@ -193,7 +193,7 @@ int64_t get_ptable_by_name(const char *name) {
     int64_t i;
 
     for (i = 0; i <= top_of_p_table; i++)
-        if (!str_cmp(player_table[i].name, name))
+        if (!strcasecmp(player_table[i].name, name))
             return (i);
 
     return (-1);
@@ -203,7 +203,7 @@ int64_t get_id_by_name(const char *name) {
     int64_t i;
 
     for (i = 0; i <= top_of_p_table; i++)
-        if (!str_cmp(player_table[i].name, name))
+        if (!strcasecmp(player_table[i].name, name))
             return (player_table[i].id);
 
     return (-1);

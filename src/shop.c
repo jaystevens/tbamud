@@ -266,7 +266,7 @@ static int evaluate_expression(struct obj_data *obj, char *expr) {
                 strncpy(name, end, ptr - end);    /* strncpy: OK (name/end:MAX_STRING_LENGTH) */
                 name[ptr - end] = '\0';
                 for (eindex = 0; *extra_bits[eindex] != '\n'; eindex++)
-                    if (!str_cmp(name, extra_bits[eindex])) {
+                    if (!strcasecmp(name, extra_bits[eindex])) {
                         push(&vals, OBJ_FLAGGED(obj, eindex));
                         break;
                     }
@@ -1118,7 +1118,7 @@ static int read_type_list(FILE *shop_f, struct shop_buy_data *list,
 
         if (strncmp(buf, "-1", 2) != 0)
             for (tindex = 0; *item_types[tindex] != '\n'; tindex++)
-                if (!strn_cmp(item_types[tindex], buf, strlen(item_types[tindex]))) {
+                if (!strncasecmp(item_types[tindex], buf, strlen(item_types[tindex]))) {
                     num = tindex;
                     memmove(buf, buf + strlen(item_types[tindex]), strlen(buf) - strlen(item_types[tindex]) + 1);
                     break;
@@ -1502,7 +1502,7 @@ void show_shops(struct char_data *ch, char *arg) {
     if (!*arg)
         list_all_shops(ch);
     else {
-        if (!str_cmp(arg, ".")) {
+        if (!strcasecmp(arg, ".")) {
             for (shop_nr = 0; shop_nr <= top_shop; shop_nr++)
                 if (ok_shop_room(shop_nr, GET_ROOM_VNUM(IN_ROOM(ch))))
                     break;

@@ -417,7 +417,7 @@ int script_command_interpreter(struct char_data *ch, char *arg) {
     line = any_one_arg(arg, first_arg);
 
     for (i = 0; *mob_script_commands[i].command_name != '\n'; i++)
-        if (!str_cmp(first_arg, mob_script_commands[i].command_name))
+        if (!strcasecmp(first_arg, mob_script_commands[i].command_name))
             break; // NB - only allow full matches.
 
     if (*mob_script_commands[i].command_name == '\n')
@@ -640,7 +640,7 @@ ACMD(do_alias) {
             else
                 send_to_char(ch, "Alias deleted.\r\n");
         } else {            /* otherwise, either add or redefine an alias */
-            if (!str_cmp(arg, "alias")) {
+            if (!strcasecmp(arg, "alias")) {
                 send_to_char(ch, "You can't alias 'alias'.\r\n");
                 return;
             }
@@ -1540,7 +1540,7 @@ void nanny(struct descriptor_data *d, char *arg) {
         case CON_NEWPASSWD:
         case CON_CHPWD_GETNEW:
             if (!*arg || strlen(arg) > MAX_PWD_LENGTH || strlen(arg) < 3 ||
-                !str_cmp(arg, GET_PC_NAME(d->character))) {
+                !strcasecmp(arg, GET_PC_NAME(d->character))) {
                 write_to_output(d, "\r\nIllegal password.\r\nPassword: ");
                 return;
             }

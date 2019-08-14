@@ -67,7 +67,7 @@ ACMD(do_oasis_hedit) {
 
     d = ch->desc;
 
-    if (!str_cmp("save", arg)) {
+    if (!strcasecmp("save", arg)) {
         mudlog(CMP, MAX(LVL_BUILDER, GET_INVIS_LEV(ch)), true, "OLC: %s saves help files.",
                GET_NAME(ch));
         hedit_save_to_disk(d);

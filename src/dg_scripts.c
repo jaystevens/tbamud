@@ -271,7 +271,7 @@ int find_eq_pos_script(char *arg) {
         return i;
 
     for (i = 0; eq_pos[i].where != -1; i++) {
-        if (!str_cmp(eq_pos[i].pos, arg))
+        if (!strcasecmp(eq_pos[i].pos, arg))
             return eq_pos[i].where;
     }
     return (-1);
@@ -457,7 +457,7 @@ obj_data *get_obj_near_obj(obj_data *obj, char *name) {
     int rm;
     long id;
 
-    if (!str_cmp(name, "self") || !str_cmp(name, "me"))
+    if (!strcasecmp(name, "self") || !strcasecmp(name, "me"))
         return obj;
 
     /* is it inside ? */
@@ -585,7 +585,7 @@ obj_data *get_obj_by_obj(obj_data *obj, char *name) {
     if (*name == UID_CHAR)
         return find_obj(atoi(name + 1));
 
-    if (!str_cmp(name, "self") || !str_cmp(name, "me"))
+    if (!strcasecmp(name, "self") || !strcasecmp(name, "me"))
         return obj;
 
     if (obj->contains && (i = get_obj_in_list(name, obj->contains)))
@@ -1170,7 +1170,7 @@ ACMD(do_detach) {
     /* vnum of mob/obj, if given */
     num_arg = atoi(arg2);
 
-    if (!str_cmp(arg1, "room") || !str_cmp(arg1, "wtr")) {
+    if (!strcasecmp(arg1, "room") || !strcasecmp(arg1, "wtr")) {
         if (!*arg3 || (strchr(arg2, '.')))
             rnum = IN_ROOM(ch);
         else if (isdigit(*arg2))
@@ -1190,7 +1190,7 @@ ACMD(do_detach) {
         }
         if (!SCRIPT(room))
             send_to_char(ch, "This room does not have any triggers.\r\n");
-        else if (!str_cmp(arg2, "all") || !str_cmp(arg3, "all")) {
+        else if (!strcasecmp(arg2, "all") || !strcasecmp(arg3, "all")) {
             extract_script(room, WLD_TRIGGER);
             send_to_char(ch, "All triggers removed from room %d.\r\n", world[rnum].number);
         } else {
@@ -1209,7 +1209,7 @@ ACMD(do_detach) {
                 send_to_char(ch, "That trigger was not found.\r\n");
         }
     } else {
-        if (is_abbrev(arg1, "mobile") || !str_cmp(arg1, "mtr")) {
+        if (is_abbrev(arg1, "mobile") || !strcasecmp(arg1, "mtr")) {
             victim = get_char_vis(ch, arg2, NULL, FIND_CHAR_WORLD);
             if (!victim) { /* search room for one with this vnum */
                 for (victim = world[IN_ROOM(ch)].people; victim; victim = victim->next_in_room)
@@ -1226,7 +1226,7 @@ ACMD(do_detach) {
                 send_to_char(ch, "You must specify a trigger to remove.\r\n");
             else
                 trigger = arg3;
-        } else if (is_abbrev(arg1, "object") || !str_cmp(arg1, "otr")) {
+        } else if (is_abbrev(arg1, "object") || !strcasecmp(arg1, "otr")) {
             object = get_obj_vis(ch, arg2, NULL);
             if (!object) { /* search room for one with this vnum */
                 for (object = world[IN_ROOM(ch)].contents; object; object = object->next_content)
@@ -1270,7 +1270,7 @@ ACMD(do_detach) {
             else if (!can_edit_zone(ch, real_zone_by_thing(GET_MOB_VNUM(victim))) && IS_NPC(victim)) {
                 send_to_char(ch, "You can only detach triggers in your own zone\r\n");
                 return;
-            } else if (trigger && !str_cmp(trigger, "all")) {
+            } else if (trigger && !strcasecmp(trigger, "all")) {
                 extract_script(victim, MOB_TRIGGER);
                 send_to_char(ch, "All triggers removed from %s.\r\n",
                              IS_NPC(victim) ? GET_SHORT(victim) : GET_NAME(victim));
@@ -1290,7 +1290,7 @@ ACMD(do_detach) {
             else if (!can_edit_zone(ch, real_zone_by_thing(GET_OBJ_VNUM(object)))) {
                 send_to_char(ch, "You can only detach triggers in your own zone\r\n");
                 return;
-            } else if (trigger && !str_cmp(trigger, "all")) {
+            } else if (trigger && !strcasecmp(trigger, "all")) {
                 extract_script(object, OBJ_TRIGGER);
                 send_to_char(ch, "All triggers removed from %s.\r\n",
                              object->short_description ? object->short_description :
@@ -1393,32 +1393,32 @@ static void eval_op(const char *op, char *lhs, char *rhs, char *result, void *go
         if (is_num(lhs) && is_num(rhs))
             sprintf(result, "%d", atoi(lhs) == atoi(rhs));
         else
-            sprintf(result, "%d", !str_cmp(lhs, rhs));
+            sprintf(result, "%d", !strcasecmp(lhs, rhs));
     } else if (!strcmp("!=", op)) {
         if (is_num(lhs) && is_num(rhs))
             sprintf(result, "%d", atoi(lhs) != atoi(rhs));
         else
-            sprintf(result, "%d", str_cmp(lhs, rhs));
+            sprintf(result, "%d", strcasecmp(lhs, rhs));
     } else if (!strcmp("<=", op)) {
         if (is_num(lhs) && is_num(rhs))
             sprintf(result, "%d", atoi(lhs) <= atoi(rhs));
         else
-            sprintf(result, "%d", str_cmp(lhs, rhs) <= 0);
+            sprintf(result, "%d", strcasecmp(lhs, rhs) <= 0);
     } else if (!strcmp(">=", op)) {
         if (is_num(lhs) && is_num(rhs))
             sprintf(result, "%d", atoi(lhs) >= atoi(rhs));
         else
-            sprintf(result, "%d", str_cmp(lhs, rhs) <= 0);
+            sprintf(result, "%d", strcasecmp(lhs, rhs) <= 0);
     } else if (!strcmp("<", op)) {
         if (is_num(lhs) && is_num(rhs))
             sprintf(result, "%d", atoi(lhs) < atoi(rhs));
         else
-            sprintf(result, "%d", str_cmp(lhs, rhs) < 0);
+            sprintf(result, "%d", strcasecmp(lhs, rhs) < 0);
     } else if (!strcmp(">", op)) {
         if (is_num(lhs) && is_num(rhs))
             sprintf(result, "%d", atoi(lhs) > atoi(rhs));
         else
-            sprintf(result, "%d", str_cmp(lhs, rhs) > 0);
+            sprintf(result, "%d", strcasecmp(lhs, rhs) > 0);
     } else if (!strcmp("/=", op))
         sprintf(result, "%c", str_str(lhs, rhs) ? '1' : '0');
 
@@ -1541,7 +1541,7 @@ static int eval_lhs_op_rhs(char *expr, char *result, void *go, struct script_dat
 
     for (i = 0; *ops[i] != '\n'; i++)
         for (j = 0; tokens[j]; j++)
-            if (!strn_cmp(ops[i], tokens[j], strlen(ops[i]))) {
+            if (!strncasecmp(ops[i], tokens[j], strlen(ops[i]))) {
                 *tokens[j] = '\0';
                 p = tokens[j] + strlen(ops[i]);
 
@@ -1585,9 +1585,9 @@ static struct cmdlist_element *find_end(trig_data *trig, struct cmdlist_element 
     for (c = cl->next; c; c = c->next) {
         for (p = c->cmd; *p && isspace(*p); p++);
 
-        if (!strn_cmp("if ", p, 3))
+        if (!strncasecmp("if ", p, 3))
             c = find_end(trig, c);
-        else if (!strn_cmp("end", p, 3))
+        else if (!strncasecmp("end", p, 3))
             return c;
 
         /* thanks to Russell Ryan for this fix */
@@ -1615,18 +1615,18 @@ static struct cmdlist_element *find_else_end(trig_data *trig,
     for (c = cl->next; c->next; c = c->next) {
         for (p = c->cmd; *p && isspace(*p); p++); /* skip spaces */
 
-        if (!strn_cmp("if ", p, 3))
+        if (!strncasecmp("if ", p, 3))
             c = find_end(trig, c);
 
-        else if (!strn_cmp("elseif ", p, 7)) {
+        else if (!strncasecmp("elseif ", p, 7)) {
             if (process_if(p + 7, go, sc, trig, type)) {
                 GET_TRIG_DEPTH(trig)++;
                 return c;
             }
-        } else if (!strn_cmp("else", p, 4)) {
+        } else if (!strncasecmp("else", p, 4)) {
             GET_TRIG_DEPTH(trig)++;
             return c;
-        } else if (!strn_cmp("end", p, 3))
+        } else if (!strncasecmp("end", p, 3))
             return c;
 
         /* thanks to Russell Ryan for this fix */
@@ -1638,7 +1638,7 @@ static struct cmdlist_element *find_else_end(trig_data *trig,
 
     /* rryan: if we got here, it's the last line, if its not an end, log it. */
     for (p = c->cmd; *p && isspace(*p); p++); /* skip spaces */
-    if (strn_cmp("end", p, 3))
+    if (strncasecmp("end", p, 3))
         script_log("Trigger VNum %d has 'if' without 'end'. (error 5)", GET_TRIG_VNUM(trig));
     return c;
 }
@@ -1659,7 +1659,7 @@ static void process_wait(void *go, trig_data *trig, int type, const char *cmd, s
         return;
     }
 
-    if (!strn_cmp(arg, "until ", 6)) {
+    if (!strncasecmp(arg, "until ", 6)) {
 
         /* valid forms of time are 14:30 and 1430 */
         if (sscanf(arg, "until %ld:%ld", &hr, &min) == 2)
@@ -2072,12 +2072,12 @@ static void process_remote(struct script_data *sc, trig_data *trig, char *cmd) {
 
     /* find the locally owned variable */
     for (vd = GET_TRIG_VARS(trig); vd; vd = vd->next)
-        if (!str_cmp(vd->name, buf))
+        if (!strcasecmp(vd->name, buf))
             break;
 
     if (!vd)
         for (vd = sc->global_vars; vd; vd = vd->next)
-            if (!str_cmp(vd->name, var) &&
+            if (!strcasecmp(vd->name, var) &&
                 (vd->context == 0 || vd->context == sc->context))
                 break;
 
@@ -2183,7 +2183,7 @@ ACMD(do_vdelete) {
 
     /* find the global */
     for (vd = sc_remote->global_vars; vd; vd_prev = vd, vd = vd->next)
-        if (!str_cmp(vd->name, var))
+        if (!strcasecmp(vd->name, var))
             break;
 
     if (!vd) {
@@ -2271,7 +2271,7 @@ static void process_rdelete(struct script_data *sc, trig_data *trig, char *cmd) 
 
     /* find the global */
     for (vd = sc_remote->global_vars; vd; vd_prev = vd, vd = vd->next)
-        if (!str_cmp(vd->name, var) &&
+        if (!strcasecmp(vd->name, var) &&
             (vd->context == 0 || vd->context == sc->context))
             break;
 
@@ -2303,7 +2303,7 @@ static void process_global(struct script_data *sc, trig_data *trig, char *cmd, l
     }
 
     for (vd = GET_TRIG_VARS(trig); vd; vd = vd->next)
-        if (!str_cmp(vd->name, var))
+        if (!strcasecmp(vd->name, var))
             break;
 
     if (!vd) {
@@ -2488,13 +2488,13 @@ int script_driver(void *go_adress, trig_data *trig, int type, int mode) {
         if (*p == '*') /* comment */
             continue;
 
-        else if (!strn_cmp(p, "if ", 3)) {
+        else if (!strncasecmp(p, "if ", 3)) {
             if (process_if(p + 3, go, sc, trig, type))
                 GET_TRIG_DEPTH(trig)++;
             else
                 cl = find_else_end(trig, cl, go, sc, type);
-        } else if (!strn_cmp("elseif ", p, 7) ||
-                   !strn_cmp("else", p, 4)) {
+        } else if (!strncasecmp("elseif ", p, 7) ||
+                   !strncasecmp("else", p, 4)) {
             /* If not in an if-block, ignore the extra 'else[if]' and warn about it. */
             if (GET_TRIG_DEPTH(trig) == 1) {
                 script_log("Trigger VNum %d has 'else' without 'if'.",
@@ -2503,7 +2503,7 @@ int script_driver(void *go_adress, trig_data *trig, int type, int mode) {
             }
             cl = find_end(trig, cl);
             GET_TRIG_DEPTH(trig)--;
-        } else if (!strn_cmp("while ", p, 6)) {
+        } else if (!strncasecmp("while ", p, 6)) {
             temp = find_done(cl);
             if (!temp) {
                 script_log("Trigger VNum %d has 'while' without 'done'.",
@@ -2516,9 +2516,9 @@ int script_driver(void *go_adress, trig_data *trig, int type, int mode) {
                 cl = temp;
                 loops = 0;
             }
-        } else if (!strn_cmp("switch ", p, 7)) {
+        } else if (!strncasecmp("switch ", p, 7)) {
             cl = find_case(trig, cl, go, sc, type, p + 7);
-        } else if (!strn_cmp("end", p, 3)) {
+        } else if (!strncasecmp("end", p, 3)) {
             /* If not in an if-block, ignore the extra 'end' and warn about it. */
             if (GET_TRIG_DEPTH(trig) == 1) {
                 script_log("Trigger VNum %d has 'end' without 'if'.",
@@ -2526,7 +2526,7 @@ int script_driver(void *go_adress, trig_data *trig, int type, int mode) {
                 continue;
             }
             GET_TRIG_DEPTH(trig)--;
-        } else if (!strn_cmp("done", p, 4)) {
+        } else if (!strncasecmp("done", p, 4)) {
             /* if in a while loop, cl->original is non-NULL */
             if (cl->original) {
                 char *orig_cmd = cl->original->cmd;
@@ -2550,65 +2550,65 @@ int script_driver(void *go_adress, trig_data *trig, int type, int mode) {
                     /* if we're falling through a switch statement, this ends it. */
                 }
             }
-        } else if (!strn_cmp("break", p, 5)) {
+        } else if (!strncasecmp("break", p, 5)) {
             cl = find_done(cl);
-        } else if (!strn_cmp("case", p, 4)) {
+        } else if (!strncasecmp("case", p, 4)) {
             /* Do nothing, this allows multiple cases to a single instance */
         } else {
             var_subst(go, sc, trig, type, p, cmd);
 
-            if (!strn_cmp(cmd, "eval ", 5))
+            if (!strncasecmp(cmd, "eval ", 5))
                 process_eval(go, sc, trig, type, cmd);
 
-            else if (!strn_cmp(cmd, "nop ", 4)); /* nop: do nothing */
+            else if (!strncasecmp(cmd, "nop ", 4)); /* nop: do nothing */
 
-            else if (!strn_cmp(cmd, "extract ", 8))
+            else if (!strncasecmp(cmd, "extract ", 8))
                 extract_value(sc, trig, cmd);
 
-            else if (!strn_cmp(cmd, "dg_letter ", 10))
+            else if (!strncasecmp(cmd, "dg_letter ", 10))
                 dg_letter_value(sc, trig, cmd);
 
-            else if (!strn_cmp(cmd, "makeuid ", 8))
+            else if (!strncasecmp(cmd, "makeuid ", 8))
                 makeuid_var(go, sc, trig, type, cmd);
 
-            else if (!strn_cmp(cmd, "halt", 4))
+            else if (!strncasecmp(cmd, "halt", 4))
                 break;
 
-            else if (!strn_cmp(cmd, "dg_cast ", 8))
+            else if (!strncasecmp(cmd, "dg_cast ", 8))
                 do_dg_cast(go, sc, trig, type, cmd);
 
-            else if (!strn_cmp(cmd, "dg_affect ", 10))
+            else if (!strncasecmp(cmd, "dg_affect ", 10))
                 do_dg_affect(go, sc, trig, type, cmd);
 
-            else if (!strn_cmp(cmd, "global ", 7))
+            else if (!strncasecmp(cmd, "global ", 7))
                 process_global(sc, trig, cmd, sc->context);
 
-            else if (!strn_cmp(cmd, "context ", 8))
+            else if (!strncasecmp(cmd, "context ", 8))
                 process_context(sc, trig, cmd);
 
-            else if (!strn_cmp(cmd, "remote ", 7))
+            else if (!strncasecmp(cmd, "remote ", 7))
                 process_remote(sc, trig, cmd);
 
-            else if (!strn_cmp(cmd, "rdelete ", 8))
+            else if (!strncasecmp(cmd, "rdelete ", 8))
                 process_rdelete(sc, trig, cmd);
 
-            else if (!strn_cmp(cmd, "return ", 7))
+            else if (!strncasecmp(cmd, "return ", 7))
                 ret_val = process_return(trig, cmd);
 
-            else if (!strn_cmp(cmd, "set ", 4))
+            else if (!strncasecmp(cmd, "set ", 4))
                 process_set(sc, trig, cmd);
 
-            else if (!strn_cmp(cmd, "unset ", 6))
+            else if (!strncasecmp(cmd, "unset ", 6))
                 process_unset(sc, trig, cmd);
 
-            else if (!strn_cmp(cmd, "wait ", 5)) {
+            else if (!strncasecmp(cmd, "wait ", 5)) {
                 process_wait(go, trig, type, cmd, cl);
                 depth--;
                 return ret_val;
-            } else if (!strn_cmp(cmd, "attach ", 7))
+            } else if (!strncasecmp(cmd, "attach ", 7))
                 process_attach(go, sc, trig, type, cmd);
 
-            else if (!strn_cmp(cmd, "detach ", 7))
+            else if (!strncasecmp(cmd, "detach ", 7))
                 process_detach(go, sc, trig, type, cmd);
 
             else {
@@ -2712,9 +2712,9 @@ find_case(struct trig_data *trig, struct cmdlist_element *cl,
     for (c = cl->next; c->next; c = c->next) {
         for (p = c->cmd; *p && isspace(*p); p++);
 
-        if (!strn_cmp("while ", p, 6) || !strn_cmp("switch", p, 6))
+        if (!strncasecmp("while ", p, 6) || !strncasecmp("switch", p, 6))
             c = find_done(c);
-        else if (!strn_cmp("case ", p, 5)) {
+        else if (!strncasecmp("case ", p, 5)) {
             buf = (char *) malloc(MAX_STRING_LENGTH);
             eval_op("==", result, p + 5, buf, go, sc, trig);
             if (*buf && *buf != '0') {
@@ -2722,9 +2722,9 @@ find_case(struct trig_data *trig, struct cmdlist_element *cl,
                 return c;
             }
             free(buf);
-        } else if (!strn_cmp("default", p, 7))
+        } else if (!strncasecmp("default", p, 7))
             return c;
-        else if (!strn_cmp("done", p, 3))
+        else if (!strncasecmp("done", p, 3))
             return c;
     }
     return c;
@@ -2743,9 +2743,9 @@ static struct cmdlist_element *find_done(struct cmdlist_element *cl) {
     for (c = cl->next; c && c->next; c = c->next) {
         for (p = c->cmd; *p && isspace(*p); p++);
 
-        if (!strn_cmp("while ", p, 6) || !strn_cmp("switch ", p, 7))
+        if (!strncasecmp("while ", p, 6) || !strncasecmp("switch ", p, 7))
             c = find_done(c);
-        else if (!strn_cmp("done", p, 3))
+        else if (!strncasecmp("done", p, 3))
             return c;
     }
 
