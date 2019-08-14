@@ -224,17 +224,17 @@ static void SendMSSP(descriptor_t *apDescriptor);
 
 static char *GetMxpTag(const char *apTag, const char *apText);
 
-static const char *GetAnsiColour(bool_t abBackground, int aRed, int aGreen, int aBlue);
+static const char *GetAnsiColour(_Bool abBackground, int aRed, int aGreen, int aBlue);
 
-static const char *GetRGBColour(bool_t abBackground, int aRed, int aGreen, int aBlue);
+static const char *GetRGBColour(_Bool abBackground, int aRed, int aGreen, int aBlue);
 
-static bool_t IsValidColour(const char *apArgument);
+static _Bool IsValidColour(const char *apArgument);
 
-static bool_t MatchString(const char *apFirst, const char *apSecond);
+static _Bool MatchString(const char *apFirst, const char *apSecond);
 
-static bool_t PrefixString(const char *apPart, const char *apWhole);
+static _Bool PrefixString(const char *apPart, const char *apWhole);
 
-static bool_t IsNumber(const char *apString);
+static _Bool IsNumber(const char *apString);
 
 static char *AllocString(const char *apString);
 
@@ -280,7 +280,7 @@ protocol_t *ProtocolCreate(void) {
     protocol_t *pProtocol;
 
     /* Called the first time we enter - make sure the table is correct */
-    static bool_t bInit = false;
+    static _Bool bInit = false;
     if (!bInit) {
         bInit = true;
         for (i = eMSDP_NONE + 1; i < eMSDP_MAX; ++i) {
@@ -497,7 +497,7 @@ const char *ProtocolOutput(descriptor_t *apDescriptor, const char *apData, int *
     const char MXPStop[] = ">\033[7z";
     const char LinkStart[] = "\033[1z<send>\033[7z";
     const char LinkStop[] = "\033[1z</send>\033[7z";
-    bool_t bTerminate = false, bUseMXP = false, bUseMSP = false;
+    _Bool bTerminate = false, bUseMXP = false, bUseMSP = false;
     int i = 0, j = 0; /* Index values */
 
     protocol_t *pProtocol = apDescriptor ? apDescriptor->pProtocol : NULL;
@@ -639,7 +639,7 @@ const char *ProtocolOutput(descriptor_t *apDescriptor, const char *apData, int *
                         char Buffer[8] = {'\0'}, BugString[256];
                         int Index = 0;
                         int Number = 0;
-                        bool_t bDone = false, bValid = true;
+                        _Bool bDone = false, bValid = true;
 
                         while (isdigit(apData[++j])) {
                             Number *= 10;
@@ -679,7 +679,7 @@ const char *ProtocolOutput(descriptor_t *apDescriptor, const char *apData, int *
                     } else if (tolower(apData[j]) == 'f' || tolower(apData[j]) == 'b') {
                         char Buffer[8] = {'\0'}, BugString[256];
                         int Index = 0;
-                        bool_t bDone = false, bValid = true;
+                        _Bool bDone = false, bValid = true;
 
                         /* Copy the 'f' (foreground) or 'b' (background) */
                         Buffer[Index++] = apData[j++];
@@ -709,7 +709,7 @@ const char *ProtocolOutput(descriptor_t *apDescriptor, const char *apData, int *
                     } else if (tolower(apData[j]) == 'x') {
                         char Buffer[8] = {'\0'}, BugString[256];
                         int Index = 0;
-                        bool_t bDone = false, bValid = true;
+                        _Bool bDone = false, bValid = true;
 
                         ++j; /* Skip the 'x' */
 
@@ -853,7 +853,7 @@ void CopyoverSet(descriptor_t *apDescriptor, const char *apData) {
 
     if (pProtocol != NULL && apData != NULL) {
         int Width = 0, Height = 0;
-        bool_t bDoneWidth = false;
+        _Bool bDoneWidth = false;
         int i; /* Loop counter */
 
         for (i = 0; apData[i] != '\0'; ++i) {
@@ -1257,7 +1257,7 @@ const char *ColourRGB(descriptor_t *apDescriptor, const char *apRGB) {
 
     if (pProtocol && pProtocol->pVariables[eMSDP_ANSI_COLORS]->ValueInt && charHasColor) {
         if (IsValidColour(apRGB)) {
-            bool_t bBackground = (tolower(apRGB[0]) == 'b');
+            _Bool bBackground = (tolower(apRGB[0]) == 'b');
             int Red = apRGB[1] - '0';
             int Green = apRGB[2] - '0';
             int Blue = apRGB[3] - '0';
@@ -1498,7 +1498,7 @@ static void PerformSubnegotiation(descriptor_t *apDescriptor, char aCmd, char *a
                 const int MaxClientLength = 64;
                 char *pClientName = alloca(MaxClientLength + 1);
                 int i = 0, j = 1;
-                bool_t bStopCyclicTTYPE = false;
+                _Bool bStopCyclicTTYPE = false;
 
                 for (; apData[j] != '\0' && i < MaxClientLength; ++j) {
                     if (isprint(apData[j]))
@@ -1687,7 +1687,7 @@ static void ParseMSDP(descriptor_t *apDescriptor, const char *apData) {
 static void ExecuteMSDPPair(descriptor_t *apDescriptor, const char *apVariable, const char *apValue) {
     if (apVariable[0] != '\0' && apValue[0] != '\0') {
         if (MatchString(apVariable, "SEND")) {
-            bool_t bDone = false;
+            _Bool bDone = false;
             int i; /* Loop counter */
             for (i = eMSDP_NONE + 1; i < eMSDP_MAX && !bDone; ++i) {
                 if (MatchString(apValue, VariableNameTable[i].pName)) {
@@ -1696,7 +1696,7 @@ static void ExecuteMSDPPair(descriptor_t *apDescriptor, const char *apVariable, 
                 }
             }
         } else if (MatchString(apVariable, "REPORT")) {
-            bool_t bDone = false;
+            _Bool bDone = false;
             int i; /* Loop counter */
             for (i = eMSDP_NONE + 1; i < eMSDP_MAX && !bDone; ++i) {
                 if (MatchString(apValue, VariableNameTable[i].pName)) {
@@ -1717,7 +1717,7 @@ static void ExecuteMSDPPair(descriptor_t *apDescriptor, const char *apVariable, 
                 }
             }
         } else if (MatchString(apVariable, "UNREPORT")) {
-            bool_t bDone = false;
+            _Bool bDone = false;
             int i; /* Loop counter */
             for (i = eMSDP_NONE + 1; i < eMSDP_MAX && !bDone; ++i) {
                 if (MatchString(apValue, VariableNameTable[i].pName)) {
@@ -2139,7 +2139,7 @@ static char *GetMxpTag(const char *apTag, const char *apText) {
  Local colour functions.
  ******************************************************************************/
 
-static const char *GetAnsiColour(bool_t abBackground, int aRed, int aGreen, int aBlue) {
+static const char *GetAnsiColour(_Bool abBackground, int aRed, int aGreen, int aBlue) {
     if (aRed == aGreen && aRed == aBlue && aRed < 2)
         return abBackground ? s_BackBlack : aRed >= 1 ? s_BoldBlack : s_DarkBlack;
     else if (aRed == aGreen && aRed == aBlue)
@@ -2158,7 +2158,7 @@ static const char *GetAnsiColour(bool_t abBackground, int aRed, int aGreen, int 
         return abBackground ? s_BackBlue : aBlue >= 3 ? s_BoldBlue : s_DarkBlue;
 }
 
-static const char *GetRGBColour(bool_t abBackground, int aRed, int aGreen, int aBlue) {
+static const char *GetRGBColour(_Bool abBackground, int aRed, int aGreen, int aBlue) {
     static char Result[16];
     int ColVal = 16 + (aRed * 36) + (aGreen * 6) + aBlue;
     sprintf(Result, "\033[%c8;5;%c%c%cm",
@@ -2169,7 +2169,7 @@ static const char *GetRGBColour(bool_t abBackground, int aRed, int aGreen, int a
     return Result;
 }
 
-static bool_t IsValidColour(const char *apArgument) {
+static _Bool IsValidColour(const char *apArgument) {
     int i; /* Loop counter */
 
     /* The sequence is 4 bytes, but we can ignore anything after it. */
@@ -2194,7 +2194,7 @@ static bool_t IsValidColour(const char *apArgument) {
  Other local functions.
  ******************************************************************************/
 
-static bool_t MatchString(const char *apFirst, const char *apSecond) {
+static _Bool MatchString(const char *apFirst, const char *apSecond) {
     while (*apFirst && tolower(*apFirst) == tolower(*apSecond)) {
         ++apFirst;
         ++apSecond;
@@ -2202,7 +2202,7 @@ static bool_t MatchString(const char *apFirst, const char *apSecond) {
     return (!*apFirst && !*apSecond);
 }
 
-static bool_t PrefixString(const char *apPart, const char *apWhole) {
+static _Bool PrefixString(const char *apPart, const char *apWhole) {
     while (*apPart && tolower(*apPart) == tolower(*apWhole)) {
         ++apPart;
         ++apWhole;
@@ -2210,7 +2210,7 @@ static bool_t PrefixString(const char *apPart, const char *apWhole) {
     return (!*apPart);
 }
 
-static bool_t IsNumber(const char *apString) {
+static _Bool IsNumber(const char *apString) {
     while (*apString && isdigit(*apString))
         ++apString;
     return (!*apString);

@@ -72,11 +72,6 @@ typedef struct descriptor_data descriptor_t;
  ******************************************************************************/
 
 typedef enum {
-    false,
-    true
-} bool_t;
-
-typedef enum {
     eUNKNOWN,
     eNO,
     eSOMETIMES,
@@ -165,10 +160,10 @@ typedef enum {
 typedef struct {
     variable_t Variable;      /* The enum type of this variable */
     const char *pName;         /* The string name of this variable */
-    bool_t bString;       /* Is this variable a string or a number? */
-    bool_t bConfigurable; /* Can it be configured by the client? */
-    bool_t bWriteOnce;    /* Can only set this variable once */
-    bool_t bGUI;          /* It's a special GUI configuration variable */
+    _Bool bString;       /* Is this variable a string or a number? */
+    _Bool bConfigurable; /* Can it be configured by the client? */
+    _Bool bWriteOnce;    /* Can only set this variable once */
+    _Bool bGUI;          /* It's a special GUI configuration variable */
     int Min;           /* The minimum valid value or string length */
     int Max;           /* The maximum valid value or string length */
     int Default;       /* The default value for a number */
@@ -176,8 +171,8 @@ typedef struct {
 } variable_name_t;
 
 typedef struct {
-    bool_t bReport;       /* Is this variable being reported? */
-    bool_t bDirty;        /* Does this variable need to be sent again? */
+    _Bool bReport;       /* Is this variable being reported? */
+    _Bool bDirty;        /* Does this variable need to be sent again? */
     int ValueInt;      /* The numeric value of the variable */
     char *pValueString;  /* The string value of the variable */
 } MSDP_t;
@@ -190,17 +185,17 @@ typedef struct {
 
 typedef struct {
     int WriteOOB;         /* Used internally to indicate OOB data */
-    bool_t bIACMode;         /* Current mode - deals with broken packets */
-    bool_t bNegotiated;      /* Indicates client successfully negotiated */
-    bool_t bBlockMXP;        /* Used internally based on MXP version */
-    bool_t bTTYPE;           /* The client supports TTYPE */
-    bool_t bNAWS;            /* The client supports NAWS */
-    bool_t bCHARSET;         /* The client supports CHARSET */
-    bool_t bMSDP;            /* The client supports MSDP */
-    bool_t bATCP;            /* The client supports ATCP */
-    bool_t bMSP;             /* The client supports MSP */
-    bool_t bMXP;             /* The client supports MXP */
-    bool_t bMCCP;            /* The client supports MCCP */
+    _Bool bIACMode;         /* Current mode - deals with broken packets */
+    _Bool bNegotiated;      /* Indicates client successfully negotiated */
+    _Bool bBlockMXP;        /* Used internally based on MXP version */
+    _Bool bTTYPE;           /* The client supports TTYPE */
+    _Bool bNAWS;            /* The client supports NAWS */
+    _Bool bCHARSET;         /* The client supports CHARSET */
+    _Bool bMSDP;            /* The client supports MSDP */
+    _Bool bATCP;            /* The client supports ATCP */
+    _Bool bMSP;             /* The client supports MSP */
+    _Bool bMXP;             /* The client supports MXP */
+    _Bool bMCCP;            /* The client supports MCCP */
     support_t b256Support;      /* The client supports XTerm 256 colors */
     int ScreenWidth;      /* The client's screen width */
     int ScreenHeight;     /* The client's screen height */
