@@ -32,132 +32,115 @@
 #include <time.h>
 // generic
 #include <errno.h>  // not C11 but on all platforms
+#include <limits.h>  // for PATH_MAX
 
 #if defined(_WIN32) || defined(_WIN64)
-// MSVC (and MinGW?)
-// visual studio does not have these functions
-#define snprintf _snprintf
-#define vsnprintf _vsnprintf
-#define strncasecmp _strnicmp
-#define strcasecmp _stricmp
-// set limits.h PATH_MAX to windows MAX_PATH
-# define PATH_MAX MAX_PATH
-// fake STDOUT_FILENO / STDERR_FILENO on windows
-#define STDOUT_FILENO 1
-#define STDERR_FILENO 2
-// fake pid_t
-#define pid_t int
-// <sys/socket.h> does not define socklen_t
-#define socklen_t int
-// <sys/types.h> does not define ssize_t
-#define ssize_t int
-// windows does not have the crypt library
-#define NOCRYPT
-
-#ifndef _WINSOCK2API_    /* Winsock1 and Winsock 2 conflict. */
-#include <winsock.h>
-#endif
-
-/* MSVC defaults to 64 (so say the old documentation)
- * this is used with select()
- * should really move away from select... */
-#ifndef FD_SETSIZE
-#define FD_SETSIZE 1024
-#endif
-
+    // MSVC (and MinGW?)
+    // visual studio does not have these functions
+    #define snprintf _snprintf
+    #define vsnprintf _vsnprintf
+    #define strncasecmp _strnicmp
+    #define strcasecmp _stricmp
+    // set PATH_MAX length properly on Windows
+    # define PATH_MAX MAX_PATH
+    // fake STDOUT_FILENO / STDERR_FILENO on windows
+    #define STDOUT_FILENO 1
+    #define STDERR_FILENO 2
+    // <sys/socket.h> does not define socklen_t
+    #define socklen_t int
+    // <sys/types.h> does not define ssize_t
+    #define ssize_t int
+    // windows does not have the crypt library
+    #define NOCRYPT
 #else  // UNIX - where god wants you to be
-#include <unistd.h>
-#include <strings.h>  // now required
-#include <limits.h>  // for PATH_MAX
-# include <sys/uio.h>
+    #include <unistd.h>
+    #include <strings.h>  // now required
+    #include <sys/uio.h>
 
-#ifdef _POSIX_VERSION
-#define POSIX
-#endif
+    // should this be eariler
+    #ifdef _POSIX_VERSION
+    #define POSIX
+    #endif
 
-#include <signal.h>
-#include <sys/stat.h>
-
+    #include <signal.h>
+    #include <sys/stat.h>
+    #include <sys/time.h>
+    #include <sys/select.h>
+    #include <sys/fcntl.h>
+    #include <sys/socket.h>
+    #include <sys/resource.h>
+    #include <sys/wait.h>
+    #include <netinet/in.h>
 #endif
 
 
 /* strlcpy */
 #if defined(__APPLE__) || defined(__FREEBSD__)
-/* macOS and FreeBSD have strlcpy prototype */
+    /* macOS and FreeBSD have strlcpy prototype */
 #else
-size_t strlcpy(char *dest, const char *src, size_t copylen);
+    size_t strlcpy(char *dest, const char *src, size_t copylen);
 #endif
 
 /* crypt on FreeBSD */
 #if defined(__FREEBSD__)
-#if !defined(HAVE_UNSAFE_CRYPT)
-#define HAVE_UNSAFE_CRYPT 1
+    #if !defined(HAVE_UNSAFE_CRYPT)
+        #define HAVE_UNSAFE_CRYPT 1
+    #endif
 #endif
-#endif
-
 
 #ifdef HAVE_CRYPT_H
-#include <crypt.h>
+    #include <crypt.h>
 #endif
 
-#ifdef HAVE_SYS_TIME_H
-#include <sys/time.h>
+/* networking on Linux */
+#if !defined(__FREEBSD__) && !defined(__APPLE__) && !defined(_WIN32) && !defined(_WIN64)
+    #include <arpa/inet.h>
 #endif
 
-#ifdef HAVE_SYS_SELECT_H
-#include <sys/select.h>
+/* networking on FreeBSD / macOS */
+#if defined(__FREEBSD__) || defined(__APPLE__)
+    #include <netdb.h>
 #endif
 
-#ifdef HAVE_SYS_FCNTL_H
-#include <sys/fcntl.h>
-#endif
-
-#ifdef HAVE_SYS_SOCKET_H
-# include <sys/socket.h>
-#endif
-
-#ifdef HAVE_SYS_RESOURCE_H
-# include <sys/resource.h>
-#endif
-
-#ifdef HAVE_SYS_WAIT_H
-# include <sys/wait.h>
-#endif
-
-#ifdef HAVE_NETINET_IN_H
-# include <netinet/in.h>
-#endif
-
-#ifdef HAVE_ARPA_INET_H
-# include <arpa/inet.h>
-#endif
-
-#ifdef HAVE_NETDB_H
-# include <netdb.h>
+/* networking on Windows */
+#if defined(_WIN32) || defined(_WIN64)
+    #include <WinSock2.h>    /* because why not use v2 ? */
+    #ifndef _WINSOCK2API_    /* Winsock1 and Winsock 2 conflict. */
+        #include <winsock.h>
+    #endif
+    /* MSVC defaults to 64 (so say the old documentation)
+    * this is used with select()
+    * should really move away from select... */
+    // jason - I question if this needs to be before #include winsock.h
+    // or if it just needs to be unset and set
+    #ifndef FD_SETSIZE
+        #define FD_SETSIZE 1024
+    #endif
 #endif
 
 /* GCC has printf like checking using __attribute__
  * you should leave this here its good for everyone involved */
 #if !defined(__GNUC__)
-# define __attribute__(x)    /* convert to NOOP */
+    #define __attribute__(x)    /* convert to NOOP */
 #endif
 
 /* cross platform socket */
-#if defined(_WIN32)
-/* SOCKET -- must be after the winsock.h #include. */
-#define CLOSE_SOCKET(sock)    closesocket(sock)
-typedef SOCKET socket_t;
+#if defined(_WIN32) || defined(_WIN64)
+    /* Windows socket i.e. SOCKET -- must be after the winsock.h #include. */
+    #define CLOSE_SOCKET(sock)    closesocket(sock)
+    typedef SOCKET socket_t;
 #else
-# define CLOSE_SOCKET(sock)    close(sock)
-typedef int socket_t;
+    /* Unix socket i.e. sock */
+    #define CLOSE_SOCKET(sock)    close(sock)
+    typedef int socket_t;
 #endif
 
 /* Guess if we have the getrlimit()/setrlimit() functions */
 #if defined(RLIMIT_NOFILE) || defined (RLIMIT_OFILE)
-#define HAS_RLIMIT
-#if !defined (RLIMIT_NOFILE)
-# define RLIMIT_NOFILE RLIMIT_OFILE
-#endif
+    #define HAS_RLIMIT
+    #if !defined (RLIMIT_NOFILE)
+        #define RLIMIT_NOFILE RLIMIT_OFILE
+    #endif
 #endif
 
 #endif /* _SYSDEP_H_ */
