@@ -13,6 +13,14 @@
 #ifndef _COMM_H_
 #define _COMM_H_
 
+/* GCC has printf like checking using __attribute__
+ * you should leave this here its good for everyone involved */
+#if !defined(__GNUC__)
+#if !defined(__attribute__)
+#define __attribute__(x)    /* convert to NOOP */
+#endif
+#endif
+
 #define NUM_RESERVED_DESCS    8
 #define COPYOVER_FILE "copyover.dat"
 

@@ -97,11 +97,6 @@
     #include <arpa/inet.h>
 #endif
 
-/* networking on FreeBSD / macOS */
-#if defined(__FREEBSD__) || defined(__APPLE__)
-    #include <netdb.h>
-#endif
-
 /* networking on Windows */
 #if defined(_WIN32) || defined(_WIN64)
     #include <WinSock2.h>    /* because why not use v2 ? */
