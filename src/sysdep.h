@@ -78,7 +78,7 @@
 #if defined(__APPLE__) || defined(__FREEBSD__)
     /* macOS and FreeBSD have strlcpy prototype */
 #else
-    size_t strlcpy(char *dest, const char *src, size_t copylen);
+size_t strlcpy(char *dest, const char *src, size_t copylen);
 #endif
 
 /* crypt on FreeBSD */
