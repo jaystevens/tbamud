@@ -71,6 +71,7 @@
     #include <sys/resource.h>
     #include <sys/wait.h>
     #include <netinet/in.h>
+    #include <netdb.h>      // gethostbyname()
 #endif
 
 
@@ -113,12 +114,6 @@ size_t strlcpy(char *dest, const char *src, size_t copylen);
     #endif
 #endif
 
-/* GCC has printf like checking using __attribute__
- * you should leave this here its good for everyone involved */
-#if !defined(__GNUC__)
-    #define __attribute__(x)    /* convert to NOOP */
-#endif
-
 /* cross platform socket */
 #if defined(_WIN32) || defined(_WIN64)
     /* Windows socket i.e. SOCKET -- must be after the winsock.h #include. */
@@ -139,3 +134,4 @@ size_t strlcpy(char *dest, const char *src, size_t copylen);
 #endif
 
 #endif /* _SYSDEP_H_ */
+
